@@ -6,6 +6,7 @@
 // http://opensource.org/licenses/mit-license.php
 // ----------------------------------------------------------------------------
 // Version
+// 0.9.3 2017/09/30 GitHubのアドレスを追加。
 // 0.9.2 2017/09/21 変数入力欄におけるエラー出力の調整。
 // 0.9.1 2017/09/21 変数入力欄に「#」を指定しても文字列として認識されていた不具合の修正。
 // 0.9.0 2017/09/20 バグ修正。プラグイン管理機能の追加。入力補完機能の向上。デザインの改善。
@@ -13,6 +14,7 @@
 // 0.8.1 2017/09/17 細かい修正と英語版に対応。
 // 0.8.0 2017/09/16 公開。
 // ----------------------------------------------------------------------------
+// [GitHub] : https://github.com/Tsumio/rmmv-plugins
 // [Blog]   : http://ntgame.wpblog.jp/
 // [Twitter]: https://twitter.com/TsumioNtGame
 //=============================================================================
@@ -206,6 +208,7 @@
  * Especially, "DevToolsManage.js" is very awesome plugin, so please try using it.
  * 
  * ----change log---
+ * 0.9.3 2017/09/30 Add GitHub address.
  * 0.9.2 2017/09/21 Adjust error output in variable input field.
  * 0.9.1 2017/09/21 Bug fix.Variable was recognized as string even if "#" was specified in the variable input field.
  * 0.9.0 2017/09/20 Bug fix.Added Plugin Manager Function.Improved autocomplete function.Improved design.
@@ -414,6 +417,7 @@
  * 特に総合開発支援プラグインは多機能なので、ぜひ一度導入してみてください。
  * 
  * 【更新履歴】
+ * 0.9.3 2017/09/30 GitHubのアドレスを追加。
  * 0.9.2 2017/09/21 変数入力欄におけるエラー出力の調整。
  * 0.9.1 2017/09/21 変数入力欄に「#」を指定しても文字列として認識されていた不具合の修正。
  * 0.9.0 2017/09/20 バグ修正。プラグイン管理機能の追加。入力補完機能の向上。デザインの改善。

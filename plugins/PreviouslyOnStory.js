@@ -6,12 +6,14 @@
 // http://opensource.org/licenses/mit-license.php
 // ----------------------------------------------------------------------------
 // Version
+// 1.1.2 2017/09/30 GitHubのアドレスを追加。
 // 1.1.1 2017/09/02 ボイス再生機能に対応。
 // 1.1.0 2017/08/26 振り返りシーンの追加と、不具合の修正。
 // 1.0.2 2017/08/25 あらすじのセーブとロード機能の追加。
 // 1.0.1 2017/08/24 いくつかの不具合の修正と、機能の追加（writeLineの拡張とデフォルトウィンドウの指定）。
 // 1.0.0 2017/08/23 公開。
 // ----------------------------------------------------------------------------
+// [GitHub] : https://github.com/Tsumio/rmmv-plugins
 // [Blog]   : http://ntgame.wpblog.jp/
 // [Twitter]: https://twitter.com/TsumioNtGame
 //=============================================================================
@@ -425,6 +427,7 @@
  * The title applied to the LookingBack scene is the saved name of the synopsis.
  * 
  * ----change log---
+ * 1.1.1 2017/09/30 Add GitHub address.
  * 1.1.1 2017/09/02 Add the voice system.
  * 1.1.0 2017/08/26 Add the looking back scene sytem and fix some bugs.
  * 1.0.2 2017/08/25 Add the Saving and Loading system.
@@ -849,6 +852,7 @@
  * 振り返りシーンに適用されるタイトルは、あらすじの保存名です。
  * 
  * 【更新履歴】
+ * 1.1.1 2017/09/30 GitHubのアドレスを追加。
  * 1.1.1 2017/09/02 ボイス再生機能に対応。
  * 1.1.0 2017/08/26 振り返りシーンの追加と、不具合の修正。
  * 1.0.2 2017/08/25 あらすじのセーブとロード機能の追加。
