@@ -8,6 +8,12 @@ These plugins are for RPG Maker MV.
 ## Usage
 Read each JS file.It contains usage.
 
+## List
+| Plugin name          | Description                               | 
+|:--------------------:|:-----------------------------------|
+| [PreviouslyOnStory](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/PreviouslyOnStory.js)    | This plugin implement the synopsis function.           |
+| [DebugToolEx](https://github.com/Tsumio/rmmv-plugins/raw/master/DebugToolEx.zip)          | This plugin help to do the debugging.               |
+
 ## License
 All plugins are released under the MIT License, see [LICENSE.txt](https://github.com/Tsumio/rmmv-plugins/blob/master/LICENSE.txt).
 
@@ -32,6 +38,13 @@ RPGツクールMV上での動作を前提としています。
 
 ## 使用方法
 各JSファイルを読んでください。使用方法が書かれています。
+
+## 一覧
+| プラグイン名          | 説明                               | 
+|:--------------------:|:-----------------------------------|
+| [PreviouslyOnStory](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/PreviouslyOnStory.js)    | あらすじ機能を実装します。           |
+| [DebugToolEx](https://github.com/Tsumio/rmmv-plugins/raw/master/DebugToolEx.zip)          | デバッグを支援します。               |
+
 
 ## ライセンス
 全てのプラグインはMITライセンスで公開されています。  
