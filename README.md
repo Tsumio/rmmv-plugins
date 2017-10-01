@@ -33,15 +33,15 @@ RPGツクールMV上での動作を前提としています。
 ## 使用方法
 各JSファイルを読んでください。使用方法が書かれています。
 
-## License
+## ライセンス
 全てのプラグインはMITライセンスで公開されています。  
 詳細は[LICENSE.txt](https://github.com/Tsumio/rmmv-plugins/blob/master/LICENSE.txt)をご覧ください。
 
-## Terms of Use
+## 利用規約
 作者に無断で改変、再配布が可能で、利用形態（商用、18禁利用等）についても制限はありません。  
 自由に使用してください。
 
-## Contact information
+## 連絡先
 ツミオ  
 [GitHub] : <https://github.com/Tsumio/rmmv-plugins>  
 [Blog]   : <http://ntgame.wpblog.jp/>  
