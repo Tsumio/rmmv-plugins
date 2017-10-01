@@ -11,8 +11,8 @@ Read each JS file.It contains usage.
 ## List
 | Plugin name          | Description                               | 
 |:--------------------:|:-----------------------------------|
-| [PreviouslyOnStory](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/PreviouslyOnStory.js)    | This plugin implement the synopsis function.           |
-| [DebugToolEx](https://github.com/Tsumio/rmmv-plugins/raw/master/DebugToolEx.zip)          | This plugin help to do the debugging.               |
+| [PreviouslyOnStory](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/PreviouslyOnStory.js)    | This plugin implements the synopsis function.           |
+| [DebugToolEx](https://github.com/Tsumio/rmmv-plugins/raw/master/DebugToolEx.zip)          | This plugin helps to do the debugging.               |
 
 ## License
 All plugins are released under the MIT License, see [LICENSE.txt](https://github.com/Tsumio/rmmv-plugins/blob/master/LICENSE.txt).

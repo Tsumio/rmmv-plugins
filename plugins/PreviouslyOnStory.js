@@ -6,6 +6,7 @@
 // http://opensource.org/licenses/mit-license.php
 // ----------------------------------------------------------------------------
 // Version
+// 1.1.3 2017/10/01 説明を少し変更。
 // 1.1.2 2017/09/30 GitHubのアドレスを追加。
 // 1.1.1 2017/09/02 ボイス再生機能に対応。
 // 1.1.0 2017/08/26 振り返りシーンの追加と、不具合の修正。
@@ -19,7 +20,7 @@
 //=============================================================================
 
 /*:
- * @plugindesc This plugin implement the synopsis function.
+ * @plugindesc This plugin implements the synopsis function.
  * @author Tsumio
  *
  * @param ----Basic Settings----
@@ -338,7 +339,7 @@
  * @desc This is a setting sets the max characters of the line in looking back scene.
  * @default 16
  * 
- * @help This plugin implement the synopsis function.
+ * @help This plugin implements the synopsis function.
  * 
  * ----feature----
  * -> When saving data is loaded, it will shift to the synopsis scene.
@@ -427,7 +428,8 @@
  * The title applied to the LookingBack scene is the saved name of the synopsis.
  * 
  * ----change log---
- * 1.1.1 2017/09/30 Add GitHub address.
+ * 1.1.3 2017/10/01 Alter description.
+ * 1.1.2 2017/09/30 Add GitHub address.
  * 1.1.1 2017/09/02 Add the voice system.
  * 1.1.0 2017/08/26 Add the looking back scene sytem and fix some bugs.
  * 1.0.2 2017/08/25 Add the Saving and Loading system.
@@ -852,7 +854,8 @@
  * 振り返りシーンに適用されるタイトルは、あらすじの保存名です。
  * 
  * 【更新履歴】
- * 1.1.1 2017/09/30 GitHubのアドレスを追加。
+ * 1.1.3 2017/10/01 説明を少し変更。
+ * 1.1.2 2017/09/30 GitHubのアドレスを追加。
  * 1.1.1 2017/09/02 ボイス再生機能に対応。
  * 1.1.0 2017/08/26 振り返りシーンの追加と、不具合の修正。
  * 1.0.2 2017/08/25 あらすじのセーブとロード機能の追加。

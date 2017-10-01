@@ -6,6 +6,7 @@
 // http://opensource.org/licenses/mit-license.php
 // ----------------------------------------------------------------------------
 // Version
+// 0.9.4 2017/10/01 説明を少し変更。
 // 0.9.3 2017/09/30 GitHubのアドレスを追加。
 // 0.9.2 2017/09/21 変数入力欄におけるエラー出力の調整。
 // 0.9.1 2017/09/21 変数入力欄に「#」を指定しても文字列として認識されていた不具合の修正。
@@ -20,7 +21,7 @@
 //=============================================================================
 
 /*:
- * @plugindesc This plugin help to do the debugging.
+ * @plugindesc This plugin helps to do the debugging.
  * @author Tsumio
  *
  * @param ----Basic Settings----
@@ -73,7 +74,7 @@
  * @desc Sort the plugin list by ON/OFF.
  * @default true
  * 
- * @help This plugin help to do the debugging.
+ * @help This plugin helps to do the debugging.
  * 
  * ----feature----
  * -> When you press a specific key (default setting is tab key), the command palette starts.
@@ -208,6 +209,7 @@
  * Especially, "DevToolsManage.js" is very awesome plugin, so please try using it.
  * 
  * ----change log---
+ * 0.9.4 2017/10/01 Alter description.
  * 0.9.3 2017/09/30 Add GitHub address.
  * 0.9.2 2017/09/21 Adjust error output in variable input field.
  * 0.9.1 2017/09/21 Bug fix.Variable was recognized as string even if "#" was specified in the variable input field.
@@ -417,6 +419,7 @@
  * 特に総合開発支援プラグインは多機能なので、ぜひ一度導入してみてください。
  * 
  * 【更新履歴】
+ * 0.9.4 2017/10/01 説明を少し変更。
  * 0.9.3 2017/09/30 GitHubのアドレスを追加。
  * 0.9.2 2017/09/21 変数入力欄におけるエラー出力の調整。
  * 0.9.1 2017/09/21 変数入力欄に「#」を指定しても文字列として認識されていた不具合の修正。
