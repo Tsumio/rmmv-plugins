@@ -12,7 +12,8 @@ Read each JS file.It contains usage.
 | Plugin name          | Description                               | Detailed information |
 |:--------------------:|:-----------------------------------|:----------------------|
 | [PreviouslyOnStory](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/PreviouslyOnStory.js)    | This plugin implements the synopsis function.           | [Official Forum](https://forums.rpgmakerweb.com/index.php?threads/previously-on-story-updated-2017-09-02.83247/) |
-| [DebugToolEx](https://github.com/Tsumio/rmmv-plugins/raw/master/DebugToolEx.zip)          | This plugin helps to do the debugging.               | None |
+| [DebugToolEx](https://github.com/Tsumio/rmmv-plugins/raw/master/DebugToolEx.zip)          | This plugin helps to do the debugging.               | [Official Forum](https://forum.tkool.jp/index.php?threads/%E3%80%90%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3%E3%80%91%E3%83%87%E3%83%90%E3%83%83%E3%82%B0%E6%94%AF%E6%8F%B4.418/) (Japanese) |  
+If you want to know all my plugin, see [the blog](http://ntgame.wpblog.jp/page-139/).
 
 ## License
 All plugins are released under the MIT License, see [LICENSE.txt](https://github.com/Tsumio/rmmv-plugins/blob/master/LICENSE.txt).
@@ -43,7 +44,8 @@ RPGツクールMV上での動作を前提としています。
 | プラグイン名          | 説明                               | 詳細情報 |
 |:--------------------:|:-----------------------------------| :----------------------|
 | [PreviouslyOnStory](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/PreviouslyOnStory.js)    | あらすじ機能を実装します。           | [公式フォーラム](https://forum.tkool.jp/index.php?threads/%E3%80%90%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3%E3%80%91%E3%81%82%E3%82%89%E3%81%99%E3%81%98%E6%A9%9F%E8%83%BD%E3%82%92%E8%BF%BD%E5%8A%A0.372/) |
-| [DebugToolEx](https://github.com/Tsumio/rmmv-plugins/raw/master/DebugToolEx.zip)          | デバッグを支援します。               | [公式フォーラム](https://forum.tkool.jp/index.php?threads/%E3%80%90%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3%E3%80%91%E3%83%87%E3%83%90%E3%83%83%E3%82%B0%E6%94%AF%E6%8F%B4.418/) |
+| [DebugToolEx](https://github.com/Tsumio/rmmv-plugins/raw/master/DebugToolEx.zip)          | デバッグを支援します。               | [公式フォーラム](https://forum.tkool.jp/index.php?threads/%E3%80%90%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3%E3%80%91%E3%83%87%E3%83%90%E3%83%83%E3%82%B0%E6%94%AF%E6%8F%B4.418/) |  
+GitHubに公開していないものを含む全てのプラグインの一覧は[ブログ](http://ntgame.wpblog.jp/page-139/)をご覧ください。
 
 
 ## ライセンス
