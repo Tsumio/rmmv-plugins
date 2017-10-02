@@ -6,6 +6,7 @@
 // http://opensource.org/licenses/mit-license.php
 // ----------------------------------------------------------------------------
 // Version
+// 1.1.4 2017/10/02 利用規約更新。
 // 1.1.3 2017/10/01 説明を少し変更。
 // 1.1.2 2017/09/30 GitHubのアドレスを追加。
 // 1.1.1 2017/09/02 ボイス再生機能に対応。
@@ -428,6 +429,7 @@
  * The title applied to the LookingBack scene is the saved name of the synopsis.
  * 
  * ----change log---
+ * 1.1.4 2017/10/02 Update terms of use.
  * 1.1.3 2017/10/01 Alter description.
  * 1.1.2 2017/09/30 Add GitHub address.
  * 1.1.1 2017/09/02 Add the voice system.
@@ -441,8 +443,7 @@
  * 
  * --Terms of Use--
  * This plugin is free for both commercial and non-commercial use.
- * You don't have to make sure to credit.
- * Furthermore, you may edit the source code to suit your needs,
+ * You may edit the source code to suit your needs,
  * so long as you don't claim the source code belongs to you.
  * 
  */
@@ -854,6 +855,7 @@
  * 振り返りシーンに適用されるタイトルは、あらすじの保存名です。
  * 
  * 【更新履歴】
+ * 1.1.4 2017/10/02 利用規約更新。
  * 1.1.3 2017/10/01 説明を少し変更。
  * 1.1.2 2017/09/30 GitHubのアドレスを追加。
  * 1.1.1 2017/09/02 ボイス再生機能に対応。
@@ -865,7 +867,7 @@
  * 【備考】
  * 当プラグインを利用したことによるいかなる損害に対しても、制作者は一切の責任を負わないこととします。
  * 
- * 利用規約：
+ * 【利用規約】
  * 作者に無断で改変、再配布が可能で、利用形態（商用、18禁利用等）
  * についても制限はありません。
  * 自由に使用してください。
