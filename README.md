@@ -21,7 +21,6 @@ All plugins are released under the MIT License, see [LICENSE.txt](https://github
 
 ## Terms of Use
 All plugins are free for both commercial and non-commercial use.  
-You don't have to make sure to credit.  
 Furthermore, you may edit the source code to suit your needs, so long as you don't claim the source code belongs to you. 
 
 ## Contact information
