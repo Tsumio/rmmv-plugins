@@ -8,6 +8,7 @@
 // Version
 // 1.0.0 2017/09/16 公開。
 // ----------------------------------------------------------------------------
+// [GitHub] : https://github.com/Tsumio/rmmv-plugins
 // [Blog]   : http://ntgame.wpblog.jp/
 // [Twitter]: https://twitter.com/TsumioNtGame
 //=============================================================================
