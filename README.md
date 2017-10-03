@@ -14,14 +14,14 @@ Read each JS file.It contains usage.
 | [PreviouslyOnStory](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/PreviouslyOnStory.js)    | This plugin implements the synopsis function.           | [Official Forum](https://forums.rpgmakerweb.com/index.php?threads/previously-on-story-updated-2017-09-02.83247/) |
 | [DebugToolEx](https://github.com/Tsumio/rmmv-plugins/raw/master/DebugToolEx.zip)          | This plugin helps to do the debugging.               | [Official Forum](https://forum.tkool.jp/index.php?threads/%E3%80%90%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3%E3%80%91%E3%83%87%E3%83%90%E3%83%83%E3%82%B0%E6%94%AF%E6%8F%B4.418/) (Japanese) |
 
-If you want to know all my plugin, see [the blog](http://ntgame.wpblog.jp/page-139/).
+If you want to know all my plugin, see [the blog](http://ntgame.wpblog.jp/page-139/) (Japanese).
 
 ## License
 All plugins are released under the MIT License, see [LICENSE.txt](https://github.com/Tsumio/rmmv-plugins/blob/master/LICENSE.txt).
 
 ## Terms of Use
 All plugins are free for both commercial and non-commercial use.  
-Furthermore, you may edit the source code to suit your needs, so long as you don't claim the source code belongs to you. 
+You may edit the source code to suit your needs, so long as you don't claim the source code belongs to you. 
 
 ## Contact information
 Tsumio  
