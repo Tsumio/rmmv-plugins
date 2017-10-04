@@ -1,7 +1,7 @@
 RMMV plugins
 ====
-![profile](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/807893b95fb1ecfb1be53bd9f602bd1c5d61d19e/img/profile.jpg "profile")
-I bundled what I think is particularly useful among plugins I created.
+![profile](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/807893b95fb1ecfb1be53bd9f602bd1c5d61d19e/img/profile.jpg "profile")  
+I bundled what I think is particularly useful among plugins I created.  
 Hope these plugins help,and enjoy creating great game!
 
 ## Requirement
@@ -35,8 +35,8 @@ Tsumio
 
 ***
 # 日本語
-![profile](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/807893b95fb1ecfb1be53bd9f602bd1c5d61d19e/img/profile.jpg "profile")
-製作したプラグインのうち、特に有用だと思うものをこのリポジトリにまとめています。
+![profile](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/807893b95fb1ecfb1be53bd9f602bd1c5d61d19e/img/profile.jpg "profile")  
+製作したプラグインのうち、特に有用だと思うものをこのリポジトリにまとめています。  
 ゲーム制作は大変なことも多いですが、少しでもお役に立てれば幸いです！
 
 ## 要件
