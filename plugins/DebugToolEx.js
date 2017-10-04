@@ -82,7 +82,7 @@
  * -> You can execute reserved functions by entering commands in the command palette.
  * -> If you do not specify a command, it will be executed as a script.
  * -> You can use management window.
- * -> There is autocomplete to support input of variables.1
+ * -> There is autocomplete to support inputting.
  * -> This plugin is valid only when test play in local environment.
  * -> You can see at a glance the currently active plugin.
  * -> If an error occurs during game execution, it attempts to identify the plugin from which the error occurred.
@@ -291,7 +291,7 @@
  * ・コマンドパレットにコマンドを入力することにより、予約された機能を実行できます。
  * ・コマンドを指定しない場合、スクリプトとして実行されます。
  * ・変数やスイッチの管理ウィンドウを表示させることができます。
- * ・変数の入力を支援する入力補完機能があります。
+ * ・入力補完機能があります。
  * ・ローカル環境でのテストプレイ時のみ有効になります。
  * ・現在有効になっているプラグインが一瞥でわかります。
  * ・ゲーム実行時にエラーが発生した場合、エラー発生元のプラグインを特定しようと試みます。
@@ -2037,7 +2037,6 @@ var Liquidize = Liquidize || {};//For resolving conflict.MadeWithMV.
         //Foreach.But options is not array even if loolks like array.So I use normal "for loop".
         for(var i = length-1; i >= 0; i--){
             if(!reg.test(options[i].value)){//When Does not match inputed chars, delete that option.
-                console.log(options[i].value + ':' +inputedChars);
                 this.selectBox().removeChild(options[i]);
                 this.selectBox().selectedIndex = 0;
             }
