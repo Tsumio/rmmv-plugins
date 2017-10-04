@@ -6,6 +6,7 @@
 // http://opensource.org/licenses/mit-license.php
 // ----------------------------------------------------------------------------
 // Version
+// 1.0.0 2017/10/04 コマンドパレットに入力補完機能を追加。MadeWithMV.jsとの衝突を解消。
 // 0.9.4 2017/10/01 説明を少し変更。
 // 0.9.3 2017/09/30 GitHubのアドレスを追加。
 // 0.9.2 2017/09/21 変数入力欄におけるエラー出力の調整。
@@ -209,6 +210,7 @@
  * Especially, "DevToolsManage.js" is very awesome plugin, so please try using it.
  * 
  * ----change log---
+ * 1.0.0 2017/10/04 Add autocomplete function to command palette.Resolved conflicts with MadeWithMV.js.
  * 0.9.4 2017/10/01 Alter description.
  * 0.9.3 2017/09/30 Add GitHub address.
  * 0.9.2 2017/09/21 Adjust error output in variable input field.
@@ -223,8 +225,7 @@
  * 
  * --Terms of Use--
  * This plugin is free for both commercial and non-commercial use.
- * You don't have to make sure to credit.
- * Furthermore, you may edit the source code to suit your needs,
+ * You may edit the source code to suit your needs,
  * so long as you don't claim the source code belongs to you.
  * 
  */
@@ -419,6 +420,7 @@
  * 特に総合開発支援プラグインは多機能なので、ぜひ一度導入してみてください。
  * 
  * 【更新履歴】
+ * 1.0.0 2017/10/04 コマンドパレットに入力補完機能を追加。MadeWithMV.jsとの衝突を解消。
  * 0.9.4 2017/10/01 説明を少し変更。
  * 0.9.3 2017/09/30 GitHubのアドレスを追加。
  * 0.9.2 2017/09/21 変数入力欄におけるエラー出力の調整。
@@ -437,6 +439,9 @@
  * 自由に使用してください。
  * 
  */
+
+
+var Liquidize = Liquidize || {};//For resolving conflict.MadeWithMV.
 
 (function() {
     'use strict';
@@ -519,12 +524,20 @@
     NTMO.DTE_Base.createInputArea = function () {
         var input = document.createElement('textarea');
         input.type           = 'textarea';
+        input.id             = 'palette';
         input.style.width    = '97%';
         input.style.height   = '20%';
         input.style.fontSize = '16px';
         input.style.zIndex   = 999;
         input.style.position = 'absolute';
+        this.addEventListenerToTextArea(input);
         return input;
+    };
+
+    NTMO.DTE_Base.addEventListenerToTextArea = function (input) {
+        input.addEventListener('keydown', function(e) {
+            NTMO.DTE.Suggest.Palette.Manager.tryToShowSuggest(e.keyCode);
+        }, false);
     };
 
     NTMO.DTE_Base.changeInputMode = function() {
@@ -553,6 +566,15 @@
     NTMO.DTE_Base.hideTextBox = function() {
         this._isTextBoxVisible = false;
         this.input.remove();
+    };
+
+    NTMO.DTE_Base.modifyFocus = function() {
+        if(NTMO.DTE.Suggest.Palette.Manager.isShowed()){
+            NTMO.DTE.Suggest.Palette.Manager.suggest.focus();
+            return;
+        }
+
+        this.getTextBox().focus();
     };
 
     NTMO.DTE_Base.getTextBox = function() {
@@ -807,7 +829,7 @@
     };
 
     NTMO.DTE_Base.reOpenDebugWindow = function() {
-        if(this.isDebugWindowOpened()){
+        if(this.isDebugWindowOpened() && !('MadeWithMV' in Liquidize)){////For resolving conflict.MadeWithMV.
             this._debugWindow.disposeDebugWindow();
             this._debugWindow         = new NTMO.DTE.DebugWindow();
             this._isDebugWindowOpened = true;
@@ -1239,7 +1261,7 @@
                 this.disposeDebugWindow();
             }.bind(this));
 
-            //Add Event listner for MAIN WINDOW!!!!
+            //Add Event listener for MAIN WINDOW!!!!
             var gui = require('nw.gui');
             var win = gui.Window.get();//Get the current window
             win.on('closed', function() {
@@ -1422,7 +1444,7 @@
 
 //=============================================================================
 // NTMO.DTE.Suggest.Global
-//  Global suggest lists and parse methods.
+//  Global suggest lists and parse methods.For variable area.
 //=============================================================================
 
     //When return false, this method do not do anything.
@@ -1497,7 +1519,7 @@
 
 //=============================================================================
 // NTMO.DTE.Suggest.Game_Actors
-//  Game_Actors suggest lists and parse methods.
+//  Game_Actors suggest lists and parse methods.For variable area.
 //=============================================================================
     NTMO.DTE.Suggest.Game_Actors.tryToGetNextSuggest = function(elm_v) {
         var text    = elm_v.value;
@@ -1512,6 +1534,519 @@
     NTMO.DTE.Suggest.Game_Actors.listId = 'actor()';
 
     NTMO.DTE.Suggest.Game_Actors.list = {
+    };
+
+//=============================================================================
+// NTMO.DTE.Suggest.Palette
+//  Suggest function for Command Palette.
+//=============================================================================
+    NTMO.DTE.Suggest.Palette = {};
+
+//=============================================================================
+// NTMO.DTE.Suggest.Palette.Manager
+//  This is static class and manager for palette area.
+//=============================================================================
+    NTMO.DTE.Suggest.Palette.Manager = function(){
+        this.suggest   = null;
+        this.dummyDiv  = null;
+        this.key       = null;
+    };
+
+    NTMO.DTE.Suggest.Palette.Manager.tryToShowSuggest = function(keyCode, shiftKey){
+        if(this.shouldShowSuggest(keyCode)){
+            return this.showSuggest(keyCode);
+        }else if(this.shouldKeepSuggest(keyCode)){
+            ;//There is none.
+        }else if(this.shouldPropagateSuggest()){
+            return this.propagateSuggest(keyCode, shiftKey);
+        }else{
+            return this.disposeSuggest(keyCode);
+        }
+    };
+
+    NTMO.DTE.Suggest.Palette.Manager.isShowed = function(){
+        if(this.suggest){
+            return true;
+        }
+
+        return false;
+    };
+
+    NTMO.DTE.Suggest.Palette.Manager.isCreatedDummyDiv = function(){
+        if(this.dummyDiv){
+            return true;
+        }
+
+        return false;
+    };
+
+    //These are test code.
+
+    NTMO.DTE.Suggest.Palette.Manager.showSuggest = function(keyCode){
+        if(this.suggest){
+            return this.disposeSuggest(keyCode);
+        }
+        switch(this.key){
+            case 'dot':
+                //this.suggest = new NTMO.DTE.Suggest.Palette.Base(NTMO.DTE.Suggest.Global.list);
+                break;
+            case 'dollar':
+                this.suggest = new NTMO.DTE.Suggest.Palette.Global();
+                break;
+            case 'space':
+                this.suggest = new NTMO.DTE.Suggest.Palette.Command();
+                if(!this.suggest.isRequiredCommand()){
+                    this.disposeSuggest();
+                }
+                break;
+        }
+    };
+
+    NTMO.DTE.Suggest.Palette.Manager.disposeSuggest = function(keyCode){
+        if(this.suggest){
+            this.suggest.propagateKeyCodeToInputArea(keyCode);
+            this.suggest.dispose();
+            this.suggest = null;
+
+            return 'dispose';//Hack:UUUUUUUUUUUUUUUUU.
+        }
+    };
+
+    NTMO.DTE.Suggest.Palette.Manager.shouldShowSuggest = function(keyCode){
+        switch(keyCode){
+            case 190: //.(dot)
+                this.key = 'dot';
+                return true;
+                break;
+            case 52: //$
+                this.key = 'dollar';
+                return true;
+                break;
+            case 32: //space
+                this.key = 'space';
+                return true;
+                break;
+        }
+
+        return false;
+    };
+
+    NTMO.DTE.Suggest.Palette.Manager.shouldKeepSuggest = function(keyCode){
+        switch(keyCode){
+            case 38 : //Up
+            case 40 : //Down
+            case 39 : //Right
+            case 37 : //Left
+            case 16 : //Shift
+            case 17 : //Ctrl
+            case 18 : //Alt
+                return true;
+                break;
+        }
+
+        return false;
+    };
+
+    NTMO.DTE.Suggest.Palette.Manager.shouldPropagateSuggest = function(){
+        if(this.suggest){
+            return (this.suggest.hasElement()) ? true : false;
+        }
+    }
+
+    NTMO.DTE.Suggest.Palette.Manager.propagateSuggest = function(keyCode, shiftKey){
+        if(this.suggest){
+            this.suggest.propagateKeyCodeToInputArea(keyCode, shiftKey);
+            this.suggest.narrowList();
+            return 'propagate';//Hack:UUUUUUUUUUUUUUUUU.
+        }
+    };
+    
+
+//=============================================================================
+// NTMO.DTE.Suggest.Palette.Base
+//  This base class provides a text area(suggest box).
+//=============================================================================
+    NTMO.DTE.Suggest.Palette.Base = function(list){
+        this.initialize.apply(this, arguments);
+    };
+
+    NTMO.DTE.Suggest.Palette.Base.prototype.initialize = function(list, key){
+        //Initialize.
+        this._palette    = null;
+        this._selectBox  = null;
+        this._startKey   = key;
+        this.dummyDiv    = NTMO.DTE.Suggest.Palette.Manager.dummyDiv;
+
+        //Create.
+        this.setPalette();
+        this.createDummyDivArea();
+        this.createSelectBox();
+        this.setItem(list);
+
+        //Set initial index.
+        this.selectBox().selectedIndex = 0;
+    };
+
+    NTMO.DTE.Suggest.Palette.Base.prototype.setPalette = function(){
+        this._palette = document.getElementById('palette');
+    };
+
+    NTMO.DTE.Suggest.Palette.Base.prototype.palette = function(){
+        return this._palette;
+    };
+
+    //Define details with inherited class, if it is necessary.
+    NTMO.DTE.Suggest.Palette.Base.prototype.setItem = function(list){
+        for(var item in list) {
+            var option = document.createElement('option');
+         
+            option.setAttribute('value', item);
+            option.innerHTML = list[item];
+         
+            this.selectBox().appendChild(option);
+        }
+    };
+
+    NTMO.DTE.Suggest.Palette.Base.prototype.narrowList = function(){
+        //Define details with inherited class, if it is necessary.
+        //This method is called by addEventListenerToSelectBox().
+
+        //Get inputed characters.
+        var inputedChars = this.getInputedCharacters();
+        var options      = this.selectBox().options;
+        var length       = options.length;
+        var reg          = new RegExp('^' + inputedChars);
+
+        //Foreach.But options is not array even if loolks like array.So I use normal "for loop".
+        for(var i = length-1; i >= 0; i--){
+            if(!reg.test(options[i].value)){//When Does not match inputed chars, delete that option.
+                this.selectBox().removeChild(options[i]);
+                this.selectBox().selectedIndex = 0;
+            }
+        }
+
+        //If options is empty, dispose suggest.
+        if(options.length <= 0){
+            NTMO.DTE.Suggest.Palette.Manager.disposeSuggest();
+        }
+    };
+
+    //Select box is for suggest list.
+    NTMO.DTE.Suggest.Palette.Base.prototype.createSelectBox = function(){
+        //Get select element.
+        this._selectBox = document.createElement('select');
+        
+        //Get caret position.
+        var pos     = this.calculateCaretPos();
+        var offsetY = 20;
+
+        //Set attribute.
+        this._selectBox.id                = 'selectBox';
+        this._selectBox.size              = '5';
+        this._selectBox.style.width       = '300px';
+        this._selectBox.style.height      = '150px';
+        this._selectBox.style.zIndex      = 1000;
+        this._selectBox.style.position    = 'absolute';
+        this._selectBox.style.left        = pos.x + 'px';
+        this._selectBox.style.top         = (pos.y + offsetY) + 'px';
+
+        //Append child.
+        document.body.appendChild(this._selectBox);
+        this.addEventListenerToSelectBox();
+    };
+
+    NTMO.DTE.Suggest.Palette.Base.prototype.selectBox = function(){
+        return this._selectBox;
+    };
+
+    NTMO.DTE.Suggest.Palette.Base.prototype.focus = function(){
+        this.selectBox().focus();
+    };
+
+    NTMO.DTE.Suggest.Palette.Base.prototype.hasElement = function(){
+        return this.selectBox().options.length > 0;
+    };
+
+    NTMO.DTE.Suggest.Palette.Base.prototype.dispose = function(){
+        if(this.selectBox()){
+            document.body.removeChild(this.selectBox());
+        }
+    };
+
+    NTMO.DTE.Suggest.Palette.Base.prototype.propagateKeyCodeToInputArea = function(keyCode, shiftKey){
+        if(keyCode === 190){//Hack:Why keycode 190(dot.) is converted strange character ? 
+            keyCode = 46;
+        }
+
+        var char = String.fromCharCode(keyCode);
+
+        if(!this.isASCII(char)){
+            return;
+        }
+
+        if(shiftKey){
+            this.insertText(char.toUpperCase());
+        }else{
+            
+            this.insertText(char.toLowerCase());
+        }
+    };
+
+    NTMO.DTE.Suggest.Palette.Base.prototype.isASCII = function(str){
+        str = (str==null)?"":str;
+        if(str.match(/^[\x20-\x7e]*$/)){
+          return true;
+        }else{
+          return false;
+        }
+    }
+
+    //If you want to know inserting selected text,see insertSelectedText().
+    NTMO.DTE.Suggest.Palette.Base.prototype.insertText = function(text){
+        //Get index and length at the beginning of the selected part.
+        var index  = this.palette().selectionStart;
+        var length = this.palette().selectionEnd - index;
+
+        //Insert.
+        this.palette().value = this.palette().value.substr(0, index) +
+          text + this.palette().value.substr(index + length);
+
+        //Move the caret position to the end of the inserted character.
+        this.palette().focus();
+        var newCaretPosition = index + text.length;
+        this.palette().setSelectionRange(newCaretPosition, newCaretPosition);
+    };
+
+    NTMO.DTE.Suggest.Palette.Base.prototype.insertSelectedText = function(text){
+        //Get index and length at the beginning of the selected part.
+        var index  = this.palette().selectionStart;
+        var length = this.palette().selectionEnd - index;
+
+        //Remove already inputed characters.
+        text = this.removeInputedCharacters(text);
+
+        //Insert.
+        this.palette().value = this.palette().value.substr(0, index) +
+          text + this.palette().value.substr(index + length);
+
+        //Move the caret position to the end of the inserted character.
+        this.palette().focus();
+        var newCaretPosition = index + text.length;
+        this.palette().setSelectionRange(newCaretPosition, newCaretPosition);
+    };
+
+    NTMO.DTE.Suggest.Palette.Base.prototype.addEventListenerToSelectBox = function () {
+        this.selectBox().addEventListener('keydown', function(e) {
+            if(e.keyCode === 13){//Enter
+                this.insertSelectedItem();
+                NTMO.DTE.Suggest.Palette.Manager.disposeSuggest();
+                e.preventDefault();
+                return;
+            }
+
+            //If state is keep or dispose, should prevent default event.
+            var state = NTMO.DTE.Suggest.Palette.Manager.tryToShowSuggest(e.keyCode, e.shiftKey);
+            switch(state){
+                case 'propagate':
+                case 'dispose':
+                    e.preventDefault();
+                    break;
+            }
+        }.bind(this), false);
+    };
+
+    NTMO.DTE.Suggest.Palette.Base.prototype.insertSelectedItem = function () {
+        var text = this.selectBox().value;
+        this.insertSelectedText(text);
+    };
+
+    NTMO.DTE.Suggest.Palette.Base.prototype.removeInputedCharacters = function (text) {
+        //Initialize.
+        var index     = this.getIndexUpToStartKey();
+        var length    = text.length;
+
+        //Slice character.
+        text = text.slice(index+1, length);
+        return text;
+    };
+
+    NTMO.DTE.Suggest.Palette.Base.prototype.getIndexUpToStartKey = function () {
+        var maxCheckedNumber = 200;
+        var character        = this.getStartKey();
+        var index            = 0;
+        while(this.getBeforeCharacter(index) !== character){
+            index++;
+            if(index > maxCheckedNumber){
+                throw new Error('Error! Check removeInputedCharacters().');
+            }
+        }
+
+        return index;
+    };
+
+    NTMO.DTE.Suggest.Palette.Base.prototype.getBeforeCharacter = function (num) {
+        var index  = this.palette().selectionStart - num;
+        return this.palette().value.substring(index-1, index);
+    };
+
+    NTMO.DTE.Suggest.Palette.Base.prototype.getCurrentCaret = function () {
+        return this.palette().selectionStart;
+    };
+
+    NTMO.DTE.Suggest.Palette.Base.prototype.getCharactersToCaret = function () {
+        return this.palette().value.substring(0, this.getCurrentCaret());
+    };
+
+    NTMO.DTE.Suggest.Palette.Base.prototype.createDummyDivArea = function () {
+        if(NTMO.DTE.Suggest.Palette.Manager.isCreatedDummyDiv()){
+            //When DummyDiv is created already, skip this sequence.
+            return;
+        }
+        
+        var i,
+        div   = document.createElement('div'),
+        list  = ['border-bottom-width', 'border-left-width', 'border-right-width',
+                 'border-top-width', 'font-family', 'font-size', 'font-style',
+                 'font-variant', 'font-weight', 'height', 'letter-spacing',
+                 'word-spacing', 'line-height', 'padding-bottom', 'padding-left',
+                 'padding-right', 'padding-top', 'text-decoration', 'width'];
+    
+        //Initialize.
+        div.style.position = 'absolute';
+        div.style.top      = 0;
+        div.style.left     = -9999;
+        
+        //Copy from palette.
+        for (i = 0; i < list.length; i++) {
+            div.style[list[i]] = this.palette().style[list[i]];
+        }
+        
+        //AppenChild.
+        document.body.appendChild(div);
+
+        //Set.
+        NTMO.DTE.Suggest.Palette.Manager.dummyDiv = div;
+        this.dummyDiv = div;
+    };
+
+    NTMO.DTE.Suggest.Palette.Base.prototype.getDummyDiv = function () {
+        return this.dummyDiv;
+    };
+
+    NTMO.DTE.Suggest.Palette.Base.prototype.calculateCaretPos = function () {
+        //Create span.
+        var span = document.createElement('span');
+        span.innerHTML       = '&nbsp;';
+
+        //Settings.
+        this.dummyDiv.textContent = this.getCharactersToCaret();
+        this.dummyDiv.scrollTop = this.dummyDiv.scrollHeight;
+        this.dummyDiv.appendChild(span);
+
+        //Get span position.
+        var positionX  = this.dummyDiv.clientWidth/6;////HACK:FOOOOOOOOOOL!!!
+        var positionY  = this.dummyDiv.clientHeight - 16;////HACK:FOOOOOOOOOOL!!!
+
+        return {x:positionX, y:positionY};
+    };
+
+    NTMO.DTE.Suggest.Palette.Base.prototype.getStartKey = function () {
+        return this._startKey;
+    };
+
+    NTMO.DTE.Suggest.Palette.Base.prototype.getInputedCharacters = function () {
+        var currenCaret      = this.getCurrentCaret();
+        var startKeyIndex    = this.getIndexUpToStartKey();
+        var allText          = this.palette().value;
+        var inputedChars     = allText.slice(currenCaret - (startKeyIndex+1), currenCaret);
+
+        return inputedChars;
+    };
+
+//=============================================================================
+// NTMO.DTE.Suggest.Palette.Command
+//  Suggest function for Command Palette.Especially, Global PaletteCommand.
+//=============================================================================
+    NTMO.DTE.Suggest.Palette.Command = function(){
+        this.initialize.apply(this, arguments);
+    };
+
+    NTMO.DTE.Suggest.Palette.Command.prototype             = Object.create(NTMO.DTE.Suggest.Palette.Base.prototype);
+    NTMO.DTE.Suggest.Palette.Command.prototype.constructor = NTMO.DTE.Suggest.Palette.Command;
+
+    NTMO.DTE.Suggest.Palette.Command.prototype.initialize = function(list, key){
+        list = this.list;
+        key  = ' ';//Space
+
+        NTMO.DTE.Suggest.Palette.Base.prototype.initialize.call(this, list, key);
+    };
+
+    NTMO.DTE.Suggest.Palette.Command.prototype.isRequiredCommand = function(){
+        var isStatWithCommand = this.palette().value.startsWith('->') || this.palette().value.startsWith('=>');
+        var containsSpace     = /\s/.test(this.palette().value);
+        return isStatWithCommand && !containsSpace;
+    };
+
+    NTMO.DTE.Suggest.Palette.Command.prototype.insertSelectedText = function(text){
+        text = ' ' + text;
+
+        NTMO.DTE.Suggest.Palette.Base.prototype.insertSelectedText.call(this, text);
+    };
+
+    NTMO.DTE.Suggest.Palette.Command.prototype.getInputedCharacters = function () {
+        var result = NTMO.DTE.Suggest.Palette.Base.prototype.getInputedCharacters.call(this);
+        
+        //Trim space.
+        return result.trim();
+    };
+
+    NTMO.DTE.Suggest.Palette.Command.prototype.list = {
+        save : 'save',
+        exe  : 'exe',
+        bind : 'bind',
+        com  : 'com',
+        e    : 'e',
+        memo : 'memo'
+    };
+
+//=============================================================================
+// NTMO.DTE.Suggest.Palette.Global
+//  Suggest function for Command Palette.Especially, Global variable.
+//=============================================================================
+    NTMO.DTE.Suggest.Palette.Global = function(){
+        this.initialize.apply(this, arguments);
+    };
+
+    NTMO.DTE.Suggest.Palette.Global.prototype             = Object.create(NTMO.DTE.Suggest.Palette.Base.prototype);
+    NTMO.DTE.Suggest.Palette.Global.prototype.constructor = NTMO.DTE.Suggest.Palette.Global;
+
+    NTMO.DTE.Suggest.Palette.Global.prototype.initialize = function(list, key){
+        list = NTMO.DTE.Suggest.Global.list;
+        key  = '$';
+
+        NTMO.DTE.Suggest.Palette.Base.prototype.initialize.call(this, list, key);
+    };
+
+    NTMO.DTE.Suggest.Palette.Global.prototype.narrowList = function(){
+        //Get inputed characters.
+        var inputedChars = '\\' + this.getInputedCharacters();//Escape
+        var options      = this.selectBox().options;
+        var length       = options.length;
+        var reg          = new RegExp('^' + inputedChars);
+
+        //Foreach.But options is not array even if loolks like array.So I use normal "for loop".
+        for(var i = length-1; i >= 0; i--){
+            if(!reg.test(options[i].value)){//When Does not match inputed chars, delete that option.
+                console.log(options[i].value + ':' +inputedChars);
+                this.selectBox().removeChild(options[i]);
+                this.selectBox().selectedIndex = 0;
+            }
+        }
+
+        //If options is empty, dispose suggest.
+        if(options.length <= 0){
+            NTMO.DTE.Suggest.Palette.Manager.disposeSuggest();
+        }
     };
 
 //=============================================================================
@@ -1815,7 +2350,7 @@
         this.renderScene();
         this.requestUpdate();
 
-        NTMO.DTE_Base.getTextBox().focus();
+        NTMO.DTE_Base.modifyFocus();
     };
 
     var _SceneManager_initialize = SceneManager.initialize;
@@ -1830,6 +2365,9 @@
                 var callDebugWindow = setInterval( function() {
                     if (DataManager.isDatabaseLoaded() && SceneManager.isCurrentSceneStarted()) {
                         clearInterval(callDebugWindow);
+                        if('MadeWithMV' in Liquidize){//For resolving conflict.MadeWithMV.
+                            DataManager.setupNewGame();
+                        }
                         NTMO.DTE_Base.openDebugWindow();
                         console.log('Debug window is opend.');
                     }
@@ -1880,7 +2418,6 @@
     var _DataManager_createGameObjects = DataManager.createGameObjects;
     DataManager.createGameObjects = function() {
         _DataManager_createGameObjects.call(this);
-        
         NTMO.DTE_Base.reOpenDebugWindow();
     };
 
