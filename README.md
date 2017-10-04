@@ -1,4 +1,4 @@
-RMMV plugins
+RMMV Plugins
 ====
 ![profile](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/807893b95fb1ecfb1be53bd9f602bd1c5d61d19e/img/profile.jpg "profile")  
 I bundled what I think is particularly useful among plugins I created.  
@@ -27,7 +27,7 @@ All plugins are released under the MIT License, see [LICENSE.txt](https://github
 All plugins are free for both commercial and non-commercial use.  
 You may edit the source code to suit your needs, so long as you don't claim the source code belongs to you. 
 
-## Contact information
+## Contact Information
 Tsumio  
 [GitHub] : <https://github.com/Tsumio/rmmv-plugins>  
 [Blog]   : <http://ntgame.wpblog.jp/>  
