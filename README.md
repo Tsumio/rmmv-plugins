@@ -2,7 +2,7 @@ RMMV plugins
 ====
 ![profile](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/807893b95fb1ecfb1be53bd9f602bd1c5d61d19e/img/profile.jpg "profile")  
 I bundled what I think is particularly useful among plugins I created.  
-Hope these plugins help, and enjoy creating great game!
+Hope these plugins help, and enjoy creating great games!
 
 ## Requirement
 These plugins are for RPG Maker MV.
