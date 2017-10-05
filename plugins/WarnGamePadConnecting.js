@@ -6,6 +6,7 @@
 // http://opensource.org/licenses/mit-license.php
 // ----------------------------------------------------------------------------
 // Version
+// 1.0.1 2017/10/05 ブラウザ版にも対応。
 // 1.0.0 2017/10/05 公開。
 // ----------------------------------------------------------------------------
 // [GitHub] : https://github.com/Tsumio/rmmv-plugins
@@ -47,8 +48,10 @@
  * As a rule, you will need to enter some kind of button to recognize the game pad.
  * Please note that it is not recognized at startup.
  * 
- * But, I don't check the operation except for Windows 10.
- * I am waiting for reports such as whether it will work on the browser.
+ * This plugin assumes a local environment, it works to some extent also in a browser environment.
+ * For example, in case of chrome, even if you press F5 key, message will not be displayed, but message will be displayed when physically disconnected.
+ * Also, it seemed that display of alert was blocked at RPGatsumaru.
+ * Please acknowledge that in other browser environments there may be a problem.
  * 
  * ----reason why setting two message----
  * The reason for setting two types of sentences in the plugin parameters is as follows.
@@ -64,6 +67,7 @@
  * There is no plugin command.
  * 
  * ----change log---
+ * 1.0.1 2017/10/05 Supports browser version.
  * 1.0.0 2017/10/05 Release.
  * 
  * ----remarks----
@@ -107,8 +111,10 @@
  * 通常、何かしらのボタンを入力しなければゲームパッドは認識されません。
  * つまり起動時に何もしなければゲームパッドは認識されていません。ご注意ください。
  * 
- * なお、当プラグインはWindows10のローカル環境以外での動作確認をしていません。
- * ブラウザ上で動作するかなどの報告をお待ちしています。
+ * 当プラグインはローカル環境を想定していますが、ブラウザ環境でもある程度は動作します。
+ * 例えばクロームの場合、F5キーを押してもメッセージは表示されませんが、物理的な切断時にはメッセージが表示されます。
+ * また、RPGアツマールではアラートの表示がブロックされるようでした。
+ * 他にもブラウザ環境では問題があるかもしれませんので、その点ご了承ください。
  * 
  * 【メッセージをわけている理由】
  * プラグインパラメーターに二種類の文章を設定する理由は以下の通りです。
@@ -123,6 +129,7 @@
  * 
  * 
  * 【更新履歴】
+ * 1.0.1 2017/10/05 ブラウザ版にも対応。
  * 1.0.0 2017/10/05 公開。
  * 
  * 【備考】
@@ -172,26 +179,19 @@
 //// Display disconnecting alert.
 ////=============================================================================
     function alertDisconnectingError(){
-        alert(param.disconnectingMessage);
+        window.alert(param.disconnectingMessage);
     }
 
     function alertReloadedMessage(){
-        alert(param.reloadedMessage);
+        window.alert(param.reloadedMessage);
     }
 
-////=============================================================================
-//// SceneManager
-////  Add a original event listener.
-////=============================================================================
-    var _SceneManager_initialize = SceneManager.initialize;
-    SceneManager.initialize        = function() {
-        _SceneManager_initialize.apply(this, arguments);
-
+    function addEventListenerForNwjs(){
         var gui = require('nw.gui');
         var win = gui.Window.get();
         win.on('loaded', function(){
 
-            window.addEventListener("gamepaddisconnected", function(e) {
+            window.addEventListener('gamepaddisconnected', function(e) {
                 alertDisconnectingError();
             });
 
@@ -202,6 +202,54 @@
                 }
             });
         });
+    }
+
+    function addEventListenerForOthers() {
+        window.addEventListener('gamepaddisconnected', function(e) {
+            alertDisconnectingError();
+        });
+
+        var isChrome = (ua.indexOf('chrome') > -1) && (ua.indexOf('edge') == -1);
+        if(!isChrome){
+            window.addEventListener("beforeunload", function (e) {
+                if (navigator.getGamepads) {
+                    if(navigator.getGamepads()[0]){
+                            var confirmationMessage = param.reloadedMessage;
+                            e.returnValue = confirmationMessage;     // Gecko, Trident, Chrome 34+
+                            return confirmationMessage;              // Gecko, WebKit, Chrome <34
+                    }
+                }
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", function(event) {
+            document.addEventListener("keydown" , function(e){
+                if(e.keyCode === 116){//F5
+                    if (navigator.getGamepads) {
+                        if(navigator.getGamepads()[0]){
+                            alertReloadedMessage();
+                        }
+                    }
+                }
+            });
+        });
+    }
+
+    //Execute.
+    if(!Utils.isNwjs()){
+        addEventListenerForOthers();
+    }
+
+////=============================================================================
+//// SceneManager
+////  Add a original event listener.
+////=============================================================================
+    var _SceneManager_initialize = SceneManager.initialize;
+    SceneManager.initialize        = function() {
+        _SceneManager_initialize.apply(this, arguments);
+        if(Utils.isNwjs()){
+            addEventListenerForNwjs();
+        }
     };
 
 })();
