@@ -17,6 +17,7 @@ Read each JS file.It contains usage.
 | [DebugToolEx](https://github.com/Tsumio/rmmv-plugins/raw/master/DebugToolEx.zip)          | This plugin helps to do the debugging.               | [Official Forum](https://forum.tkool.jp/index.php?threads/%E3%80%90%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3%E3%80%91%E3%83%87%E3%83%90%E3%83%83%E3%82%B0%E6%94%AF%E6%8F%B4.418/) (Japanese) |
 | [ChoiceListBugFix](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/ChoiceListBugFix.js)          | This plugin fix a bug in choice list.               | N/A |
 | [OperateDearFollowers](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/OperateDearFollowers.js)          | This plugin enables the operation of the follower.               | [Official Forum](https://forum.tkool.jp/index.php?threads/%E3%80%90%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3%E3%80%91%E3%83%95%E3%82%A9%E3%83%AD%E3%83%AF%E3%83%BC%E3%82%92%E6%93%8D%E4%BD%9C.405/) (Japanese) |
+| [WarnGamePadConnecting](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/WarnGamePadConnecting.js)          | This plugin report the gamepad has been disconnected.               | N/A |
 
 If you want to know all my plugin, see [the blog](http://ntgame.wpblog.jp/page-139/) (Japanese).
 
@@ -52,6 +53,7 @@ RPGツクールMV上での動作を前提としています。
 | [DebugToolEx](https://github.com/Tsumio/rmmv-plugins/raw/master/DebugToolEx.zip)          | デバッグを支援します。               | [公式フォーラム](https://forum.tkool.jp/index.php?threads/%E3%80%90%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3%E3%80%91%E3%83%87%E3%83%90%E3%83%83%E3%82%B0%E6%94%AF%E6%8F%B4.418/) |
 | [ChoiceListBugFix](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/ChoiceListBugFix.js)          | 選択肢のバグ修正用プラグインです。               | なし |
 | [OperateDearFollowers](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/OperateDearFollowers.js)          | フォロワーを操作するプラグインです。               | [公式フォーラム](https://forum.tkool.jp/index.php?threads/%E3%80%90%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3%E3%80%91%E3%83%95%E3%82%A9%E3%83%AD%E3%83%AF%E3%83%BC%E3%82%92%E6%93%8D%E4%BD%9C.405/) |
+| [WarnGamePadConnecting](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/WarnGamePadConnecting.js)          | ゲームパッドが切断されたことを報告するプラグインです。               | なし |
 
 GitHubに公開していないものを含む全てのプラグインの一覧は[ブログ](http://ntgame.wpblog.jp/page-139/)をご覧ください。
 
