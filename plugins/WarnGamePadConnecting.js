@@ -21,10 +21,16 @@
  * @desc 
  * @default 
  * 
- * @param Message
+ * @param DisconnectingMessage
  * @type text
  * @desc This message is displayed when the gamepad is disconnected.
  * @default Gamepad is disconnected.Please reconnect.
+ * 
+ * @param ReloadedMessage
+ * @type text
+ * @desc This message is displayed when the window is reloaded.
+ * @default Gamepad is probably disconnected.Please reconnect if necessary.
+ * 
  * 
  * 
  * @help This plugin report the gamepad has been disconnected.
@@ -43,6 +49,16 @@
  * 
  * But, I don't check the operation except for Windows 10.
  * I am waiting for reports such as whether it will work on the browser.
+ * 
+ * ----reason why setting two message----
+ * The reason for setting two types of sentences in the plugin parameters is as follows.
+ * 
+ * When physically disconnected, it can be seen that it is disconnected certainly.
+ * So "DisconnectingMessage" is displayed.
+ * 
+ * When reloading with F5 key etc., there may be cases that it is not disconnected.
+ * It is probably depending on the environment (but I have not confirmed that.).
+ * Therefore, "ReloadedMessage" is displayed.
  * 
  * ----plugin command----
  * There is no plugin command.
@@ -67,11 +83,15 @@
  * @desc 
  * @default 
  * 
- * @param メッセージ
+ * @param 切断メッセージ
  * @type text
  * @desc ゲームパッドが切断されたときに表示するメッセージ内容です。
  * @default ゲームパッドが切断されました。再接続してください。
  * 
+ * @param リロード時のメッセージ
+ * @type text
+ * @desc ゲームがF5キーなどによってリロードされたときに表示するメッセージです。
+ * @default ゲームパッドが切断された可能性があります。必要があれば再接続してください。
  * 
  * @help ゲームパッドが切断されたことを報告するプラグインです。
  * 
@@ -85,10 +105,18 @@
  * 
  * ゲームパッドが接続されていない状態（認識されていない状態）の場合はメッセージを表示しません。
  * 通常、何かしらのボタンを入力しなければゲームパッドは認識されません。
- * つまり起動時は認識されていませんのでご注意ください。
+ * つまり起動時に何もしなければゲームパッドは認識されていません。ご注意ください。
  * 
  * なお、当プラグインはWindows10のローカル環境以外での動作確認をしていません。
  * ブラウザ上で動作するかなどの報告をお待ちしています。
+ * 
+ * 【メッセージをわけている理由】
+ * プラグインパラメーターに二種類の文章を設定する理由は以下の通りです。
+ * 
+ * 物理的に切断された場合、確実に切断されているとわかるので「切断メッセージ」を表示させています。
+ * 
+ * F5キーなどでリロードされた場合、環境によっては切断されていない場合があるかもしれません（未確認）。
+ * したがって「リロード時のメッセージ」を表示させています。
  * 
  * 【プラグインコマンド】
  * このプラグインにプラグインコマンドはありません。
@@ -137,13 +165,18 @@
 ////=============================================================================
     var param         = {};
     //Basic Stteings
-    param.message     = getParamString(['Message', 'メッセージ']);
+    param.disconnectingMessage     = getParamString(['DisconnectingMessage', '切断メッセージ']);
+    param.reloadedMessage          = getParamString(['ReloadedMessage', 'リロード時のメッセージ']);
 
 ////=============================================================================
 //// Display disconnecting alert.
 ////=============================================================================
     function alertDisconnectingError(){
-        alert(param.message);
+        alert(param.disconnectingMessage);
+    }
+
+    function alertReloadedMessage(){
+        alert(param.reloadedMessage);
     }
 
 ////=============================================================================
@@ -165,7 +198,7 @@
             //Emitted when window reloaded(F5).
             win.on('loading', function() {
                 if(navigator.getGamepads()[0]){
-                    alertDisconnectingError();
+                    alertReloadedMessage();
                 }
             });
         });
