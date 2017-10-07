@@ -6,6 +6,7 @@
 // http://opensource.org/licenses/mit-license.php
 // ----------------------------------------------------------------------------
 // Version
+// 1.0.1 2017/10/07 ゲームパッドの接続を監視する機能を追加。入力補完機能の調整と追加。
 // 1.0.0 2017/10/04 コマンドパレットに入力補完機能を追加。MadeWithMV.jsとの衝突を解消。
 // 0.9.4 2017/10/01 説明を少し変更。
 // 0.9.3 2017/09/30 GitHubのアドレスを追加。
@@ -105,7 +106,7 @@
  * The command needs to be written on the first line.
  * In addition, although the explanation uses "double quotation" for visibility, it is unnecessary when actually entering on the command palette.
  * 
- * Palette commands are distinguish uppercase and lowercase.
+ * All commands are distinguish uppercase and lowercase.
  * And separate each word with a space.
  * Please make sure.
  * 
@@ -210,9 +211,10 @@
  * Especially, "DevToolsManage.js" is very awesome plugin, so please try using it.
  * 
  * ----change log---
- * 1.0.0 2017/10/04 Add autocomplete function to command palette.Resolved conflicts with MadeWithMV.js.
+ * 1.0.1 2017/10/07 Added function to monitor connection of gamepad.Added and adjusted autocomplete list.
+ * 1.0.0 2017/10/04 Added autocomplete function to command palette.Resolved conflicts with MadeWithMV.js.
  * 0.9.4 2017/10/01 Alter description.
- * 0.9.3 2017/09/30 Add GitHub address.
+ * 0.9.3 2017/09/30 Added GitHub address.
  * 0.9.2 2017/09/21 Adjust error output in variable input field.
  * 0.9.1 2017/09/21 Bug fix.Variable was recognized as string even if "#" was specified in the variable input field.
  * 0.9.0 2017/09/20 Bug fix.Added Plugin Manager Function.Improved autocomplete function.Improved design.
@@ -314,7 +316,7 @@
  * コマンドは一行目に書く必要があり、二行目以降は認識しません。
  * また、説明上では視認性のためにカギカッコを使用していますが、実際にコマンドパレットに入力する際にはカギカッコの入力は不要です。
  * 
- * 全てのパレットコマンドは大文字と小文字を区別します。
+ * 全てのコマンドは大文字と小文字を区別します。
  * 各単語の間は半角スペースで区切ります（全角では認識しません）。
  * 間違わないように気をつけてください。
  * 
@@ -420,6 +422,7 @@
  * 特に総合開発支援プラグインは多機能なので、ぜひ一度導入してみてください。
  * 
  * 【更新履歴】
+ * 1.0.1 2017/10/07 ゲームパッドの接続を監視する機能を追加。入力補完機能の調整と追加。
  * 1.0.0 2017/10/04 コマンドパレットに入力補完機能を追加。MadeWithMV.jsとの衝突を解消。
  * 0.9.4 2017/10/01 説明を少し変更。
  * 0.9.3 2017/09/30 GitHubのアドレスを追加。
@@ -1272,6 +1275,27 @@ var Liquidize = Liquidize || {};//For resolving conflict.MadeWithMV.
             win.on('loading', function() {
                 this.disposeDebugWindow();
             }.bind(this));
+            
+            window.addEventListener("gamepadconnected", function(e) {
+                var gp = navigator.getGamepads()[0];
+                if($dataSystem.locale.match(/^ja/)){
+                    console.warn("%d番：ゲームパッドが接続されました。詳細： %s. %d buttons, %d axes.",
+                    gp.index, gp.id,
+                    gp.buttons.length, gp.axes.length);
+                }else{
+                    console.warn("Gamepad connected at index %d: %s. %d buttons, %d axes.",
+                    gp.index, gp.id,
+                    gp.buttons.length, gp.axes.length);
+                }
+            });
+
+            window.addEventListener("gamepaddisconnected", function(e) {
+                if($dataSystem.locale.match(/^ja/)){
+                    console.warn('ゲームパッドが切断されました。');
+                }else{
+                    console.warn('Gamepad is disconnected.');
+                }
+            });
 
             //EOF addEventListener().
         }.bind(this));
@@ -1588,7 +1612,10 @@ var Liquidize = Liquidize || {};//For resolving conflict.MadeWithMV.
         }
         switch(this.key){
             case 'dot':
-                //this.suggest = new NTMO.DTE.Suggest.Palette.Base(NTMO.DTE.Suggest.Global.list);
+                this.suggest = new NTMO.DTE.Suggest.Palette.Method();
+                if(this.suggest.isListNull()){
+                    this.disposeSuggest();
+                }
                 break;
             case 'dollar':
                 this.suggest = new NTMO.DTE.Suggest.Palette.Global();
@@ -1844,6 +1871,13 @@ var Liquidize = Liquidize || {};//For resolving conflict.MadeWithMV.
                 return;
             }
 
+            //Cancel when back space or Esc key are pressed.
+            if(e.keyCode === 27 || e.keyCode === 8){//Esc or BS
+                NTMO.DTE.Suggest.Palette.Manager.disposeSuggest();
+                e.preventDefault();
+                return;
+            }
+
             //If state is keep or dispose, should prevent default event.
             var state = NTMO.DTE.Suggest.Palette.Manager.tryToShowSuggest(e.keyCode, e.shiftKey);
             switch(state){
@@ -2046,6 +2080,892 @@ var Liquidize = Liquidize || {};//For resolving conflict.MadeWithMV.
         if(options.length <= 0){
             NTMO.DTE.Suggest.Palette.Manager.disposeSuggest();
         }
+    };
+
+//=============================================================================
+// NTMO.DTE.Suggest.Palette.Method
+//  Suggest function for Command Palette.Especially, methods(dot).
+//=============================================================================
+    NTMO.DTE.Suggest.Palette.Method = function(){
+        this.initialize.apply(this, arguments);
+    };
+
+    NTMO.DTE.Suggest.Palette.Method.prototype             = Object.create(NTMO.DTE.Suggest.Palette.Base.prototype);
+    NTMO.DTE.Suggest.Palette.Method.prototype.constructor = NTMO.DTE.Suggest.Palette.Method;
+
+    //HACK:FOOOOOOOOOOL
+    NTMO.DTE.Suggest.Palette.Method.prototype.initialize = function(list, key){
+        //Initialize.
+        key  = '.';//HACK:FOOOOOOOOOOL
+        this._palette    = null;
+        this._selectBox  = null;
+        this._startKey   = key;
+        this.dummyDiv    = NTMO.DTE.Suggest.Palette.Manager.dummyDiv;
+        this._isListNull = false;
+
+        //Create.
+        this.setPalette();
+        this.createDummyDivArea();
+        this.createSelectBox();
+        list = this.getAppropriateList();//HACK:FOOOOOOOOOOL
+
+        //Check null.
+        if(list === null){
+            this._isListNull = true;
+        }
+
+        //Set initial index.
+        this.setItem(list);
+        this.selectBox().selectedIndex = 0;
+    };
+
+    NTMO.DTE.Suggest.Palette.Method.prototype.isListNull = function(){
+        return this._isListNull;
+    };
+
+    NTMO.DTE.Suggest.Palette.Method.prototype.narrowList = function(){
+        //Get inputed characters.
+        var inputedChars = '\\' + this.getInputedCharacters();//Escape
+        var options      = this.selectBox().options;
+        var length       = options.length;
+        var reg          = new RegExp('^' + inputedChars);
+
+        //Foreach.But options is not array even if loolks like array.So I use normal "for loop".
+        for(var i = length-1; i >= 0; i--){
+            if(!reg.test(options[i].value)){//When Does not match inputed chars, delete that option.
+                this.selectBox().removeChild(options[i]);
+                this.selectBox().selectedIndex = 0;
+            }
+        }
+
+        //If options is empty, dispose suggest.
+        if(options.length <= 0){
+            NTMO.DTE.Suggest.Palette.Manager.disposeSuggest();
+        }
+    };
+
+    NTMO.DTE.Suggest.Palette.Method.prototype.getInputedGlobalName = function () {
+        var currenCaret         = this.getCurrentCaret();
+        var globalNameIndex     = this.getIndexUpToGlobalName();
+        var allText             = this.palette().value;
+        var inputedGlobalName   = allText.slice(currenCaret - (globalNameIndex+1), currenCaret);
+
+        return inputedGlobalName;
+    };
+
+    NTMO.DTE.Suggest.Palette.Method.prototype.getIndexUpToGlobalName = function () {
+        var maxCheckedNumber = 200;
+        var character        = '$';//This means global.
+        var index            = 0;
+        while(this.getBeforeCharacter(index) !== character){
+            index++;
+            if(index > maxCheckedNumber){
+                console.warn('Can not find global name.');
+                break;
+            }
+        }
+
+        return index;
+    };
+
+    NTMO.DTE.Suggest.Palette.Method.prototype.getAppropriateList = function(){
+        //Specify a method "Get the character up to the front $ mark and check what it is a global variable"
+        //After obtaining the global variable name, set the corresponding list.
+        var inputedGlobalName = this.getInputedGlobalName();
+        inputedGlobalName     = inputedGlobalName.replace('$', '');
+        var searchResult      = this.tryToSearchList(inputedGlobalName);
+        
+        if(searchResult === null){
+            return null;
+        }
+
+        return this[searchResult + 'List'];
+    };
+
+    //If there is no search result, returns null. 
+    NTMO.DTE.Suggest.Palette.Method.prototype.tryToSearchList = function(inputedName){
+        //Search.
+        for(var element of this.allList){
+            if(inputedName === element){
+                return inputedName;
+            }
+        }
+
+        return null;
+    };
+
+    NTMO.DTE.Suggest.Palette.Method.prototype.allList = [
+        'dataActors',
+        'dataAnimations',
+        'dataArmors',
+        'dataClasses',
+        'dataCommonEvents',
+        'dataEnemies',
+        'dataItems',
+        'dataMap',
+        'dataMapInfos',
+        'dataSkills',
+        'dataStates',
+        'dataSystem',
+        'dataTilesets',
+        'dataTroops',
+        'dataWeapons',
+        'gameActors',
+        'gameMap',
+        'gameMessage',
+        'gameParty',
+        'gamePlayer',
+        'gameScreen',
+        'gameSelfSwitches',
+        'gameSwitches',
+        'gameSystem',
+        'gameTemp',
+        'gameTimer',
+        'gameTroop',
+        'gameVariables'
+    ];
+
+//=============================================================================
+// NTMO.DTE.Suggest.Palette.Method
+//  The list of methods.
+//=============================================================================
+    /*Create a list for each global variable
+    Make the list read into getAppropriateList().*/
+    
+    NTMO.DTE.Suggest.Palette.Method.prototype.dataArrayList = {
+        '.clone()' : 'clone()',
+        '.concat()' : 'concat()',
+        '.contains()' : 'contains()',
+        '.copyWithin()': 'copyWithin()',
+        '.entries()' : 'entries()',
+        '.equals()' : 'equals()',
+        '.every()' : 'every()',
+        '.fill()' : 'fill()',
+        '.filter()' : 'filter()',
+        '.find()' : 'find()',
+        '.findIndex()' : 'findIndex()',
+        '.forEach()' : 'forEach()',
+        '.indexOf()' : 'indexOf()',
+        '.join()' : 'join()',
+        '.keys()' : 'keys()',
+        '.lastIndexOf()' : 'lastIndexOf()',
+        '.length' : 'length',
+        '.map()' : 'map()',
+        '.pop()' : 'pop()',
+        '.push()' : 'push()',
+        '.reduce()' : 'reduce()',
+        '.reduceRight()' : 'reduceRight()',
+        '.reverse()' : 'reverse()',
+        '.shift()' : 'shift()',
+        '.slice()' : 'slice()',
+        '.some()' : 'some()',
+        '.sort()' : 'sort()',
+        '.splice()' : 'splice()',
+        '.toLocaleString()' : 'toLocaleString()',
+        '.toString()' : 'toString()',
+        '.unshift()' : 'unshift()',
+        '.values()' : 'values()'
+    };
+
+    NTMO.DTE.Suggest.Palette.Method.prototype.dataActorsList = NTMO.DTE.Suggest.Palette.Method.prototype.dataArrayList;
+
+    NTMO.DTE.Suggest.Palette.Method.prototype.dataAnimationsList = NTMO.DTE.Suggest.Palette.Method.prototype.dataArrayList;
+
+    NTMO.DTE.Suggest.Palette.Method.prototype.dataArmorsList = NTMO.DTE.Suggest.Palette.Method.prototype.dataArrayList;
+
+    NTMO.DTE.Suggest.Palette.Method.prototype.dataClassesList = NTMO.DTE.Suggest.Palette.Method.prototype.dataArrayList;
+
+    NTMO.DTE.Suggest.Palette.Method.prototype.dataCommonEventsList = NTMO.DTE.Suggest.Palette.Method.prototype.dataArrayList;
+
+    NTMO.DTE.Suggest.Palette.Method.prototype.dataEnemiesList = NTMO.DTE.Suggest.Palette.Method.prototype.dataArrayList;
+
+    NTMO.DTE.Suggest.Palette.Method.prototype.dataItemsList = NTMO.DTE.Suggest.Palette.Method.prototype.dataArrayList;
+
+    NTMO.DTE.Suggest.Palette.Method.prototype.dataMapList = {
+        '.autoplayBgm' : 'autoplayBgm',
+        '.autoplayBgs' : 'autoplayBgs',
+        '.battleback1Name' : 'battleback1Name',
+        '.battleback2_name' : 'battleback2_name',
+        '.bgm' : 'bgm',
+        '.bgs' : 'bgs',
+        '.data' : 'data',
+        '.disableDashing' : 'disableDashing',
+        '.displayName' : 'displayName',
+        '.encounterList' : 'encounterList',
+        '.encounterStep' : 'encounterStep',
+        '.events' : 'events',
+        '.height' : 'height',
+        '.meta' : 'meta',
+        '.note' : 'note',
+        '.parallaxLoopX' : 'parallaxLoopX',
+        '.parallaxLoopY' : 'parallaxLoopY',
+        '.parallaxName' : 'parallaxName',
+        '.parallaxShow' : 'parallaxShow',
+        '.parallaxSx' : 'parallaxSx',
+        '.parallaxSy' : 'parallaxSy',
+        '.scrollType' : 'scrollType',
+        '.specifyBattleback' : 'specifyBattleback',
+        '.tilesetId' : 'tilesetId',
+        '.width' : 'width'
+    };
+
+    NTMO.DTE.Suggest.Palette.Method.prototype.dataMapInfosList = NTMO.DTE.Suggest.Palette.Method.prototype.dataArrayList;
+
+    NTMO.DTE.Suggest.Palette.Method.prototype.dataSkillsList = NTMO.DTE.Suggest.Palette.Method.prototype.dataArrayList;
+
+    NTMO.DTE.Suggest.Palette.Method.prototype.dataStatesList = NTMO.DTE.Suggest.Palette.Method.prototype.dataArrayList;
+
+    NTMO.DTE.Suggest.Palette.Method.prototype.dataSystemList = {
+        '.airship' : 'airship',
+        '.armorTypes' : 'armorTypes',
+        '.attackMotions' : 'attackMotions',
+        '.battleback1Name' : 'battleback1Name',
+        '.battleback2Name' : 'battleback2Name',
+        '.battleBgm' : 'battleBgm',
+        '.battleEndMe' : 'battleEndMe',
+        '.battlerHue' : 'battlerHue',
+        '.battlerName' : 'battlerName',
+        '.boat' : 'boat',
+        '.currencyUnit' : 'currencyUnit',
+        '.editMapId' : 'editMapId',
+        '.elements' : 'elements',
+        '.equipTypes' : 'equipTypes',
+        '.gameoverMe' : 'gameoverMe',
+        '.gameTitle' : 'gameTitle',
+        '.locale' : 'locale',
+        '.optDisplayTp' : 'optDisplayTp',
+        '.optDrawTitle' : 'optDrawTitle',
+        '.optExtraExp' : 'optExtraExp',
+        '.optFloorDeath' : 'optFloorDeath',
+        '.optFollowers' : 'optFollowers',
+        '.optSideView' : 'optSideView',
+        '.optSlipDeath' : 'optSlipDeath',
+        '.optTransparent' : 'optTransparent',
+        '.partyMembers' : 'partyMembers',
+        '.ship' : 'ship',
+        '.skillTypes' : 'skillTypes',
+        '.sounds' : 'sounds',
+        '.startMapId' : 'startMapId',
+        '.startX' : 'startX',
+        '.startY' : 'startY',
+        '.switches' : 'switches',
+        '.terms' : 'terms',
+        '.testBattlers' : 'testBattlers',
+        '.testTroopId' : 'testTroopId',
+        '.title1Name' : 'title1Name',
+        '.title2Name' : 'title2Name',
+        '.titleBgm' : 'titleBgm',
+        '.variables' : 'variables',
+        '.versionId' : 'versionId',
+        '.weaponTypes' : 'weaponTypes',
+        '.windowTone' : 'windowTone'
+    };
+
+    NTMO.DTE.Suggest.Palette.Method.prototype.dataTilesetsList = NTMO.DTE.Suggest.Palette.Method.prototype.dataArrayList;
+
+    NTMO.DTE.Suggest.Palette.Method.prototype.dataTroopsList = NTMO.DTE.Suggest.Palette.Method.prototype.dataArrayList;
+
+    NTMO.DTE.Suggest.Palette.Method.prototype.dataWeaponsList = NTMO.DTE.Suggest.Palette.Method.prototype.dataArrayList;
+
+    NTMO.DTE.Suggest.Palette.Method.prototype.gameActorsList = {
+        '.actor()' : 'actor()'
+    };
+
+    NTMO.DTE.Suggest.Palette.Method.prototype.gameMapList = {
+        '.adjustX()' : 'adjustX()',
+        '.adjustY()' : 'adjustY()',
+        '.allTiles()' : 'allTiles()',
+        '.autoplay()' : 'autoplay()',
+        '.autotileType()' : 'autotileType()',
+        '.battleback1Name()' : 'battleback1Name()',
+        '.battleback2Name()' : 'battleback2Name()',
+        '.boat()' : 'boat()',
+        '.canvasToMapX()' : 'canvasToMapX()',
+        '.canvasToMapY()' : 'canvasToMapY()',
+        '.changeBattleback()' : 'changeBattleback()',
+        '.changeParallax()' : 'changeParallax()',
+        '.changeTileset()' : 'changeTileset()',
+        '.checkLayeredTilesFlags()' : 'checkLayeredTilesFlags()',
+        '.checkPassage()' : 'checkPassage()',
+        '.createVehicles()' : 'createVehicles()',
+        '.data()' : 'data()',
+        '.deltaX()' : 'deltaX()',
+        '.deltaY()' : 'deltaY()',
+        '.disableNameDisplay()' : 'disableNameDisplay()',
+        '.displayName()' : 'displayName()',
+        '.displayX()' : 'displayX()',
+        '.displayY()' : 'displayY()',
+        '.distance()' : 'distance()',
+        '.doScroll()' : 'doScroll()',
+        '.enableNameDisplay()' : 'enableNameDisplay()',
+        '.encounterList()' : 'encounterList()',
+        '.encounterStep()' : 'encounterStep()',
+        '.eraseEvent()' : 'eraseEvent()',
+        '.event()' : 'event()',
+        '.eventIdXy()' : 'eventIdXy()',
+        '.events()' : 'events()',
+        '.eventsXy()' : 'eventsXy()',
+        '.eventsXyNt()' : 'eventsXyNt()',
+        '.height()' : 'height()',
+        '.isAirshipLandOk()' : 'isAirshipLandOk()',
+        '.isAnyEventStarting()' : 'isAnyEventStarting()',
+        '.isBoatPassable()' : 'isBoatPassable()',
+        '.isBush()' : 'isBush()',
+        '.isCounter()' : 'isCounter()',
+        '.isDamageFloor()' : 'isDamageFloor()',
+        '.isDashDisabled()' : 'isDashDisabled()',
+        '.isEventRunning()' : 'isEventRunning()',
+        '.isLadder()' : 'isLadder()',
+        '.isLoopHorizontal()' : 'isLoopHorizontal()',
+        '.isLoopVertical()' : 'isLoopVertical()',
+        '.isNameDisplayEnabled()' : 'isNameDisplayEnabled()',
+        '.isOverworld()' : 'isOverworld()',
+        '.isPassable()' : 'isPassable()',
+        '.isScrolling()' : 'isScrolling()',
+        '.isShipPassable()' : 'isShipPassable()',
+        '.isValid()' : 'isValid()',
+        '.layeredTiles()' : 'layeredTiles()',
+        '.mapId()' : 'mapId()',
+        '.parallaxName()' : 'parallaxName()',
+        '.parallelCommonEvents()' : 'parallelCommonEvents()',
+        '.refereshVehicles()' : 'refereshVehicles()',
+        '.refresh()' : 'refresh()',
+        '.refreshIfNeeded()' : 'refreshIfNeeded()',
+        '.refreshTileEvents()' : 'refreshTileEvents()',
+        '.regionId()' : 'regionId()',
+        '.requestRefresh()' : 'requestRefresh()',
+        '.roundX()' : 'roundX()',
+        '.roundXWithDirection()' : 'roundXWithDirection()',
+        '.roundY()' : 'roundY()',
+        '.roundYWithDirection()' : 'roundYWithDirection()',
+        '.screenTileX()' : 'screenTileX()',
+        '.screenTileY()' : 'screenTileY()',
+        '.scrollDistance()' : 'scrollDistance()',
+        '.scrollDown()' : 'scrollDown()',
+        '.scrollLeft()' : 'scrollLeft()',
+        '.scrollRight()' : 'scrollRight()',
+        '.scrollUp()' : 'scrollUp()',
+        '.setDisplayPos()' : 'setDisplayPos()',
+        '.setup()' : 'setup()',
+        '.setupAutorunCommonEvent()' : 'setupAutorunCommonEvent()',
+        '.setupBattleback()' : 'setupBattleback()',
+        '.setupEvents()' : 'setupEvents()',
+        '.setupParallax()' : 'setupParallax()',
+        '.setupScroll()' : 'setupScroll()',
+        '.setupStartingEvent()' : 'setupStartingEvent()',
+        '.setupStartingMapEvent()' : 'setupStartingMapEvent()',
+        '.setupTestEvent()' : 'setupTestEvent()',
+        '.ship()' : 'ship()',
+        '.startScroll()' : 'startScroll()',
+        '.terrainTag()' : 'terrainTag()',
+        '.tileEventsXy()' : 'tileEventsXy()',
+        '.tileHeight()' : 'tileHeight()',
+        '.tileId()' : 'tileId()',
+        '.tileset()' : 'tileset()',
+        '.tilesetFlags()' : 'tilesetFlags()',
+        '.tilesetId()' : 'tilesetId()',
+        '.tileWidth()' : 'tileWidth()',
+        '.unlockEvent()' : 'unlockEvent()',
+        '.update()' : 'update()',
+        '.updateEvents()' : 'updateEvents()',
+        '.updateInterpreter()' : 'updateInterpreter()',
+        '.updateParallax()' : 'updateParallax()',
+        '.updateScroll()' : 'updateScroll()',
+        '.updateVehicles()' : 'updateVehicles()',
+        '.vehicle()' : 'vehicle()',
+        '.vehicles()' : 'vehicles()',
+        '.width()' : 'width()',
+        '.xWithDirection()' : 'xWithDirection()',
+        '.yWithDirection()' : 'yWithDirection()'
+    };
+
+    NTMO.DTE.Suggest.Palette.Method.prototype.gameMessageList = {
+        '.add()' : 'add()',
+        '.allText()' : 'allText()',
+        '.background()' : 'background()',
+        '.choiceBackground()' : 'choiceBackground()',
+        '.choiceCancelType()' : 'choiceCancelType()',
+        '.choiceDefaultType()' : 'choiceDefaultType()',
+        '.choicePositionType()' : 'choicePositionType()',
+        '.choices()' : 'choices()',
+        '.clear()' : 'clear()',
+        '.faceIndex()' : 'faceIndex()',
+        '.faceName()' : 'faceName()',
+        '.hasText()' : 'hasText()',
+        '.isBusy()' : 'isBusy()',
+        '.isChoice()' : 'isChoice()',
+        '.isItemChoice()' : 'isItemChoice()',
+        '.isNumberInput()' : 'isNumberInput()',
+        '.itemChoiceItypeId()' : 'itemChoiceItypeId()',
+        '.itemChoiceVariableId()' : 'itemChoiceVariableId()',
+        '.newPage()' : 'newPage()',
+        '.numInputMaxDigits()' : 'numInputMaxDigits()',
+        '.numInputVariableId()' : 'numInputVariableId()',
+        '.onChoice()' : 'onChoice()',
+        '.positionType()' : 'positionType()',
+        '.scrollMode()' : 'scrollMode()',
+        '.scrollNoFast()' : 'scrollNoFast()',
+        '.scrollSpeed()' : 'scrollSpeed()',
+        '.setBackground()' : 'setBackground()',
+        '.setChoiceBackground()' : 'setChoiceBackground()',
+        '.setChoiceCallback()' : 'setChoiceCallback()',
+        '.setChoicePositionType()' : 'setChoicePositionType()',
+        '.setChoices()' : 'setChoices()',
+        '.setFaceImage()' : 'setFaceImage()',
+        '.setItemChoice()' : 'setItemChoice()',
+        '.setNumberInput()' : 'setNumberInput()',
+        '.setPositionType()' : 'setPositionType()',
+        '.setScroll()' : 'setScroll()'
+    };
+
+    NTMO.DTE.Suggest.Palette.Method.prototype.gamePartyList = {
+        '.addActor()' : 'addActor()',
+        '.agility()' : 'agility()',
+        '.aliveMembers()' : 'aliveMembers()',
+        '.allItems()' : 'allItems()',
+        '.armors()' : 'armors()',
+        '.battleMembers()' : 'battleMembers()',
+        '.canInput()' : 'canInput()',
+        '.canUse()' : 'canUse()',
+        '.charactersForSavefile()' : 'charactersForSavefile()',
+        '.clearActions()' : 'clearActions()',
+        '.clearResults()' : 'clearResults()',
+        '.consumeItem()' : 'consumeItem()',
+        '.deadMembers()' : 'deadMembers()',
+        '.discardMembersEquip()' : 'discardMembersEquip()',
+        '.equipItems()' : 'equipItems()',
+        '.exists()' : 'exists()',
+        '.facesForSavefile()' : 'facesForSavefile()',
+        '.gainGold()' : 'gainGold()',
+        '.gainItem()' : 'gainItem()',
+        '.gold()' : 'gold()',
+        '.hasCancelSurprise()' : 'hasCancelSurprise()',
+        '.hasDropItemDouble()' : 'hasDropItemDouble()',
+        '.hasEncounterHalf()' : 'hasEncounterHalf()',
+        '.hasEncounterNone()' : 'hasEncounterNone()',
+        '.hasGoldDouble()' : 'hasGoldDouble()',
+        '.hasItem()' : 'hasItem()',
+        '.hasMaxItems()' : 'hasMaxItems()',
+        '.hasRaisePreemptive()' : 'hasRaisePreemptive()',
+        '.highestLevel()' : 'highestLevel()',
+        '.inBattle()' : 'inBattle()',
+        '.increaseSteps()' : 'increaseSteps()',
+        '.initAllItems()' : 'initAllItems()',
+        '.isAllDead()' : 'isAllDead()',
+        '.isAnyMemberEquipped()' : 'isAnyMemberEquipped()',
+        '.isEmpty()' : 'isEmpty()',
+        '.itemContainer()' : 'itemContainer()',
+        '.items()' : 'items()',
+        '.lastItem()' : 'lastItem()',
+        '.leader()' : 'leader()',
+        '.loseGold()' : 'loseGold()',
+        '.loseItem()' : 'loseItem()',
+        '.makeActions()' : 'makeActions()',
+        '.makeMenuActorNext()' : 'makeMenuActorNext()',
+        '.makeMenuActorPrevious()' : 'makeMenuActorPrevious()',
+        '.maxBattleMembers()' : 'maxBattleMembers()',
+        '.maxGold()' : 'maxGold()',
+        '.maxItems()' : 'maxItems()',
+        '.members()' : 'members()',
+        '.menuActor()' : 'menuActor()',
+        '.movableMembers()' : 'movableMembers()',
+        '.name()' : 'name()',
+        '.numItems()' : 'numItems()',
+        '.onBattleEnd()' : 'onBattleEnd()',
+        '.onBattleStart()' : 'onBattleStart()',
+        '.onPlayerWalk()' : 'onPlayerWalk()',
+        '.partyAbility()' : 'partyAbility()',
+        '.performEscape()' : 'performEscape()',
+        '.performVictory()' : 'performVictory()',
+        '.randomDeadTarget()' : 'randomDeadTarget()',
+        '.randomTarget()' : 'randomTarget()',
+        '.ratePreemptive()' : 'ratePreemptive()',
+        '.rateSurprise()' : 'rateSurprise()',
+        '.removeActor()' : 'removeActor()',
+        '.removeBattleStates()' : 'removeBattleStates()',
+        '.requestMotionRefresh()' : 'requestMotionRefresh()',
+        '.reviveBattleMembers()' : 'reviveBattleMembers()',
+        '.select()' : 'select()',
+        '.setLastItem()' : 'setLastItem()',
+        '.setMenuActor()' : 'setMenuActor()',
+        '.setTargetActor()' : 'setTargetActor()',
+        '.setupBattleTest()' : 'setupBattleTest()',
+        '.setupBattleTestItems()' : 'setupBattleTestItems()',
+        '.setupBattleTestMembers()' : 'setupBattleTestMembers()',
+        '.setupStartingMembers()' : 'setupStartingMembers()',
+        '.size()' : 'size()',
+        '.smoothDeadTarget()' : 'smoothDeadTarget()',
+        '.smoothTarget()' : 'smoothTarget()',
+        '.steps()' : 'steps()',
+        '.substituteBattler()' : 'substituteBattler()',
+        '.swapOrder()' : 'swapOrder()',
+        '.targetActor()' : 'targetActor()',
+        '.tgrSum()' : 'tgrSum()',
+        '.weapons()' : 'weapons()',
+    };
+
+    NTMO.DTE.Suggest.Palette.Method.prototype.gamePlayerList = {
+        '.advanceMoveRouteIndex()' : 'advanceMoveRouteIndex()',
+        '.animationId()' : 'animationId()',
+        '.animationWait()' : 'animationWait()',
+        '.areFollowersGathered()' : 'areFollowersGathered()',
+        '.areFollowersGathering()' : 'areFollowersGathering()',
+        '.balloonId()' : 'balloonId()',
+        '.blendMode()' : 'blendMode()',
+        '.bushDepth()' : 'bushDepth()',
+        '.canEncounter()' : 'canEncounter()',
+        '.canMove()' : 'canMove()',
+        '.canPass()' : 'canPass()',
+        '.canPassDiagonally()' : 'canPassDiagonally()',
+        '.canStartLocalEvents()' : 'canStartLocalEvents()',
+        '.center()' : 'center()',
+        '.centerX()' : 'centerX()',
+        '.centerY()' : 'centerY()',
+        '.characterIndex()' : 'characterIndex()',
+        '.characterName()' : 'characterName()',
+        '.checkEventTriggerHere()' : 'checkEventTriggerHere()',
+        '.checkEventTriggerThere()' : 'checkEventTriggerThere()',
+        '.checkEventTriggerTouch()' : 'checkEventTriggerTouch()',
+        '.checkEventTriggerTouchFront()' : 'checkEventTriggerTouchFront()',
+        '.checkStop()' : 'checkStop()',
+        '.clearTransferInfo()' : 'clearTransferInfo()',
+        '.copyPosition()' : 'copyPosition()',
+        '.deltaXFrom()' : 'deltaXFrom()',
+        '.deltaYFrom()' : 'deltaYFrom()',
+        '.direction()' : 'direction()',
+        '.distancePerFrame()' : 'distancePerFrame()',
+        '.encounterProgressValue()' : 'encounterProgressValue()',
+        '.endAnimation()' : 'endAnimation()',
+        '.endBalloon()' : 'endBalloon()',
+        '.executeEncounter()' : 'executeEncounter()',
+        '.executeMove()' : 'executeMove()',
+        '.fadeType()' : 'fadeType()',
+        '.findDirectionTo()' : 'findDirectionTo()',
+        '.followers()' : 'followers()',
+        '.forceMoveForward()' : 'forceMoveForward()',
+        '.forceMoveRoute()' : 'forceMoveRoute()',
+        '.gatherFollowers()' : 'gatherFollowers()',
+        '.getInputDirection()' : 'getInputDirection()',
+        '.getOffVehicle()' : 'getOffVehicle()',
+        '.getOnOffVehicle()' : 'getOnOffVehicle()',
+        '.getOnVehicle()' : 'forceMoveFogetOnVehiclerward()',
+        '.hasStepAnime()' : 'hasStepAnime()',
+        '.hasWalkAnime()' : 'hasWalkAnime()',
+        '.hideFollowers()' : 'hideFollowers()',
+        '.increaseSteps()' : 'increaseSteps()',
+        '.initMembers()' : 'initMembers()',
+        '.isAnimationPlaying()' : 'isAnimationPlaying()',
+        '.isBalloonPlaying()' : 'isBalloonPlaying()',
+        '.isCollided()' : 'isCollided()',
+        '.isCollidedWithCharacters()' : 'isCollidedWithCharacters()',
+        '.isCollidedWithEvents()' : 'isCollidedWithEvents()',
+        '.isCollidedWithVehicles()' : 'isCollidedWithVehicles()',
+        '.isDashButtonPressed()' : 'isDashButtonPressed()',
+        '.isDashing()' : 'isDashing()',
+        '.isDashRing()' : 'isDashRing()',
+        '.isDebugThrough()' : 'isDebugThrough()',
+        '.isDirectionFixed()' : 'isDirectionFixed()',
+        '.isInAirship()' : 'isInAirship()',
+        '.isInBoat()' : 'isInBoat()',
+        '.isInShip()' : 'isInShip()',
+        '.isInVehicle()' : 'isInVehicle()',
+        '.isJumping()' : 'isJumping()',
+        '.isMapPassable()' : 'isMapPassable()',
+        '.isMovementSucceeded()' : 'isMovementSucceeded()',
+        '.isMoveRouteForcing()' : 'isMoveRouteForcing()',
+        '.isMoving()' : 'isMoving()',
+        '.isNearTheScreen()' : 'isNearTheScreen()',
+        '.isNormal()' : 'isNormal()',
+        '.isNormalPriority()' : 'isNormalPriority()',
+        '.isObjectCharacter()' : 'isObjectCharacter()',
+        '.isOnBush()' : 'isOnBush()',
+        '.isOnDamageFloor()' : 'isOnDamageFloor()',
+        '.isOnLadder()' : 'isOnLadder()',
+        '.isOriginalPattern()' : 'isOriginalPattern()',
+        '.isStopping()' : 'isStopping()',
+        '.isThrough()' : 'isThrough()',
+        '.isTile()' : 'isTile()',
+        '.isTransferring()' : 'isTransferring()',
+        '.isTransparent()' : 'isTransparent()',
+        '.jump()' : 'jump()',
+        '.jumpHeight()' : 'jumpHeight()',
+        '.locate()' : 'locate()',
+        '.makeEncounterCount()' : 'makeEncounterCount()',
+        '.makeEncounterTroopId()' : 'makeEncounterTroopId()',
+        '.maxPattern()' : 'maxPattern()',
+        '.meetsEncounterConditions()' : 'meetsEncounterConditions()',
+        '.memorizeMoveRoute()' : 'memorizeMoveRoute()',
+        '.moveAwayFromCharacter()' : 'moveAwayFromCharacter()',
+        '.moveAwayFromPlayer()' : 'moveAwayFromPlayer()',
+        '.moveBackward()' : 'moveBackward()',
+        '.moveByInput()' : 'moveByInput()',
+        '.moveDiagonally()' : 'moveDiagonally()',
+        '.moveForward()' : 'moveForward()',
+        '.moveFrequency()' : 'moveFrequency()',
+        '.moveRandom()' : 'moveRandom()',
+        '.moveSpeed()' : 'moveSpeed()',
+        '.moveStraight()' : 'moveStraight()',
+        '.moveTowardCharacter()' : 'moveTowardCharacter()',
+        '.moveTowardPlayer()' : 'moveTowardPlayer()',
+        '.newMapId()' : 'newMapId()',
+        '.opacity()' : 'opacity()',
+        '.pattern()' : 'pattern()',
+        '.performTransfer()' : 'performTransfer()',
+        '.pos()' : 'pos()',
+        '.posNt()' : 'posNt()',
+        '.processMoveCommand()' : 'processMoveCommand()',
+        '.processRouteEnd()' : 'processRouteEnd()',
+        '.realMoveSpeed()' : 'realMoveSpeed()',
+        '.refresh()' : 'refresh()',
+        '.refreshBushDepth()' : 'refreshBushDepth()',
+        '.regionId()' : 'regionId()',
+        '.requestAnimation()' : 'requestAnimation()',
+        '.requestBalloon()' : 'requestBalloon()',
+        '.requestMapReload()' : 'requestMapReload()',
+        '.reserveTransfer()' : 'reserveTransfer()',
+        '.resetPattern()' : 'resetPattern()',
+        '.resetStopCount()' : 'resetStopCount()',
+        '.restoreMoveRoute()' : 'restoreMoveRoute()',
+        '.reverseDir()' : 'reverseDir()',
+        '.screenX()' : 'screenX()',
+        '.screenY()' : 'screenY()',
+        '.screenZ()' : 'screenZ()',
+        '.scrolledX()' : 'scrolledX()',
+        '.searchLimit()' : 'searchLimit()',
+        '.setBlendMode()' : 'setBlendMode()',
+        '.setDirection()' : 'setDirection()',
+        '.setDirectionFix()' : 'setDirectionFix()',
+        '.setImage()' : 'setImage()',
+        '.setMoveFrequency()' : 'setMoveFrequency()',
+        '.setMovementSuccess()' : 'setMovementSuccess()',
+        '.setMoveRoute()' : 'setMoveRoute()',
+        '.setMoveSpeed()' : 'setMoveSpeed()',
+        '.setOpacity()' : 'setOpacity()',
+        '.setPattern()' : 'setPattern()',
+        '.setPosition()' : 'setPosition()',
+        '.setPriorityType()' : 'setPriorityType()',
+        '.setStepAnime()' : 'setStepAnime()',
+        '.setThrough()' : 'setThrough()',
+        '.setTileImage()' : 'setTileImage()',
+        '.setTransparent()' : 'setTransparent()',
+        '.setWalkAnime()' : 'setWalkAnime()',
+        '.shiftY()' : 'shiftY()',
+        '.showFollowers()' : 'showFollowers()',
+        '.startAnimation()' : 'startAnimation()',
+        '.startBalloon()' : 'startBalloon()',
+        '.startMapEvent()' : 'startMapEvent()',
+        '.straighten()' : 'straighten()',
+        '.swap()' : 'swap()',
+        '.terrainTag()' : 'terrainTag()',
+        '.tileId()' : 'tileId()',
+        '.triggerAction()' : 'triggerAction()',
+        '.triggerButtonAction()' : 'triggerButtonAction()',
+        '.triggerTouchAction()' : 'triggerTouchAction()',
+        '.triggerTouchActionD1()' : 'triggerTouchActionD1()',
+        '.triggerTouchActionD2()' : 'triggerTouchActionD2()',
+        '.triggerTouchActionD3()' : 'triggerTouchActionD3()',
+        '.turn180()' : 'turn180()',
+        '.turnAwayFromCharacter()' : 'turnAwayFromCharacter()',
+        '.turnAwayFromPlayer()' : 'turnAwayFromPlayer()',
+        '.turnLeft90()' : 'turnLeft90()',
+        '.turnRandom()' : 'turnRandom()',
+        '.turnRight90()' : 'turnRight90()',
+        '.turnRightOrLeft90()' : 'turnRightOrLeft90()',
+        '.turnTowardCharacter()' : 'turnTowardCharacter()',
+        '.turnTowardPlayer()' : 'turnTowardPlayer()',
+        '.update()' : 'update()',
+        '.updateAnimation()' : 'updateAnimation()',
+        '.updateAnimationCount()' : 'updateAnimationCount()',
+        '.updateDashing()' : 'updateDashing()',
+        '.updateEncounterCount()' : 'updateEncounterCount()',
+        '.updateJump()' : 'updateJump()',
+        '.updateMove()' : 'updateMove()',
+        '.updateNonmoving()' : 'updateNonmoving()',
+        '.updatePattern()' : 'updatePattern()',
+        '.updateRoutineMove()' : 'updateRoutineMove()',
+        '.updateScroll()' : 'updateScroll()',
+        '.updateStop()' : 'updateStop()',
+        '.updateVehicle()' : 'updateVehicle()',
+        '.updateVehicleGetOff()' : 'updateVehicleGetOff()',
+        '.updateVehicleGetOn()' : 'updateVehicleGetOn()',
+        '.vehicle()' : 'vehicle()',
+        '.x' : 'x',
+        '.y' : 'y'
+    };
+
+    NTMO.DTE.Suggest.Palette.Method.prototype.gameScreenList = {
+        '.brightness()' : 'brightness()',
+        '.changeWeather()' : 'changeWeather()',
+        '.clear()' : 'clear()',
+        '.clearFade()' : 'clearFade()',
+        '.clearFlash()' : 'clearFlash()',
+        '.clearPictures()' : 'clearPictures()',
+        '.clearShake()' : 'clearShake()',
+        '.clearTone()' : 'clearTone()',
+        '.clearWeather()' : 'clearWeather()',
+        '.clearZoom()' : 'clearZoom()',
+        '.eraseBattlePictures()' : 'eraseBattlePictures()',
+        '.erasePicture()' : 'erasePicture()',
+        '.flashColor()' : 'flashColor()',
+        '.maxPictures()' : 'maxPictures()',
+        '.movePicture()' : 'movePicture()',
+        '.onBattleStart()' : 'onBattleStart()',
+        '.picture()' : 'picture()',
+        '.realPictureId()' : 'realPictureId()',
+        '.rotatePicture()' : 'rotatePicture()',
+        '.setZoom()' : 'setZoom()',
+        '.shake()' : 'shake()',
+        '.showPicture()' : 'showPicture()',
+        '.startFadeIn()' : 'startFadeIn()',
+        '.startFadeOut()' : 'startFadeOut()',
+        '.startFlash()' : 'startFlash()',
+        '.startFlashForDamage()' : 'startFlashForDamage()',
+        '.startShake()' : 'startShake()',
+        '.startTint()' : 'startTint()',
+        '.startZoom()' : 'startZoom()',
+        '.tintPicture()' : 'tintPicture()',
+        '.tone()' : 'tone()',
+        '.update()' : 'update()',
+        '.updateFadeIn()' : 'updateFadeIn()',
+        '.updateFadeOut()' : 'updateFadeOut()',
+        '.updateFlash()' : 'updateFlash()',
+        '.updatePictures()' : 'updatePictures()',
+        '.updateShake()' : 'updateShake()',
+        '.updateTone()' : 'updateTone()',
+        '.updateWeather()' : 'updateWeather()',
+        '.updateZoom()' : 'updateZoom()',
+        '.weatherPower()' : 'weatherPower()',
+        '.weatherType()' : 'weatherType()',
+        '.zoomScale()' : 'zoomScale()',
+        '.zoomX()' : 'zoomX()',
+        '.zoomY()' : 'zoomY()'
+    };
+    
+
+    NTMO.DTE.Suggest.Palette.Method.prototype.gameSelfSwitchesList = {
+        '.clear()' : 'clear()',
+        '.onChange()' : 'onChange()',
+        '.setValue()' : 'setValue()',
+        '.value()' : 'value()'
+    };
+
+    NTMO.DTE.Suggest.Palette.Method.prototype.gameSwitchesList = {
+        '.clear()' : 'clear()',
+        '.onChange()' : 'onChange()',
+        '.setValue()' : 'setValue()',
+        '.value()' : 'value()'
+    };
+
+    NTMO.DTE.Suggest.Palette.Method.prototype.gameSystemList = {
+        '.battleBgm()' : 'battleBgm()',
+        '.battleCount()' : 'battleCount()',
+        '.defeatMe()' : 'defeatMe()',
+        '.disableEncounter()' : 'disableEncounter()',
+        '.disableFormation()' : 'disableFormation()',
+        '.disableMenu()' : 'disableMenu()',
+        '.disableSave()' : 'disableSave()',
+        '.enableEncounter()' : 'enableEncounter()',
+        '.enableFormation()' : 'enableFormation()',
+        '.enableMenu()' : 'enableMenu()',
+        '.enableSave()' : 'enableSave()',
+        '.escapeCount()' : 'escapeCount()',
+        '.isChinese()' : 'isChinese()',
+        '.isCJK()' : 'isCJK()',
+        '.isEncounterEnabled()' : 'isEncounterEnabled()',
+        '.isFormationEnabled()' : 'isFormationEnabled()',
+        '.isJapanese()' : 'isJapanese()',
+        '.isKorean()' : 'isKorean()',
+        '.isMenuEnabled()' : 'isMenuEnabled()',
+        '.isRussian()' : 'isRussian()',
+        '.isSaveEnabled()' : 'isSaveEnabled()',
+        '.isSideView()' : 'isSideView()',
+        '.onAfterLoad()' : 'onAfterLoad()',
+        '.onBattleEscape()' : 'onBattleEscape()',
+        '.onBattleStart()' : 'onBattleStart()',
+        '.onBattleWin()' : 'onBattleWin()',
+        '.onBeforeSave()' : 'onBeforeSave()',
+        '.playtime()' : 'playtime()',
+        '.playtimeText()' : 'playtimeText()',
+        '.replayBgm()' : 'replayBgm()',
+        '.replayWalkingBgm()' : 'replayWalkingBgm()',
+        '.saveBgm()' : 'saveBgm()',
+        '.saveCount()' : 'saveCount()',
+        '.saveWalkingBgm()' : 'saveWalkingBgm()',
+        '.saveWalkingBgm2()' : 'saveWalkingBgm2()',
+        '.setBattleBgm()' : 'setBattleBgm()',
+        '.setDefeatMe()' : 'setDefeatMe()',
+        '.setVictoryMe()' : 'setVictoryMe()',
+        '.setWindowTone()' : 'setWindowTone()',
+        '.versionId()' : 'versionId()',
+        '.victoryMe()' : 'victoryMe()',
+        '.winCount()' : 'winCount()',
+        '.windowTone()' : 'windowTone()'
+    };
+
+    NTMO.DTE.Suggest.Palette.Method.prototype.gameTempList = {
+        '.clearCommonEvent()' : 'clearCommonEvent()',
+        '.clearDestination()' : 'clearDestination()',
+        '.destinationX()' : 'destinationX()',
+        '.destinationY()' : 'destinationY()',
+        '.isCommonEventReserved()' : 'isCommonEventReserved()',
+        '.isDestinationValid()' : 'isDestinationValid()',
+        '.isPlaytest()' : 'isPlaytest()',
+        '.reserveCommonEvent()' : 'reserveCommonEvent()',
+        '.reservedCommonEvent()' : 'reservedCommonEvent()',
+        '.setDestination()' : 'setDestination()'
+    };
+
+    NTMO.DTE.Suggest.Palette.Method.prototype.gameTimerList = {
+        '.isWorking()' : 'isWorking()',
+        '.onExpire()' : 'onExpire()',
+        '.seconds()' : 'seconds()',
+        '.start()' : 'start()',
+        '.stop()' : 'stop()',
+        '.update()' : 'update()'
+    };
+
+    NTMO.DTE.Suggest.Palette.Method.prototype.gameTroopList = {
+        '.agility()' : 'agility()',
+        '.aliveMembers()' : 'aliveMembers()',
+        '.clear()' : 'clear()',
+        '.clearActions()' : 'clearActions()',
+        '.clearResults()' : 'clearResults()',
+        '.deadMembers()' : 'deadMembers()',
+        '.enemyNames()' : 'enemyNames()',
+        '.expTotal()' : 'expTotal()',
+        '.goldRate()' : 'goldRate()',
+        '.goldTotal()' : 'goldTotal()',
+        '.inBattle()' : 'inBattle()',
+        '.increaseTurn()' : 'increaseTurn()',
+        '.isAllDead()' : 'isAllDead()',
+        '.isEventRunning()' : 'isEventRunning()',
+        '.letterTable()' : 'letterTable()',
+        '.makeActions()' : 'makeActions()',
+        '.makeDropItems()' : 'makeDropItems()',
+        '.makeUniqueNames()' : 'makeUniqueNames()',
+        '.meetsConditions()' : 'meetsConditions()',
+        '.members()' : 'members()',
+        '.movableMembers()' : 'movableMembers()',
+        '.onBattleEnd()' : 'onBattleEnd()',
+        '.onBattleStart()' : 'onBattleStart()',
+        '.randomDeadTarget()' : 'randomDeadTarget()',
+        '.randomTarget()' : 'randomTarget()',
+        '.select()' : 'select()',
+        '.setup()' : 'setup()',
+        '.setupBattleEvent()' : 'setupBattleEvent()',
+        '.smoothDeadTarget()' : 'smoothDeadTarget()',
+        '.substituteBattler()' : 'substituteBattler()',
+        '.tgrSum()' : 'tgrSum()',
+        '.troop()' : 'troop()',
+        '.turnCount()' : 'turnCount()',
+        '.updateInterpreter()' : 'updateInterpreter()'
+    };
+
+    NTMO.DTE.Suggest.Palette.Method.prototype.gameVariablesList = {
+        '.clear()' : 'clear()',
+        '.onChange()' : 'onChange()',
+        '.setValue()' : 'setValue()',
+        '.value()' : 'value()'
     };
 
 //=============================================================================
