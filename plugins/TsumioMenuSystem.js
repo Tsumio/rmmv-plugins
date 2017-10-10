@@ -6,6 +6,7 @@
 // http://opensource.org/licenses/mit-license.php
 // ----------------------------------------------------------------------------
 // Version
+// 1.1.0 2017/10/11 コンテンツの高さパラメーターの追加とコードの改善。
 // 1.0.2 2017/10/10 バグ修正とコードの改善。
 // 1.0.1 2017/10/10 バグ修正と設定項目の追加。
 // 1.0.0 2017/10/09 公開。
@@ -146,12 +147,21 @@
  * @desc This is a settings sets the contents of the option2.If you want to cooperate Chronus.js, write [Chronus1] or [Chronus2].
  * @default [Chronus2]
  * 
+ * @param ----Special Settings----
+ * @desc 
+ * @default 
+ * 
  * @param Ratio
  * @type number[]
  * @max 1
  * @decimals 2
  * @desc This is a settings sets the ratio of the characters placement in sub window.
  * @default ["0.00", "0.35", "0.70"]
+ * 
+ * @param LineHeight
+ * @type struct<LineHeight>
+ * @desc This is a settings sets the line height of the status window contents.The larger the number, displayed in lower.
+ * @default {"class":"-1", "face":"0", "name":"1", "level":"2", "icons":"2", "hp":"3", "mp":"4", "tp":"5", "exp":"6"}
  * 
  * @help This plugin remodels the menu scene.
  * 
@@ -195,6 +205,11 @@
  * 
  * Reference：https://raw.githubusercontent.com/triacontane/RPGMakerMV/master/Chronus.js
  * 
+ * ----line height----
+ * By setting "LineHeight" of the plugin parameter, you can change the height of the display contents in the status window.
+ * The larger the number, displayed in lower.
+ * In addition, the height is not specified in pixels but in line units.
+ * 
  * ----plugin command----
  * All plugin commands start with "TMS".
  * Plugin commands are distinguish uppercase and lowercase.
@@ -213,6 +228,7 @@
  * Furthermore, if you change the dpi or change the number of rows or columns, you may get trouble.
  * 
  * ----change log---
+ * 1.1.0 2017/10/11 Added line height parameter and code improvement.
  * 1.0.2 2017/10/10 Bug fix and code improvement.
  * 1.0.1 2017/10/10 Bug fix and added plugin parameters.
  * 1.0.0 2017/10/09 Release.
@@ -358,12 +374,22 @@
  * @desc オプション2の内容を設定します。Chronus.jsと連携したい場合、[Chronus1]か[Chronus2]と記入してください。
  * @default [Chronus2]
  * 
+ * 
+ * @param ----特殊な設定----
+ * @desc 
+ * @default 
+ * 
  * @param 比率
  * @type number[]
  * @max 1
  * @decimals 2
  * @desc サブウィンドウ内における文字列の配置の比率を設定します。
  * @default ["0.00", "0.35", "0.70"]
+ * 
+ * @param コンテンツの高さ
+ * @type struct<LineHeight>
+ * @desc ステータスウィンドウ内のコンテンツの高さを設定します。数字が大きいほど下に表示されます。
+ * @default {"class":"-1", "face":"0", "name":"1", "level":"2", "icons":"2", "hp":"3", "mp":"4", "tp":"5", "exp":"6"}
  * 
  * @help メニュー画面を改造するプラグインです。
  * 
@@ -407,6 +433,11 @@
  * 
  * 参考URL：https://raw.githubusercontent.com/triacontane/RPGMakerMV/master/Chronus.js
  * 
+ *【コンテンツの高さ】
+ * プラグインパラメーターのコンテンツの高さを設定すると、ステータスウィンドウにおける表示内容の高さを変更することができます。
+ * 数字を大きくすれば大きくするほど表示内容は下に表示されます。
+ * なお、高さはピクセルで指定するのではなく行単位です。
+ * 
  * 【プラグインコマンド】
  * 全てのプラグインコマンドは「TMS」から始まります。
  * また、説明上では視認性のためにカギカッコを使用していますが、実際にプラグインコマンドに入力する際には
@@ -427,6 +458,7 @@
  * また、解像度を変えたり、行数や列数を変えたりした場合、不具合が出るかもしれません。
  * 
  * 【更新履歴】
+ * 1.1.0 2017/10/11 コンテンツの高さパラメーターの追加とコードの改善。
  * 1.0.2 2017/10/10 バグ修正とコードの改善。
  * 1.0.1 2017/10/10 バグ修正と設定項目の追加。
  * 1.0.0 2017/10/09 公開。
@@ -450,6 +482,62 @@
  * @param height
  * @type number
  * @desc 高さ(height).
+ */
+/*~struct~LineHeight:
+ * 
+ * @param class
+ * @type number
+ * @min -255
+ * @max 255
+ * @desc 職業(class).
+ * 
+ * @param face
+ * @type number
+ * @min -255
+ * @max 255
+ * @desc 顔グラフィック(face).
+ * 
+ * @param name
+ * @type number
+ * @min -255
+ * @max 255
+ * @desc 名前(name).
+ * 
+ * @param level
+ * @type number
+ * @min -255
+ * @max 255
+ * @desc レベル(level).
+ * 
+ * @param icons
+ * @type number
+ * @min -255
+ * @max 255
+ * @desc アイコン(icons).
+ * 
+ * @param hp
+ * @type number
+ * @min -255
+ * @max 255
+ * @desc HP.
+ * 
+ * @param mp
+ * @type number
+ * @min -255
+ * @max 255
+ * @desc MP.
+ * 
+ * @param tp
+ * @type number
+ * @min -255
+ * @max 255
+ * @desc TP.
+ * 
+ * @param exp
+ * @type number
+ * @min -255
+ * @max 255
+ * @desc 経験値(exp).
  */
 
 function Game_TMenuSys() {
@@ -504,6 +592,19 @@ function Game_TMenuSys() {
         }
     };
 
+    /**
+     * Convert to number.Receive converted JSON object.
+     * @param {Object} obj
+     * 
+     */
+    //This function is not written by Triacontane.Tsumio wrote this function !
+    var convertToNumber = function(obj) {
+        for(var prop in obj) {
+            obj[prop] = parseInt(obj[prop], 10);
+        }
+        return obj;
+    }
+
     var _DataManager_extractSaveContents = DataManager.extractSaveContents;
     DataManager.extractSaveContents      = function(contents) {
         _DataManager_extractSaveContents.apply(this, arguments);
@@ -537,7 +638,9 @@ function Game_TMenuSys() {
     param.op1Contents     = getParamString(['Option1Contents', 'オプション1の内容']);
     param.option2         = getParamString(['Option2', 'オプション2']);
     param.op2Contents     = getParamString(['Option2Contents', 'オプション2の内容']);
+    //Special Settings
     param.ratio           = getParamString(['Ratio', '比率']);
+    param.lineHeight      = getParamString(['LineHeight', 'コンテンツの高さ']);
 
 ////==============================
 //// Convert parameters.
@@ -546,7 +649,13 @@ function Game_TMenuSys() {
     param.textHelp = convertParam(param.textHelp);
     param.faceSize = convertParam(param.faceSize);
     param.shouldUseChapWin = convertParam(param.shouldUseChapWin);
-    
+    param.lineHeight       = convertParam(param.lineHeight);
+////==============================
+//// Convert to Number.
+////==============================
+    param.faceSize    = convertToNumber(param.faceSize);
+    param.lineHeight  = convertToNumber(param.lineHeight);
+
 //-----------------------------------------------------------------------------
 // Settings for plugin command.
 //-----------------------------------------------------------------------------
@@ -964,13 +1073,21 @@ function Game_TMenuSys() {
     var _Window_MenuCommand_update = Window_MenuCommand.prototype.update;
     Window_MenuStatus.prototype.update = function() {
         _Window_MenuCommand_update.call(this);
-        this.updateSVActors();
+        this.sVActors.update();
     };
 
     var _Window_MenuCommand_createContents = Window_MenuCommand.prototype.createContents;
     Window_MenuStatus.prototype.createContents = function() {
         _Window_MenuCommand_createContents.call(this);
-        this.createSVActors();
+        this.sVActors = new SVActors(this, this.lineHeight(), this.getCorrectY());
+    };
+
+    Window_MenuStatus.prototype.modifySVActorsVisible = function() {
+        this.sVActors.modifyVisible();
+    };
+
+    Window_MenuStatus.prototype.swapSVActors = function() {
+        this.sVActors.swap();
     };
 
     //If do not use chapter window, lower the contents of the status window by the height of the chapter window.
@@ -1001,13 +1118,14 @@ function Game_TMenuSys() {
         this.drawLowerArea(index, correctY);
     };
 
-    Window_MenuStatus.prototype.drawFaceImage = function(index, yCorrect) {
+    Window_MenuStatus.prototype.drawFaceImage = function(index, correctY) {
         var actor  = $gameParty.members()[index];
         var rect   = this.itemRect(index);
-        var width  = Number(param.faceSize.width);
-        var height = Number(param.faceSize.height);
+        var width  = param.faceSize.width;
+        var height = param.faceSize.height;
         var margin = 5;
-        var y      = rect.y + margin + yCorrect;
+        var lineHeight = this.lineHeight() * param.lineHeight.face;
+        var y      = rect.y + margin + correctY + lineHeight;
         this.changePaintOpacity(actor.isBattleMember());
         this.drawActorFace(actor, rect.x + margin, y, width, height);
         this.changePaintOpacity(true);
@@ -1021,78 +1139,22 @@ function Game_TMenuSys() {
         var width      = rect.width;
         var lineHeight = this.lineHeight();
         var margin     = 10;
-        var levelWidth = this.drawActorLevelTMS(actor, x, y + lineHeight * 2, width);
-        this.drawActorClass(actor, x, y - lineHeight);
-        this.drawActorName(actor, x, y + lineHeight * 1, width);
-        this.drawActorIcons(actor, levelWidth + margin, y + lineHeight * 2, width);
+        var levelWidth = this.drawActorLevelTMS(actor, x, y + lineHeight * param.lineHeight.level, width);
+        this.drawActorClass(actor, x, y + lineHeight * param.lineHeight.class);
+        this.drawActorName(actor, x, y + lineHeight * param.lineHeight.name, width);
+        this.drawActorIcons(actor, levelWidth + margin, y + lineHeight * param.lineHeight.icons, width);
     };
 
-    Window_MenuStatus.prototype.createSVActors = function() {
-        if(!$dataSystem.optSideView){
-            return;
-        }
-        this._spriteSVActors = [];
-
-        $gameParty.members().forEach(function(actor, i) {
-            this._spriteSVActors[i] = new Sprite_Actor(actor);
-            this._spriteSVActors[i].setBattler(actor);
-            this._spriteSVActors[i].startMotion(NTMO.TMS.Base.getActorState(actor));
-            this.addChild(this._spriteSVActors[i]);
-        }, this);
-    };
-
-    Window_MenuStatus.prototype.updateSVActors = function() {
-        if(!this.canDrawSVActors()){
-            return;
-        }
-
+    Window_MenuStatus.prototype.drawLowerArea = function (index, yCorrect) {
+        var actor      = $gameParty.members()[index];
+        var rect       = this.itemRect(index);
         var lineHeight = this.lineHeight();
-        var padding    = 20;
-        //If do not use chapter window, lower the contents of the status window by the height of the chapter window.
-        //8 is usually correction.
-        var correctY   = this.getCorrectY()+8;
-        var y = lineHeight*2 + correctY;
-
-        $gameParty.members().forEach(function(actor, i) {
-            var rect = this.itemRect(i);
-            this._spriteSVActors[i].startMotion(NTMO.TMS.Base.getActorState(actor));
-            this._spriteSVActors[i].x = rect.x + rect.width - padding;
-            this._spriteSVActors[i].y = y;
-        }, this);
-    };
-
-    Window_MenuStatus.prototype.modifySVActorsVisible = function() {
-        if(!this.canDrawSVActors()){
-            return;
-        }
-
-        var topIndex = this.topIndex();
-        this._spriteSVActors.forEach(function(element, index) {
-            if((index >= topIndex) && (index <= topIndex+this.maxCols()-1)){
-                //When window contains the Actor.
-                element.show();
-            }else{
-                //Not contains the Actor.Actor is next(or else) page.
-                element.hide();
-            }
-        }, this);
-    };
-
-    Window_MenuStatus.prototype.canDrawSVActors = function() {
-        return $dataSystem.optSideView && '_spriteSVActors' in this;
-    };
-
-    Window_MenuStatus.prototype.swapSVActors = function() {
-        if(!this.canDrawSVActors()){
-            return;
-        }
-
-        this._spriteSVActors.forEach(function(element, index) {
-            this.removeChild(element);
-        }, this);
-        
-        this.createSVActors();
-        this.modifySVActorsVisible();
+        var width      = rect.width;
+        var x = rect.x;
+        this.drawActorHp(actor, x, yCorrect + lineHeight * param.lineHeight.hp,  width);
+        this.drawActorMp(actor, x, yCorrect + lineHeight * param.lineHeight.mp,  width);
+        this.drawTpPoint(actor, x, yCorrect + lineHeight * param.lineHeight.tp,  width);
+        this.drawNextExp(index, x, yCorrect + lineHeight * param.lineHeight.exp, width);
     };
 
     /**
@@ -1108,18 +1170,6 @@ function Game_TMenuSys() {
 
         var resultWidth = x + width + padding + this.textWidth(actor.level);
         return resultWidth;
-    };
-
-    Window_MenuStatus.prototype.drawLowerArea = function (index, yCorrect) {
-        var actor      = $gameParty.members()[index];
-        var rect       = this.itemRect(index);
-        var lineHeight = this.lineHeight();
-        var width      = rect.width;
-        var x = rect.x;
-        this.drawActorHp(actor, x, yCorrect + lineHeight * 3, width);
-        this.drawActorMp(actor, x, yCorrect + lineHeight * 4, width);
-        this.drawTpPoint(actor, x, yCorrect + lineHeight * 5, width);
-        this.drawNextExp(index, x, yCorrect + lineHeight * 6, width);
     };
 
     Window_MenuStatus.prototype.drawNextExp = function (index, x, lineHeight, width) {
@@ -1385,6 +1435,116 @@ function Game_TMenuSys() {
             return (data==='[Chronus1]') ? $gameSystem.chronus().getDateFormat(1) : $gameSystem.chronus().getDateFormat(2);
         }else{
             return 'Chronus is not found.';
+        }
+    };
+
+////=============================================================================
+//// SVActors
+////  This is a wrapper class of the side view actor.
+////=============================================================================
+    class SVActors {
+        /**
+         * @param {Window_Base} parent
+         * @param {number} lineHeight
+         * @param {correctY} correctY
+         */
+        constructor(parent, lineHeight, correctY) {
+            this._parent      = parent;//Parent window.
+            this._lineHeight  = lineHeight;
+            this._correctY    = correctY;
+            this._sprites     = [];
+
+            this.create();
+        }
+
+        get parent() {
+            return this._parent;
+        }
+
+        get lineHeight() {
+            return this._lineHeight;
+        }
+
+        get correctY() {
+            //8 is usually correction.
+            return this._correctY+8;
+        }
+
+        get sprites() {
+            return this._sprites;
+        }
+
+        create() {
+            if(!this._canDraw()){
+                return;
+            }
+    
+            $gameParty.members().forEach(function(actor, i) {
+                this.sprites[i] = new Sprite_Actor(actor);
+                this.sprites[i].setBattler(actor);
+                this.sprites[i].startMotion(NTMO.TMS.Base.getActorState(actor));
+                this.parent.addChild(this.sprites[i]);
+            }, this);
+        }
+
+        /**
+         * Modify side view actors.Show and hide.
+         * @param {number} topIndex
+         */
+        modifyVisible() {
+            if(!this._canDraw()){
+                return;
+            }
+
+            var topIndex = this.parent.topIndex();
+    
+            this.sprites.forEach(function(element, index) {
+                if((index >= topIndex) && (index <= topIndex+this.parent.maxCols()-1)){
+                    //When window contains the Actor.
+                    element.show();
+                }else{
+                    //Not contains the Actor.Actor is next(or else) page.
+                    element.hide();
+                }
+            }, this);
+        }
+
+        update() {
+            if(!this._canDraw()){
+                return;
+            }
+    
+            var padding    = 20;
+            //If do not use chapter window, lower the contents of the status window by the height of the chapter window.
+            var y     = this.lineHeight*2 + this.correctY;
+    
+            $gameParty.members().forEach(function(actor, i) {
+                var rect = this.parent.itemRect(i);
+                this.sprites[i].startMotion(NTMO.TMS.Base.getActorState(actor));
+                this.sprites[i].x = rect.x + rect.width - padding;
+                this.sprites[i].y = y;
+            }, this);
+        }
+
+        swap() {
+            if(!this._canDraw()){
+                return;
+            }
+    
+            this.sprites.forEach(function(element, index) {
+                this.parent.removeChild(element);
+            }, this);
+            
+            this.create();
+            this.modifyVisible();
+        }
+
+        /**
+         * This methos is private.
+         * @return {boolean}
+         */
+        _canDraw() {
+            return $dataSystem.optSideView;
         }
     };
 
