@@ -1042,7 +1042,7 @@ function Game_TMenuSys() {
     };
 
     Window_MenuStatus.prototype.updateSVActors = function() {
-        if(!$dataSystem.optSideView || !'_spriteSVActors' in this){
+        if(!this.canDrawSVActors()){
             return;
         }
 
@@ -1062,7 +1062,7 @@ function Game_TMenuSys() {
     };
 
     Window_MenuStatus.prototype.modifySVActorsVisible = function() {
-        if(!$dataSystem.optSideView || !'_spriteSVActors' in this){
+        if(!this.canDrawSVActors()){
             return;
         }
 
@@ -1078,7 +1078,15 @@ function Game_TMenuSys() {
         }, this);
     };
 
+    Window_MenuStatus.prototype.canDrawSVActors = function() {
+        return $dataSystem.optSideView && '_spriteSVActors' in this;
+    };
+
     Window_MenuStatus.prototype.swapSVActors = function() {
+        if(!this.canDrawSVActors()){
+            return;
+        }
+
         this._spriteSVActors.forEach(function(element, index) {
             this.removeChild(element);
         }, this);
