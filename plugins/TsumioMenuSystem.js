@@ -6,6 +6,7 @@
 // http://opensource.org/licenses/mit-license.php
 // ----------------------------------------------------------------------------
 // Version
+// 1.0.1 2017/10/10 バグ修正と設定項目の追加。
 // 1.0.0 2017/10/09 公開。
 // ----------------------------------------------------------------------------
 // [GitHub] : https://github.com/Tsumio/rmmv-plugins
@@ -39,6 +40,11 @@
  * @desc This is a settings sets the maximum number of columns in the status window.Reccomend 3-5.
  * @default 4
  * 
+ * @param ShowChapterWindow
+ * @type boolean
+ * @desc This is a settings sets the whether or not to display the chapter window.
+ * @default true
+ * 
  * @param ChapterWindowHeight
  * @type number
  * @max 1000
@@ -50,6 +56,12 @@
  * @max 1000
  * @desc This is a settings sets the height of status window.
  * @default 290
+ * 
+ * 
+ * @param FaceSize
+ * @type struct<Size>
+ * @desc This is a settings sets the face size.INITIAL VALUE:105*30 FULL:144*144
+ * @default {"width":"105","height":"30"}
  * 
  * @param SubWIndowsFontSize
  * @type number
@@ -162,6 +174,11 @@
  * For details, please refer to "UseHelp" of the plugin parameter.
  * Control characters can also be used.
  * 
+ * You can hide chapter windows from v1.0.1.
+ * When the chapter window is hidden., the windows are displayed in a stuffed state by the height of the chapter window set by the parameter.
+ * At this time, the window to be enlarged is the chips window and the information window.
+ * If you want to enlarge the status window, change the height of the status window with the plugin parameter.
+ * 
  * ----tips window----
  * You can set each chip from the plugin command.
  * Control characters can also be used.
@@ -195,6 +212,7 @@
  * Furthermore, if you change the dpi or change the number of rows or columns, you may get trouble.
  * 
  * ----change log---
+ * 1.0.1 2017/10/10 Bug fix and added plugin parameters.
  * 1.0.0 2017/10/09 Release.
  * 
  * ----remarks----
@@ -232,6 +250,11 @@
  * @desc ステータスウィンドウの最大列数を設定します。3～5程度を推奨します。
  * @default 4
  * 
+ * @param 章ウィンドウを表示する
+ * @type boolean
+ * @desc 章ウィンドウを表示するかどうかを設定します。
+ * @default true
+ * 
  * @param 章ウィンドウの高さ
  * @type number
  * @max 1000
@@ -243,6 +266,13 @@
  * @max 1000
  * @desc ステータスウィンドウの高さを設定します。
  * @default 290
+ * 
+ * 
+ * @param 顔グラフィックのサイズ
+ * @type struct<Size>
+ * @desc 顔グラフィックのサイズを設定します。初期値:105*30 フルサイズ:144*144
+ * @default {"width":"105","height":"30"}
+ * 
  * 
  * @param サブウィンドウのフォントサイズ
  * @type number
@@ -355,6 +385,11 @@
  * 詳しくはプラグインパラメーターの「ヘルプを利用する」をご覧ください。
  * 制御文字の使用も可能です。
  * 
+ * v1.0.1より、章ウィンドウの非表示が可能になりました。
+ * 章ウィンドウを非表示にした場合、パラメーターで設定した章ウィンドウの高さ分だけウィンドウが詰めて表示されます。
+ * このとき、拡大されるウィンドウはチップスウィンドウと情報ウィンドウです。
+ * ステータスウィンドウを拡大したい場合はプラグインパラメーターでステータスウィンドウの高さを変更してください。
+ * 
  * 【チップスウィンドウ】
  * プラグインコマンドから各チップスを設定できます。
  * 制御文字の使用も可能です。
@@ -390,6 +425,7 @@
  * また、解像度を変えたり、行数や列数を変えたりした場合、不具合が出るかもしれません。
  * 
  * 【更新履歴】
+ * 1.0.1 2017/10/10 バグ修正と設定項目の追加。
  * 1.0.0 2017/10/09 公開。
  * 
  * 【備考】
@@ -402,7 +438,16 @@
  * 自由に使用してください。
  * 
  */
-
+/*~struct~Size:
+ *
+ * @param width
+ * @type number
+ * @desc 幅(width).
+ * 
+ * @param height
+ * @type number
+ * @desc 高さ(height).
+ */
 
 function Game_TMenuSys() {
     this.initialize.apply(this, arguments);
@@ -467,12 +512,14 @@ function Game_TMenuSys() {
 ////=============================================================================
     var param                          = {};
     //Basic Stteings
-    param.menuRows        = getParamNumber(['MenuRows', 'メニューの行数']);
-    param.menuMaxCols     = getParamNumber(['MenuMaxCols', 'メニューの最大列数']);
-    param.chapWinHeight   = getParamNumber(['ChapterWindowHeight', '章ウィンドウの高さ']);
-    param.statusWinHeight = getParamNumber(['StatusWindowHeight', 'ステータスウィンドウの高さ']);
-    param.subWinfontSize  = getParamNumber(['SubWIndowsFontSize', 'サブウィンドウのフォントサイズ']);
-    param.statusMaxCols   = getParamNumber(['StatusMaxCols', 'ステータスの最大列数']);
+    param.menuRows         = getParamNumber(['MenuRows', 'メニューの行数']);
+    param.menuMaxCols      = getParamNumber(['MenuMaxCols', 'メニューの最大列数']);
+    param.shouldUseChapWin = getParamString(['ShowChapterWindow', '章ウィンドウを表示する']);
+    param.chapWinHeight    = getParamNumber(['ChapterWindowHeight', '章ウィンドウの高さ']);
+    param.statusWinHeight  = getParamNumber(['StatusWindowHeight', 'ステータスウィンドウの高さ']);
+    param.faceSize         = getParamString(['FaceSize', '顔グラフィックのサイズ']);
+    param.subWinfontSize   = getParamNumber(['SubWIndowsFontSize', 'サブウィンドウのフォントサイズ']);
+    param.statusMaxCols    = getParamNumber(['StatusMaxCols', 'ステータスの最大列数']);
     //Help Settings
     param.shouldUseHelp   = getParamString(['UseHelp',  'ヘルプを利用する']);
     param.textHelp        = getParamString(['HelpText', 'ヘルプ用テキスト']);
@@ -494,6 +541,8 @@ function Game_TMenuSys() {
 ////==============================
     param.ratio    = convertParam(param.ratio);
     param.textHelp = convertParam(param.textHelp);
+    param.faceSize = convertParam(param.faceSize);
+    param.shouldUseChapWin = convertParam(param.shouldUseChapWin);
     
 //-----------------------------------------------------------------------------
 // Settings for plugin command.
@@ -624,7 +673,7 @@ function Game_TMenuSys() {
         this.createTipsWindow();
         this.createInfoWindow();
         //Hide unnecessary window.
-        this._goldWindow.hide();
+        this.hideUnnecessaryWindows();
         //Reset and refresh windows position.
         this.resetWindowsPosAndSize();
         this.refreshWindow_TMS();
@@ -710,6 +759,15 @@ function Game_TMenuSys() {
 
     Scene_Menu.prototype.getCommandIndex = function() {
         return this._commandWindow.index();
+    };
+
+    Scene_Menu.prototype.hideUnnecessaryWindows = function() {
+        this._goldWindow.hide();
+        if(!param.shouldUseChapWin){
+            this._chapterWindow.hide();
+            //Adjust the position of other windows by setting the height to 0.
+            this._chapterWindow.height = 0;
+        }
     };
 
     Scene_Menu.prototype.onDownTMS = function() {
@@ -919,32 +977,39 @@ function Game_TMenuSys() {
             //But I think there is a better solution.
             return;
         }
+        //If do not use chapter window, lower the contents of the status window by the height of the chapter window.
+        var initHeight = 290;
+        var yCorrect   = (param.shouldUseChapWin) ? 0 : this.height-initHeight;
+
+        //Draw all contents.
         this.drawItemBackground(index);
-        this.drawFaceImage(index);
-        this.drawUpperArea(index);
-        this.drawLowerArea(index);
+        this.drawFaceImage(index, yCorrect);
+        this.drawUpperArea(index, yCorrect);
+        this.drawLowerArea(index, yCorrect);
     };
 
-    Window_MenuStatus.prototype.drawFaceImage = function(index) {
+    Window_MenuStatus.prototype.drawFaceImage = function(index, yCorrect) {
         var actor  = $gameParty.members()[index];
         var rect   = this.itemRect(index);
-        var width  = 105;
-        var height = 30;
+        var width  = Number(param.faceSize.width);
+        var height = Number(param.faceSize.height);
         var margin = 5;
+        var y      = rect.y + margin + yCorrect;
         this.changePaintOpacity(actor.isBattleMember());
-        this.drawActorFace(actor, rect.x + margin, rect.y + margin, width, height);
+        this.drawActorFace(actor, rect.x + margin, y, width, height);
         this.changePaintOpacity(true);
     };
 
-    Window_MenuStatus.prototype.drawUpperArea = function (index) {
+    Window_MenuStatus.prototype.drawUpperArea = function (index, yCorrect) {
         var actor      = $gameParty.members()[index];
         var rect       = this.itemRect(index);
         var x          = rect.x;
-        var y          = rect.y;
+        var y          = rect.y + yCorrect;
         var width      = rect.width;
         var lineHeight = this.lineHeight();
         var margin     = 10;
         var levelWidth = this.drawActorLevelTMS(actor, x, y + lineHeight * 2, width);
+        this.drawActorClass(actor, x, y - lineHeight);
         this.drawActorName(actor, x, y + lineHeight * 1, width);
         this.drawActorIcons(actor, levelWidth + margin, y + lineHeight * 2, width);
     };
@@ -970,7 +1035,10 @@ function Game_TMenuSys() {
 
         var lineHeight = this.lineHeight();
         var padding    = 20;
-        var correctY   = 8;
+        //If do not use chapter window, lower the contents of the status window by the height of the chapter window.
+        //8 is usually correction.
+        var initHeight = 290;
+        var correctY   = (param.shouldUseChapWin) ? 8 : 8+this.height-initHeight;
         var y = lineHeight*2 + correctY;
 
         $gameParty.members().forEach(function(actor, i) {
@@ -999,10 +1067,10 @@ function Game_TMenuSys() {
     };
 
     Window_MenuStatus.prototype.swapSVActors = function() {
-        //スワップ用の処理を書く
         this._spriteSVActors.forEach(function(element, index) {
             this.removeChild(element);
         }, this);
+        
         this.createSVActors();
         this.modifySVActorsVisible();
     };
@@ -1022,17 +1090,16 @@ function Game_TMenuSys() {
         return resultWidth;
     };
 
-    Window_MenuStatus.prototype.drawLowerArea = function (index) {
+    Window_MenuStatus.prototype.drawLowerArea = function (index, yCorrect) {
         var actor      = $gameParty.members()[index];
         var rect       = this.itemRect(index);
         var lineHeight = this.lineHeight();
         var width      = rect.width;
         var x = rect.x;
-        var y = rect.y;
-        this.drawActorHp(actor, x, lineHeight * 3, width);
-        this.drawActorMp(actor, x, lineHeight * 4, width);
-        this.drawTpPoint(actor, x, lineHeight * 5, width);
-        this.drawNextExp(index, x, lineHeight * 6, width);
+        this.drawActorHp(actor, x, yCorrect + lineHeight * 3, width);
+        this.drawActorMp(actor, x, yCorrect + lineHeight * 4, width);
+        this.drawTpPoint(actor, x, yCorrect + lineHeight * 5, width);
+        this.drawNextExp(index, x, yCorrect + lineHeight * 6, width);
     };
 
     Window_MenuStatus.prototype.drawNextExp = function (index, x, lineHeight, width) {
@@ -1227,7 +1294,7 @@ function Game_TMenuSys() {
         //Location.
         this.drawInfoText(param.charsLocation, $gameMap.displayName(), x, true, locationWidth, fortuneWidth);
         //The money in player's possession.
-        this.drawInfoText(param.charsFortune, $gameParty.gold()+' \G', x, false, locationWidth, fortuneWidth);
+        this.drawInfoText(param.charsFortune, $gameParty.gold()+' \\G', x, false, locationWidth, fortuneWidth);
     };
 
     NTMO.TMS.Window_Info.prototype.drawCenterArea = function() {
