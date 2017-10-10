@@ -6,6 +6,7 @@
 // http://opensource.org/licenses/mit-license.php
 // ----------------------------------------------------------------------------
 // Version
+// 1.0.2 2017/10/10 バグ修正とコードの改善。
 // 1.0.1 2017/10/10 バグ修正と設定項目の追加。
 // 1.0.0 2017/10/09 公開。
 // ----------------------------------------------------------------------------
@@ -212,6 +213,7 @@
  * Furthermore, if you change the dpi or change the number of rows or columns, you may get trouble.
  * 
  * ----change log---
+ * 1.0.2 2017/10/10 Bug fix and code improvement.
  * 1.0.1 2017/10/10 Bug fix and added plugin parameters.
  * 1.0.0 2017/10/09 Release.
  * 
@@ -425,6 +427,7 @@
  * また、解像度を変えたり、行数や列数を変えたりした場合、不具合が出るかもしれません。
  * 
  * 【更新履歴】
+ * 1.0.2 2017/10/10 バグ修正とコードの改善。
  * 1.0.1 2017/10/10 バグ修正と設定項目の追加。
  * 1.0.0 2017/10/09 公開。
  * 
@@ -970,6 +973,18 @@ function Game_TMenuSys() {
         this.createSVActors();
     };
 
+    //If do not use chapter window, lower the contents of the status window by the height of the chapter window.
+    Window_MenuStatus.prototype.getCorrectY = function() {
+        var initHeight = 290;
+        return this.height - initHeight;
+        /*
+          [Obsolete]
+          return (param.shouldUseChapWin) ? 0 : this.height-initHeight;
+          WHY : When user shows chapter window, the contents position will be corrupted.
+                Should simply return "this.height - initHeight".
+        */
+    };
+
     //Override.
     Window_MenuStatus.prototype.drawItem = function(index) {
         if(index < this.topIndex()){
@@ -977,15 +992,13 @@ function Game_TMenuSys() {
             //But I think there is a better solution.
             return;
         }
-        //If do not use chapter window, lower the contents of the status window by the height of the chapter window.
-        var initHeight = 290;
-        var yCorrect   = (param.shouldUseChapWin) ? 0 : this.height-initHeight;
+        var correctY   = this.getCorrectY();
 
         //Draw all contents.
         this.drawItemBackground(index);
-        this.drawFaceImage(index, yCorrect);
-        this.drawUpperArea(index, yCorrect);
-        this.drawLowerArea(index, yCorrect);
+        this.drawFaceImage(index, correctY);
+        this.drawUpperArea(index, correctY);
+        this.drawLowerArea(index, correctY);
     };
 
     Window_MenuStatus.prototype.drawFaceImage = function(index, yCorrect) {
@@ -1037,8 +1050,7 @@ function Game_TMenuSys() {
         var padding    = 20;
         //If do not use chapter window, lower the contents of the status window by the height of the chapter window.
         //8 is usually correction.
-        var initHeight = 290;
-        var correctY   = (param.shouldUseChapWin) ? 8 : 8+this.height-initHeight;
+        var correctY   = this.getCorrectY()+8;
         var y = lineHeight*2 + correctY;
 
         $gameParty.members().forEach(function(actor, i) {
