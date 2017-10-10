@@ -1446,7 +1446,7 @@ function Game_TMenuSys() {
         /**
          * @param {Window_Base} parent
          * @param {number} lineHeight
-         * @param {correctY} correctY
+         * @param {number} correctY
          */
         constructor(parent, lineHeight, correctY) {
             this._parent      = parent;//Parent window.
