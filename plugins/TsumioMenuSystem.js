@@ -6,6 +6,7 @@
 // http://opensource.org/licenses/mit-license.php
 // ----------------------------------------------------------------------------
 // Version
+// 1.1.1 2017/10/12 バグ修正。背景設定・ウィンドウスキン設定・DestinationWindow.jsとの連携機能の追加。
 // 1.1.0 2017/10/11 コンテンツの高さパラメーターの追加とコードの改善。
 // 1.0.2 2017/10/10 バグ修正とコードの改善。
 // 1.0.1 2017/10/10 バグ修正と設定項目の追加。
@@ -147,6 +148,51 @@
  * @desc This is a settings sets the contents of the option2.If you want to cooperate Chronus.js, write [Chronus1] or [Chronus2].
  * @default [Chronus2]
  * 
+ * @param ----背景の設定----
+ * @desc 
+ * @default 
+ * 
+ * @param MainBackgroundImage
+ * @type file
+ * @require 1
+ * @desc This is a setting sets the main background image.
+ * @dir img/tsumio
+ * @default
+ * 
+ * @param MainBackgroundSettings
+ * @type struct<Background>
+ * @desc This is a setting sets the main background settings.If you set minus number in size, sets the screen size.
+ *  * @default {"x":"0", "y":"0", "width":"-1", "height":"-1", "speedX":"0.00", "speedY":"0.00"}
+ * 
+ * @param SubBackgroundImage
+ * @type file
+ * @require 1
+ * @desc This is a setting sets the main background image.
+ * @dir img/tsumio
+ * @default
+ * 
+ * @param SubBackgroundSettings
+ * @type struct<Background>
+ * @desc This is a setting sets the main background settings.If you set minus number in size, sets the screen size.
+ *  * @default {"x":"0", "y":"0", "width":"-1", "height":"-1", "speedX":"0.00", "speedY":"0.00"}
+ * 
+ * @param ParticleImage
+ * @type file
+ * @require 1
+ * @desc This is a setting sets the particle image.
+ * @dir img/tsumio
+ * @default
+ * 
+ * @param ParticleSettings
+ * @type struct<Particle>
+ * @desc This is a setting sets the particle settings.If you set minus number in size, sets the screen size.
+ * @default {"x":"0", "y":"0", "width":"-1", "height":"-1", "speedX":"-1.00", "speedY":"1.00", "opacity":"150", "blendMode":"0"}
+ * 
+ * @param ParticleFlashing
+ * @type boolean
+ * @desc This is a setting sets whether to make the particles flashing.
+ * @default true
+ * 
  * @param ----Special Settings----
  * @desc 
  * @default 
@@ -162,6 +208,12 @@
  * @type struct<LineHeight>
  * @desc This is a settings sets the line height of the status window contents.The larger the number, displayed in lower.
  * @default {"class":"-1", "face":"0", "name":"1", "level":"2", "icons":"2", "hp":"3", "mp":"4", "tp":"5", "exp":"6"}
+ * 
+ * @param WindowSkin
+ * @type struct<WindowSkin>
+ * @desc This is a settings sets the skin of the each window.
+ * @default {"command":"", "status":"", "chapter":"", "tips":"", "info":""}
+ * 
  * 
  * @help This plugin remodels the menu scene.
  * 
@@ -203,12 +255,26 @@
  * Enter "[Chronus1]" as the content of option and get date format1.
  * Enter "[Chronus2]" as the content of option and get date format2.
  * 
+ * ----collaboration with DestinationWindow.js----
+ * This plugin supports collaboration with DestinationWindow.js created by Triacontane.
+ * Enter "[Destination]" as the content of option and get destination.
+ * 
+ * 参考URL：https://raw.githubusercontent.com/triacontane/RPGMakerMV/master/DestinationWindow.js
+ * 
  * Reference：https://raw.githubusercontent.com/triacontane/RPGMakerMV/master/Chronus.js
  * 
  * ----line height----
  * By setting "LineHeight" of the plugin parameter, you can change the height of the display contents in the status window.
  * The larger the number, displayed in lower.
  * In addition, the height is not specified in pixels but in line units.
+ * 
+ * ----background and particle----
+ * You can set background images and particles.
+ * The sub background is displayed above the main background.
+ * By changing the speed of the X axis and the Y axis, it is possible to move the image while looping it.
+ * 
+ * ----window skin----
+ * If you do not set the window skin, the standard window skin will be applied.
  * 
  * ----plugin command----
  * All plugin commands start with "TMS".
@@ -228,6 +294,7 @@
  * Furthermore, if you change the dpi or change the number of rows or columns, you may get trouble.
  * 
  * ----change log---
+ * 1.1.1 2017/10/12 Bug fix.Added background settings, window skin settings, collaboration function with DestinationWindow.js.
  * 1.1.0 2017/10/11 Added line height parameter and code improvement.
  * 1.0.2 2017/10/10 Bug fix and code improvement.
  * 1.0.1 2017/10/10 Bug fix and added plugin parameters.
@@ -375,6 +442,51 @@
  * @default [Chronus2]
  * 
  * 
+ * @param ----背景の設定----
+ * @desc 
+ * @default 
+ * 
+ * @param メイン背景の画像
+ * @type file
+ * @require 1
+ * @desc メイン背景の画像を設定します。
+ * @dir img/tsumio
+ * @default
+ * 
+ * @param メイン背景の設定
+ * @type struct<Background>
+ * @desc メイン背景の設定を設定します。幅と高さにマイナスの値を設定すると、スクリーンサイズが代入されます。
+ * @default {"x":"0", "y":"0", "width":"-1", "height":"-1", "speedX":"0.00", "speedY":"0.00"}
+ * 
+ * @param サブ背景の画像
+ * @type file
+ * @require 1
+ * @desc メイン背景の画像を設定します。
+ * @dir img/tsumio
+ * @default
+ * 
+ * @param サブ背景の設定
+ * @type struct<Background>
+ * @desc メイン背景の設定を設定します。幅と高さにマイナスの値を設定すると、スクリーンサイズが代入されます。
+ * @default {"x":"0", "y":"0", "width":"-1", "height":"-1", "speedX":"0.00", "speedY":"0.00"}
+ * 
+ * @param パーティクルの画像
+ * @type file
+ * @require 1
+ * @desc パーティクルの画像を設定します。
+ * @dir img/tsumio
+ * @default
+ * 
+ * @param パーティクルの設定
+ * @type struct<Particle>
+ * @desc パーティクルの設定を設定します。幅と高さにマイナスの値を設定すると、スクリーンサイズが代入されます。
+ * @default {"x":"0", "y":"0", "width":"-1", "height":"-1", "speedX":"-1.00", "speedY":"1.00", "opacity":"150", "blendMode":"0"}
+ * 
+ * @param パーティクルの点滅
+ * @type boolean
+ * @desc パーティクルを点滅させるかどうかを設定します。
+ * @default true
+ * 
  * @param ----特殊な設定----
  * @desc 
  * @default 
@@ -390,6 +502,12 @@
  * @type struct<LineHeight>
  * @desc ステータスウィンドウ内のコンテンツの高さを設定します。数字が大きいほど下に表示されます。
  * @default {"class":"-1", "face":"0", "name":"1", "level":"2", "icons":"2", "hp":"3", "mp":"4", "tp":"5", "exp":"6"}
+ * 
+ * @param ウィンドウスキン
+ * @type struct<WindowSkin>
+ * @desc 各ウィンドウのスキンを設定します。
+ * @default {"command":"", "status":"", "chapter":"", "tips":"", "info":""}
+ * 
  * 
  * @help メニュー画面を改造するプラグインです。
  * 
@@ -431,12 +549,24 @@
  * オプションの内容に「[Chronus1]」と入力すると日時フォーマット1を取得します。
  * また、「[Chronus2]」と入力すると日時フォーマット2を取得します。
  * 
- * 参考URL：https://raw.githubusercontent.com/triacontane/RPGMakerMV/master/Chronus.js
+ * 【DestinationWindow.jsとの連携】
+ * 当プラグインはトリアコンタンさんが制作したDestinationWindow.jsとの連携をサポートしています。
+ * オプションの内容に「[Destination]」と入力すると、設定した行動目標をを取得します。
+ * 
+ * 参考URL：https://raw.githubusercontent.com/triacontane/RPGMakerMV/master/DestinationWindow.js
  * 
  *【コンテンツの高さ】
  * プラグインパラメーターのコンテンツの高さを設定すると、ステータスウィンドウにおける表示内容の高さを変更することができます。
  * 数字を大きくすれば大きくするほど表示内容は下に表示されます。
  * なお、高さはピクセルで指定するのではなく行単位です。
+ * 
+ * 【背景画像とパーティクル】
+ * 背景画像とパーティクルを設定することができます。
+ * サブ背景はメイン背景よりも上に表示されます。
+ * X軸Y軸のスピードを変更することにより、画像をループさせて移動させることもできます。
+ * 
+ * 【ウィンドウスキン】
+ * ウィンドウスキンを設定しない場合、標準のウィンドウスキンが適用されます。
  * 
  * 【プラグインコマンド】
  * 全てのプラグインコマンドは「TMS」から始まります。
@@ -458,6 +588,7 @@
  * また、解像度を変えたり、行数や列数を変えたりした場合、不具合が出るかもしれません。
  * 
  * 【更新履歴】
+ * 1.1.1 2017/10/12 バグ修正。背景設定・ウィンドウスキン設定・DestinationWindow.jsとの連携機能の追加。
  * 1.1.0 2017/10/11 コンテンツの高さパラメーターの追加とコードの改善。
  * 1.0.2 2017/10/10 バグ修正とコードの改善。
  * 1.0.1 2017/10/10 バグ修正と設定項目の追加。
@@ -482,6 +613,98 @@
  * @param height
  * @type number
  * @desc 高さ(height).
+ */
+/*~struct~Background:
+ *
+ * @param x
+ * @type number
+ * @min -2000
+ * @max 2000
+ * @desc X座標(X coordinate).
+ * 
+ * @param y
+ * @type number
+ * @min -2000
+ * @max 2000
+ * @desc Y座標(Y coordinate).
+ * 
+ * @param width
+ * @type number
+ * @min -2000
+ * @max 2000
+ * @desc 幅(width).
+ * 
+ * @param height
+ * @type number
+ * @min -2000
+ * @max 2000
+ * @desc 高さ(height).
+ * 
+ * @param speedX
+ * @type number
+ * @min -255
+ * @max 255
+ * @decimals 2
+ * @desc X軸のスピード(The speed of the X direction).
+ * 
+ * @param speedY
+ * @type number
+ * @min -255
+ * @max 255
+ * @decimals 2
+ * @desc Y軸のスピード(The speed of the Y direction).
+ * 
+ */
+/*~struct~Particle:
+ *
+ * @param x
+ * @type number
+ * @min -2000
+ * @max 2000
+ * @desc X座標(X coordinate).
+ * 
+ * @param y
+ * @type number
+ * @min -2000
+ * @max 2000
+ * @desc Y座標(Y coordinate).
+ * 
+ * @param width
+ * @type number
+ * @min -2000
+ * @max 2000
+ * @desc 幅(width).
+ * 
+ * @param height
+ * @type number
+ * @min -2000
+ * @max 2000
+ * @desc 高さ(height).
+ * 
+ * @param speedX
+ * @type number
+ * @min -255
+ * @max 255
+ * @decimals 2
+ * @desc X軸のスピード(The speed of the X direction).
+ * 
+ * @param speedY
+ * @type number
+ * @min -255
+ * @max 255
+ * @decimals 2
+ * @desc Y軸のスピード(The speed of the Y direction).
+ * 
+ * @param opacity
+ * @type number
+ * @max 255
+ * @desc 透明度(opacity).
+ * 
+ * @param blendMode
+ * @type number
+ * @max 3
+ * @desc ブレンドモード(blend mode).0：通常 1：加算 2：乗算 3：スクリーン(0:Normal 1:Addition 2:Multiplication 3:Screen).
+ * 
  */
 /*~struct~LineHeight:
  * 
@@ -538,6 +761,39 @@
  * @min -255
  * @max 255
  * @desc 経験値(exp).
+ */
+/*~struct~WindowSkin:
+ *
+ * @param command
+ * @type file
+ * @require 1
+ * @desc コマンドウィンドウのスキン(The skin of the command window).
+ * @dir img/tsumio
+ * 
+ * @param status
+ * @type file
+ * @require 1
+ * @desc ステータスウィンドウのスキン(The skin of the status window).
+ * @dir img/tsumio
+ * 
+ * @param chapter
+ * @type file
+ * @require 1
+ * @desc 章ウィンドウのスキン(The skin of the chapter window).
+ * @dir img/tsumio
+ * 
+ * @param tips
+ * @type file
+ * @require 1
+ * @desc チップスウィンドウのスキン(The skin of the tips window).
+ * @dir img/tsumio
+ * 
+ * @param info
+ * @type file
+ * @require 1
+ * @desc 情報ウィンドウのスキン(The skin of the info window).
+ * @dir img/tsumio
+ * 
  */
 
 function Game_TMenuSys() {
@@ -600,7 +856,7 @@ function Game_TMenuSys() {
     //This function is not written by Triacontane.Tsumio wrote this function !
     var convertToNumber = function(obj) {
         for(var prop in obj) {
-            obj[prop] = parseInt(obj[prop], 10);
+            obj[prop] = Number(obj[prop]);
         }
         return obj;
     }
@@ -638,9 +894,19 @@ function Game_TMenuSys() {
     param.op1Contents     = getParamString(['Option1Contents', 'オプション1の内容']);
     param.option2         = getParamString(['Option2', 'オプション2']);
     param.op2Contents     = getParamString(['Option2Contents', 'オプション2の内容']);
+    //Background Settings
+    param.mainBackImg     = getParamString(['MainBackgroundImage', 'メイン背景の画像']);
+    param.mainBackSet     = getParamString(['MainBackgroundSettings', 'メイン背景の設定']);
+    param.subBackImg      = getParamString(['SubBackgroundImage', 'サブ背景の画像']);
+    param.subBackSet      = getParamString(['SubBackgroundSettings', 'サブ背景の設定']);
+    param.particleImg     = getParamString(['ParticleImage', 'パーティクルの画像']);
+    param.particleSet     = getParamString(['ParticleSettings', 'パーティクルの設定']);
+    param.particleFlash   = getParamString(['ParticleFlashing', 'パーティクルの点滅']);
     //Special Settings
     param.ratio           = getParamString(['Ratio', '比率']);
     param.lineHeight      = getParamString(['LineHeight', 'コンテンツの高さ']);
+    param.windowSkin      = getParamString(['WindowSkin', 'ウィンドウスキン']);
+
 
 ////==============================
 //// Convert parameters.
@@ -650,11 +916,19 @@ function Game_TMenuSys() {
     param.faceSize = convertParam(param.faceSize);
     param.shouldUseChapWin = convertParam(param.shouldUseChapWin);
     param.lineHeight       = convertParam(param.lineHeight);
+    param.windowSkin       = convertParam(param.windowSkin);
+    param.mainBackSet      = convertParam(param.mainBackSet);
+    param.subBackSet       = convertParam(param.subBackSet);
+    param.particleSet      = convertParam(param.particleSet);
+    param.particleFlash    = convertParam(param.particleFlash);
 ////==============================
 //// Convert to Number.
 ////==============================
     param.faceSize    = convertToNumber(param.faceSize);
     param.lineHeight  = convertToNumber(param.lineHeight);
+    param.mainBackSet = convertToNumber(param.mainBackSet);
+    param.subBackSet  = convertToNumber(param.subBackSet);
+    param.particleSet = convertToNumber(param.particleSet);
 
 //-----------------------------------------------------------------------------
 // Settings for plugin command.
@@ -677,6 +951,39 @@ function Game_TMenuSys() {
         }
     };
 
+////==============================
+//// Add tsumio folder to ImageManager.
+////==============================
+    ImageManager.loadTsumio = function(filename) {
+        return this.loadBitmap('img/tsumio/', filename, 0, true);
+    };
+
+////==============================
+//// Scene_Boot
+///   Override this class for loading images.
+////==============================
+    var _Scene_Boot_loadSystemWindowImage      = Scene_Boot.prototype.loadSystemWindowImage;
+    Scene_Boot.prototype.loadSystemWindowImage = function() {
+        _Scene_Boot_loadSystemWindowImage.call(this);
+
+        //Addtional window images.
+        if(param.windowSkin.command){
+            ImageManager.loadTsumio(param.windowSkin.command);
+        }
+        if(param.windowSkin.status){
+            ImageManager.loadTsumio(param.windowSkin.status);
+        }
+        if(param.windowSkin.chapter){
+            ImageManager.loadTsumio(param.windowSkin.chapter);
+        }
+        if(param.windowSkin.tips){
+            ImageManager.loadTsumio(param.windowSkin.tips);
+        }
+        if(param.windowSkin.info){
+            ImageManager.loadTsumio(param.windowSkin.info);
+        }
+    };
+
 //////=============================================================================
 ///// NTMO.TMS.Base
 /////  This is static class for getting various information.
@@ -689,6 +996,29 @@ function Game_TMenuSys() {
                 return 'dying';
             }else{
                 return 'walk';
+            }
+        }
+
+        static isNumberMinus(num) {
+            if(num < 0){
+                return true;
+            }
+            return false;
+        }
+
+        static convertBackgroundWidth(num) {
+            if(this.isNumberMinus(num)){
+                return Graphics.width; 
+            }else{
+                return num;
+            }
+        }
+
+        static convertBackgroundHeight(num) {
+            if(this.isNumberMinus(num)){
+                return Graphics.height; 
+            }else{
+                return num;
             }
         }
     };
@@ -784,14 +1114,76 @@ function Game_TMenuSys() {
         this.createChapterWindow();
         this.createTipsWindow();
         this.createInfoWindow();
+
+        /*
+          Note : Create Particle.
+          Should be created with createBackground() or here.
+          I can not decide which is better.
+        */
+        //this.createParticle();
+
         //Hide unnecessary window.
         this.hideUnnecessaryWindows();
+
         //Reset and refresh windows position.
         this.resetWindowsPosAndSize();
         this.refreshWindow_TMS();
+
         //Add eventListener.
         this.addEventListenerToCommandWindow();
         this.addEventListenerToStatusWindow();
+    };
+
+    var _Scene_Menu_update      = Scene_Menu.prototype.update;
+    Scene_Menu.prototype.update = function() {
+        _Scene_Menu_update.call(this);
+
+        this.scrollBackImages.update();
+        this.particleImage.update();
+    };
+    
+    var _Scene_Menu_createBackground      = Scene_Menu.prototype.createBackground;
+    Scene_Menu.prototype.createBackground = function() {
+        _Scene_Menu_createBackground.call(this);
+
+        this.createScrollBackground();
+        this.createParticle();//Refer -> Note : Create Particle.
+    };
+
+    Scene_Menu.prototype.createScrollBackground = function() {
+        //Initialize background settings.
+        var main_x      = param.mainBackSet.x;
+        var main_y      = param.mainBackSet.y;
+        var main_width  = NTMO.TMS.Base.convertBackgroundWidth(param.mainBackSet.width);
+        var main_height = NTMO.TMS.Base.convertBackgroundHeight(param.mainBackSet.height);
+        var sub_x       = param.subBackSet.x;
+        var sub_y       = param.subBackSet.y;
+        var sub_width   = NTMO.TMS.Base.convertBackgroundWidth(param.subBackSet.width);
+        var sub_height  = NTMO.TMS.Base.convertBackgroundHeight(param.subBackSet.height);
+
+        //Create scrolling background.You should 'move()' each image, if you want to draw a certain range.
+        this.scrollBackImages = new ScrollBackImages(this, param.mainBackImg, param.subBackImg);
+        this.scrollBackImages.setMainSpeed(param.mainBackSet.speedX, param.mainBackSet.speedY);
+        this.scrollBackImages.setSubSpeed(param.subBackSet.speedX, param.subBackSet.speedY);
+        this.scrollBackImages.moveMainSprite(main_x, main_y, main_width, main_height);
+        this.scrollBackImages.moveSubSprite(sub_x, sub_y, sub_width, sub_height);
+    };
+
+    Scene_Menu.prototype.createParticle = function() {
+        //Initialize particle settings.
+        var fileName    = param.particleImg;
+        var opacity     = param.particleSet.opacity;
+        var blendMode   = param.particleSet.blendMode;
+        var flashing    = param.particleFlash;
+        var x           = param.particleSet.x;
+        var y           = param.particleSet.y;
+        var width       = NTMO.TMS.Base.convertBackgroundWidth(param.particleSet.width);
+        var height      = NTMO.TMS.Base.convertBackgroundHeight(param.particleSet.height);
+
+        //Create particle.You should 'move()' each image, if you want to draw a certain range.
+        this.particleImage = new ParticleImage(this, fileName, opacity, blendMode, flashing);
+        this.particleImage.setSpeed(param.particleSet.speedX, param.particleSet.speedY);
+        this.particleImage.moveSprite(x, y, width, height);
     };
 
     var _Scene_Menu_createStatusWindow      = Scene_Menu.prototype.createStatusWindow;
@@ -918,14 +1310,31 @@ function Game_TMenuSys() {
                 func();
             }
             count++;
-            yield;
+            yield count;
         }
     };
 
     var _Scene_Menu_onFormationOk      = Scene_Menu.prototype.onFormationOk;
     Scene_Menu.prototype.onFormationOk = function() {
         _Scene_Menu_onFormationOk.call(this);
-        this._genSwapSVActors.next();
+        
+        //HACK: Not best answer.But anyway works.
+        //This is a process to guard SVActors from flickering.
+        //See the "onFormationCancel()".
+        var count = this._genSwapSVActors.next();
+        if(count.value >= 2){
+            this._genSwapSVActors = this.genSkipFirstCalling(this._statusWindow.swapSVActors.bind(this._statusWindow));
+        }
+    };
+
+    var _Scene_Menu_onFormationCancel      = Scene_Menu.prototype.onFormationCancel;
+    Scene_Menu.prototype.onFormationCancel = function() {
+        _Scene_Menu_onFormationCancel.call(this);
+
+        //HACK: Not best answer.But anyway works.
+        //This is a process to guard SVActors from flickering.
+        //See the "onFormationOk()".
+        this._genSwapSVActors = this.genSkipFirstCalling(this._statusWindow.swapSVActors.bind(this._statusWindow));
     };
 
 //////=============================================================================
@@ -942,6 +1351,14 @@ function Game_TMenuSys() {
 
     Window_MenuCommand.prototype.maxCols = function() {
         return param.menuMaxCols;
+    };
+
+    Window_MenuCommand.prototype.loadWindowskin = function() {
+        if (param.windowSkin.command) {
+            this.windowskin = ImageManager.loadTsumio(param.windowSkin.command);
+        } else {
+            Window_Base.prototype.loadWindowskin.call(this);
+        }
     };
 
     var _Window_MenuCommand_initialize = Window_MenuCommand.prototype.initialize;
@@ -1056,6 +1473,14 @@ function Game_TMenuSys() {
         _Window_MenuStatus_initialize.call(this,x, y, width, height);
     };
 
+    Window_MenuStatus.prototype.loadWindowskin = function() {
+        if (param.windowSkin.status) {
+            this.windowskin = ImageManager.loadTsumio(param.windowSkin.status);
+        } else {
+            Window_Base.prototype.loadWindowskin.call(this);
+        }
+    };
+
     Window_MenuStatus.prototype.createEventListener = function(){
         this.eventListener = new Map([['onUp',null],['onDown',null],['onLeft',null],['onRight',null],['onSelect',null]]);
         for(var key of this.eventListener.keys()){
@@ -1070,9 +1495,9 @@ function Game_TMenuSys() {
         this.eventListener.onSelect.fire();
     };
 
-    var _Window_MenuCommand_update = Window_MenuCommand.prototype.update;
+    var _Window_MenuStatus_update = Window_MenuStatus.prototype.update;
     Window_MenuStatus.prototype.update = function() {
-        _Window_MenuCommand_update.call(this);
+        _Window_MenuStatus_update.call(this);
         this.sVActors.update();
     };
 
@@ -1087,6 +1512,7 @@ function Game_TMenuSys() {
     };
 
     Window_MenuStatus.prototype.swapSVActors = function() {
+        Debug.log('swapSVActors()でswap発生');
         this.sVActors.swap();
     };
 
@@ -1140,7 +1566,7 @@ function Game_TMenuSys() {
         var lineHeight = this.lineHeight();
         var margin     = 10;
         var levelWidth = this.drawActorLevelTMS(actor, x, y + lineHeight * param.lineHeight.level, width);
-        this.drawActorClass(actor, x, y + lineHeight * param.lineHeight.class);
+        this.drawActorClass(actor, x, y + lineHeight * param.lineHeight.class, width);
         this.drawActorName(actor, x, y + lineHeight * param.lineHeight.name, width);
         this.drawActorIcons(actor, levelWidth + margin, y + lineHeight * param.lineHeight.icons, width);
     };
@@ -1194,11 +1620,11 @@ function Game_TMenuSys() {
         
         //Draw text.
         this.changeTextColor(this.systemColor());
-        this.drawText("EXP", x, lineHeight, expWidth,'left');
+        this.drawText('EXP', x, lineHeight, expWidth,'left');
         this.resetTextColor();
         this.drawText(requiredPercent, numY, lineHeight, numWidth, 'right');
         this.changeTextColor(this.systemColor());
-        this.drawText("%", x + rect.width - perWidth, lineHeight, perWidth, 'right');
+        this.drawText('%', x + rect.width - perWidth, lineHeight, perWidth, 'right');
         this.resetTextColor();
     }
 
@@ -1213,11 +1639,24 @@ function Game_TMenuSys() {
         if (actor.level === 1) {
             return currentExp / nextLevelExp * 100;
         }else if(actor.isMaxLevel()){
-            return '-------';
+            return this.calcAppropriateMaxExpExpression();
         }else{
             var pow          = Math.pow(10, 2);
             var remainingPer = 100 - (requiredExp / (nextLevelExp - previousLevelExp) * 100)//The remaining percentage
             return Math.floor(remainingPer * pow) / pow;
+        }
+    };
+
+    Window_MenuStatus.prototype.calcAppropriateMaxExpExpression = function () {
+        var rectWidth = this.itemWidth();
+        var textMax   = '-------';
+        var maxWidth  = this.textWidth(textMax);
+        var textExp   = 'Exp%';
+        var expWidth  = this.textWidth(textExp);
+        if(maxWidth+expWidth > rectWidth){ 
+            return '---';
+        }else {
+            return textMax;
         }
     };
 
@@ -1279,6 +1718,14 @@ function Game_TMenuSys() {
         this.drawChapterText();
     };
 
+    NTMO.TMS.Window_Chapter.prototype.loadWindowskin = function() {
+        if (param.windowSkin.chapter) {
+            this.windowskin = ImageManager.loadTsumio(param.windowSkin.chapter);
+        } else {
+            Window_Base.prototype.loadWindowskin.call(this);
+        }
+    };
+
     NTMO.TMS.Window_Chapter.prototype.drawChapterText = function() {
         var x     = 0;
         var y     = 0;
@@ -1320,6 +1767,14 @@ function Game_TMenuSys() {
         Window_Base.prototype.initialize.call(this, x, y, width, height);
     };
 
+    NTMO.TMS.Window_Tips.prototype.loadWindowskin = function() {
+        if (param.windowSkin.tips) {
+            this.windowskin = ImageManager.loadTsumio(param.windowSkin.tips);
+        } else {
+            Window_Base.prototype.loadWindowskin.call(this);
+        }
+    };
+
     NTMO.TMS.Window_Tips.prototype.refresh = function() {
         this.drawTipsText($gameSystem.tMenuSys().getTips1(), 1);
         this.drawTipsText($gameSystem.tMenuSys().getTips2(), 2);
@@ -1349,6 +1804,14 @@ function Game_TMenuSys() {
 
     NTMO.TMS.Window_Info.prototype.initialize = function(x, y, width, height) {
         Window_Base.prototype.initialize.call(this, x, y, width, height);
+    };
+
+    NTMO.TMS.Window_Info.prototype.loadWindowskin = function() {
+        if (param.windowSkin.info) {
+            this.windowskin = ImageManager.loadTsumio(param.windowSkin.info);
+        } else {
+            Window_Base.prototype.loadWindowskin.call(this);
+        }
     };
 
     NTMO.TMS.Window_Info.prototype.refresh = function() {
@@ -1385,8 +1848,8 @@ function Game_TMenuSys() {
         var ratio   = Number(param.ratio[2]);//Default is 0.7.
         var x       = this.contentsWidth() * ratio;
         //Try to parse
-        var op1Text = this.tryToParseChronus(param.op1Contents);
-        var op2Text = this.tryToParseChronus(param.op2Contents);
+        var op1Text = this.tryToParse(param.op1Contents);
+        var op2Text = this.tryToParse(param.op2Contents);
         //Drawing.
         this.drawInfoText(param.option1, op1Text, x, true);
         this.drawInfoText(param.option2, op2Text, x, false);
@@ -1423,15 +1886,39 @@ function Game_TMenuSys() {
         return param.subWinfontSize;
     };
 
+    NTMO.TMS.Window_Info.prototype.tryToParse = function(data) {
+        data = this.tryToParseChronus(data);
+        data = this.tryToParseDestination(data);
+
+        return data;
+    };
+
+    NTMO.TMS.Window_Info.prototype.tryToParseDestination = function(data) {
+        if(data !== '[Destination]'){
+            //When data is not Destination, return data as is. 
+            Debug.log('Dest:parse不実行');
+            return data;
+        }
+
+        if('getDestination' in $gameSystem){
+            Debug.log('Dest:parse実行');
+            return $gameSystem.getDestination().trim();
+        }else{
+            return 'Destination is not found.';
+        }
+    };
+
     NTMO.TMS.Window_Info.prototype.tryToParseChronus = function(data) {
         if(data !== '[Chronus1]' && data !== '[Chronus2]'){
             //When data is not Chronus, return data as is. 
+            Debug.log('Chronus:parse不実行');
             return data;
         }
 
         if('Game_Chronus' in window){
             //Collaborate with Chronus and acquire time data.
             //1 is Years etc.2 is 24hours.
+            Debug.log('Chronus:parse実行');
             return (data==='[Chronus1]') ? $gameSystem.chronus().getDateFormat(1) : $gameSystem.chronus().getDateFormat(2);
         }else{
             return 'Chronus is not found.';
@@ -1549,6 +2036,216 @@ function Game_TMenuSys() {
     };
 
 ////=============================================================================
+//// ScrollBackImages
+////  This class is for scrolling back image.
+////=============================================================================
+    class ScrollBackImages {
+
+        /**
+         * @param {Scene_Base} parent
+         * @param {string} mainFileName
+         * @param {string} subFileName
+         */
+        constructor(parent, mainFileName, subFileName) {
+            this.initialize.apply(this, arguments);
+        }
+
+        initialize(parent, mainFileName, subFileName) {
+            //Initialize
+            this._parent         = parent;//parent scene.
+            this._backMainSprite = null;
+            this._backSubSprite  = null;
+            this._mainSpeedX     = 0;
+            this._mainSpeedY     = 0;
+            this._subSpeedX      = 0;
+            this._subSpeedY      = 0;
+            this._mainFileName   = mainFileName;
+            this._subFileName    = subFileName;
+
+            //Create.
+            this.createSprites();
+            this.moveMainSprite(0, 0, Graphics.width, Graphics.height);
+            this.moveSubSprite(0, 0, Graphics.width, Graphics.height);
+        }
+
+        get mainFileName() {
+            if(this._mainFileName){
+                return this._mainFileName;
+            }
+            return null;
+        }
+
+        get subFileName() {
+            if(this._subFileName){
+                return this._subFileName;
+            }
+            return null;
+        }
+
+        get parent() {
+            return this._parent;
+        }
+
+        createSprites() {
+            //Create.
+            this._backMainSprite = new TilingSprite(ImageManager.loadTsumio(this.mainFileName));
+            this._backSubSprite  = new TilingSprite(ImageManager.loadTsumio(this.subFileName));
+            //AddChild.
+            this.parent.addChild(this._backMainSprite);
+            this.parent.addChild(this._backSubSprite);
+        }
+
+        moveMainSprite(x, y, width, height) {
+            this._backMainSprite.move(x, y, width, height);
+        }
+
+        moveSubSprite(x, y, width, height) {
+            this._backSubSprite.move(x, y, width, height);
+        }
+
+        setMainSpeed(speedX, speedY) {
+            this._mainSpeedX = (isFinite(speedX)) ? speedX : 0;
+            this._mainSpeedY = (isFinite(speedY)) ? speedY : 0;
+        }
+
+        setSubSpeed(speedX, speedY) {
+            this._subSpeedX = (isFinite(speedX)) ? speedX : 0;
+            this._subSpeedY = (isFinite(speedY)) ? speedY : 0;
+        }
+
+        update() {
+            this._updateOriginPosition();
+        }
+
+        _updateOriginPosition() {
+            //Main.
+            this._backMainSprite.origin.x += this._mainSpeedX;
+            this._backMainSprite.origin.y += this._mainSpeedY;
+            //Sub.
+            this._backSubSprite.origin.x  += this._subSpeedX;
+            this._backSubSprite.origin.y  += this._subSpeedY;
+        }
+    }
+
+////=============================================================================
+//// ParticleImage
+////  This class implements particle image.
+////=============================================================================
+    class ParticleImage {
+        
+        /**
+         * @param {Scene_Base} parent
+         * @param {string} fileName
+         * @param {number} opacity
+         * @param {number} blendMode
+         * @param {boolean} isFlashing
+         */
+        constructor(parent, fileName, opacity, blendMode, isFlashing) {
+            this.initialize.apply(this, arguments);
+        }
+
+        initialize(parent, fileName, opacity, blendMode, isFlashing) {
+            //Initialize basic settings.
+            this._parent         = parent;//parent scene.
+            this._particleSprite = null;
+            this._speedX         = 0;
+            this._speedY         = 0;
+            this._fileName       = fileName;
+
+            //Flashing settings.
+            this._opacity        = Number(opacity);
+            this._blendMode      = Number(blendMode);//0:Normal 1:Addition 2:Multiplication 3:Screen
+            this._amp            = this._opacity / 2;//Wave amplitude
+            this._phase          = 0;//Wave phase
+            this._isFlashing     = isFlashing;
+
+            //Create.
+            this.createSprite();
+            this.moveSprite(0, 0, Graphics.width, Graphics.height);
+        }
+
+        /**
+         * CENTER_OPACITY is used to calculate flashing.
+         */
+        get CENTER_OPACITY() {
+            return 127;// -> 255 / 2;
+        }
+
+        get fileName() {
+            if(this._fileName){
+                return this._fileName;
+            }
+            return null;
+        }
+
+        get parent() {
+            return this._parent;
+        }
+
+        get blendMode() {
+            return this._blendMode;
+        }
+
+        get opacity() {
+            return this._opacity;
+        }
+
+        set opacity(value) {
+            this._opacity = value;
+        }
+
+        createSprite() {
+            //Create and set.
+            this._particleSprite           = new TilingSprite(ImageManager.loadTsumio(this.fileName));
+            this._particleSprite.blendMode = this.blendMode;
+            this._particleSprite.opacity   = this.opacity;
+            //AddChild.
+            this.parent.addChild(this._particleSprite);
+        }
+
+        moveSprite(x, y, width, height) {
+            this._particleSprite.move(x, y, width, height);
+        }
+
+        setSpeed(speedX, speedY) {
+            this._speedX = (isFinite(speedX)) ? speedX : 0;
+            this._speedY = (isFinite(speedY)) ? speedY : 0;
+        }
+
+        isFlashing() {
+            return this._isFlashing;
+        }
+
+        /**
+         * Count up wave phase for flashing.
+         */
+        wavePhaseCountUp() {
+            this._phase++;
+        }
+
+        update() {
+            this.updateOriginPosition();
+            this.updateOpacity();
+        }
+
+        updateOriginPosition() {
+            this._particleSprite.origin.x += this._speedX;
+            this._particleSprite.origin.y += this._speedY;
+        }
+
+        updateOpacity() {
+            if(this.isFlashing()){
+                //Get new opacity.
+                var d         = Math.sin(this._phase * Math.PI / 180);
+                this.opacity  = d * this._amp + this.CENTER_OPACITY;
+                this.wavePhaseCountUp();
+                //Set new opacity.
+                this._particleSprite.opacity = this.opacity;
+            }
+        }
+    }
+
+////=============================================================================
 //// EventListener
 ////  This class is event listener for window system.
 ////  I use the class syntax to test the class syntax.There is no deep meaning.
@@ -1570,5 +2267,111 @@ function Game_TMenuSys() {
             }
         }
     };
+
+////=============================================================================
+//// Debug
+////  This static class is for simple debugging.I/O.
+////=============================================================================
+    class Debug {
+        /**
+         * Instead of constructor.
+         * At debugging, this method should be executed on loaded.
+         */
+        static on() {
+            this._debugMode = true;
+            this._stack     = [];
+            console.warn(`${this.FILENAME} : Debug mode turned ON.`);
+        }
+
+        /**
+         * Instead of constructor.
+         * At release, this method should be executed on loaded.
+         */
+        static off() {
+            this._debugMode = false;
+            this._stack     = [];
+            console.warn(`${this.FILENAME} : Debug mode turned OFF.`);
+        }
+
+        static get FILENAME(){
+            return 'TsumioMenuSystem';
+        }
+
+        static get isDebugMode() {
+            return this._debugMode;
+        }
+
+        static outputStack() {
+            if(!this.isDebugMode){
+                return;
+            }
+
+            if(this._stack.length > 0){
+                this._stack.forEach(function(element) {
+                    console.log(element);
+                }, this);
+                return `Stack length is ${this._stack.length}.`;
+            }
+            return 'Stack length is 0.';
+        }
+
+        static clearStack() {
+            if(!this.isDebugMode){
+                return;
+            }
+
+            this._stack = [];
+        }
+
+        static push(arg) {
+            if(!this.isDebugMode){
+                return;
+            }
+
+            this._stack.push(arg);
+        }
+
+        /**
+         * Private method.
+         * @param {Function} func
+         * @param {Array} args
+         */
+        static _output(func, args) {
+            if(!this.isDebugMode){
+                return;
+            }
+
+            args = Array.prototype.slice.call(args);//ES6: Array.from(args);
+            for(var arg of args) {
+                console[func](arg);
+                this.push(args);
+            }
+        }
+
+        static log(args) {
+            this._output('log', arguments);
+        }
+
+        static dir(args) {
+            this._output('dir', arguments);
+        }
+
+        static warn(args) {
+            this._output('warn', arguments);
+        }
+
+        static error(args) {
+            this._output('error', arguments);
+        }
+
+        static modify() {
+            this._debugMode = !this._debugMode;
+            var status      = this._debugMode ? 'ON' : 'OFF';
+            console.warn(`Debug mode turned ${status}.`);
+        }
+    }
+
+    //Debug.on();
+    Debug.off();
 
 })();
