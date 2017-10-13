@@ -256,13 +256,14 @@
  * Enter "[Chronus1]" as the content of option and get date format1.
  * Enter "[Chronus2]" as the content of option and get date format2.
  * 
+ * Reference：https://raw.githubusercontent.com/triacontane/RPGMakerMV/master/Chronus.js
+ * 
  * ----collaboration with DestinationWindow.js----
  * This plugin supports collaboration with DestinationWindow.js created by Triacontane.
  * Enter "[Destination]" as the content of option and get destination.
  * 
- * 参考URL：https://raw.githubusercontent.com/triacontane/RPGMakerMV/master/DestinationWindow.js
+ * Reference：https://raw.githubusercontent.com/triacontane/RPGMakerMV/master/DestinationWindow.js
  * 
- * Reference：https://raw.githubusercontent.com/triacontane/RPGMakerMV/master/Chronus.js
  * 
  * ----line height----
  * By setting "LineHeight" of the plugin parameter, you can change the height of the display contents in the status window.
@@ -550,6 +551,8 @@
  * 当プラグインはトリアコンタンさんが制作したChronus.jsとの連携をサポートしています。
  * オプションの内容に「[Chronus1]」と入力すると日時フォーマット1を取得します。
  * また、「[Chronus2]」と入力すると日時フォーマット2を取得します。
+ * 
+ * 参考URL：https://raw.githubusercontent.com/triacontane/RPGMakerMV/master/Chronus.js
  * 
  * 【DestinationWindow.jsとの連携】
  * 当プラグインはトリアコンタンさんが制作したDestinationWindow.jsとの連携をサポートしています。
