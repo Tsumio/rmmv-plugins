@@ -149,7 +149,7 @@
  * @desc This is a settings sets the contents of the option2.If you want to cooperate Chronus.js, write [Chronus1] or [Chronus2].
  * @default [Chronus2]
  * 
- * @param ----背景の設定----
+ * @param ----Backgoround Settings----
  * @desc 
  * @default 
  * 
