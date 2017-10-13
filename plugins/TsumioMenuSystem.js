@@ -6,6 +6,7 @@
 // http://opensource.org/licenses/mit-license.php
 // ----------------------------------------------------------------------------
 // Version
+// 1.1.2 2017/10/13 メソッド名を修正。
 // 1.1.1 2017/10/12 バグ修正。背景設定・ウィンドウスキン設定・DestinationWindow.jsとの連携機能の追加。
 // 1.1.0 2017/10/11 コンテンツの高さパラメーターの追加とコードの改善。
 // 1.0.2 2017/10/10 バグ修正とコードの改善。
@@ -294,6 +295,7 @@
  * Furthermore, if you change the dpi or change the number of rows or columns, you may get trouble.
  * 
  * ----change log---
+ * 1.1.2 2017/10/12 Correct method name.
  * 1.1.1 2017/10/12 Bug fix.Added background settings, window skin settings, collaboration function with DestinationWindow.js.
  * 1.1.0 2017/10/11 Added line height parameter and code improvement.
  * 1.0.2 2017/10/10 Bug fix and code improvement.
@@ -588,6 +590,7 @@
  * また、解像度を変えたり、行数や列数を変えたりした場合、不具合が出るかもしれません。
  * 
  * 【更新履歴】
+ * 1.1.2 2017/10/13 メソッド名の修正。
  * 1.1.1 2017/10/12 バグ修正。背景設定・ウィンドウスキン設定・DestinationWindow.jsとの連携機能の追加。
  * 1.1.0 2017/10/11 コンテンツの高さパラメーターの追加とコードの改善。
  * 1.0.2 2017/10/10 バグ修正とコードの改善。
@@ -2219,7 +2222,7 @@ function Game_TMenuSys() {
         /**
          * Count up wave phase for flashing.
          */
-        wavePhaseCountUp() {
+        countUpWavePhase() {
             this._phase++;
         }
 
@@ -2238,7 +2241,7 @@ function Game_TMenuSys() {
                 //Get new opacity.
                 var d         = Math.sin(this._phase * Math.PI / 180);
                 this.opacity  = d * this._amp + this.CENTER_OPACITY;
-                this.wavePhaseCountUp();
+                this.countUpWavePhase();
                 //Set new opacity.
                 this._particleSprite.opacity = this.opacity;
             }
