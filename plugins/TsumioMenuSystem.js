@@ -2362,12 +2362,24 @@ function Game_TMenuSys() {
             this._output('dir', arguments);
         }
 
+        static info(args) {
+            this._output('info', arguments);
+        }
+
         static warn(args) {
             this._output('warn', arguments);
         }
 
         static error(args) {
             this._output('error', arguments);
+        }
+
+        static assert(test, message, optionalParam) {
+            if(!this.isDebugMode){
+                return;
+            }
+
+            console.assert(test, message, optionalParam);
         }
 
         static modify() {
