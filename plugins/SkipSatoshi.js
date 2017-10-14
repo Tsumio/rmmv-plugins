@@ -198,7 +198,7 @@
 
 ////=============================================================================
 //// Game_System
-////  Override for Pokemon Master Satoshi !
+////  Override for Satoshi !
 ////=============================================================================
     var _Game_System_initialize = Game_System.prototype.initialize;
     Game_System.prototype.initialize = function() {
@@ -220,7 +220,7 @@
 
 ////=============================================================================
 //// Game_Party
-////  Override for Pokemon Master Satoshi !
+////  Override for Satoshi !
 ////=============================================================================
 
     Game_Party.prototype.leader = function() {
