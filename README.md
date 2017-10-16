@@ -23,7 +23,7 @@ Read each JS file.It contains usage.
 | [ByeGoodBoy](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/ByeGoodBoy.js)          | When there is a level difference with the enemy, you will force victory to battle.               | [Official Forum](https://forum.tkool.jp/index.php?threads/%E3%80%90%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3%E3%80%91%E3%83%AC%E3%83%99%E3%83%AB%E5%B7%AE%E3%81%8C%E3%81%82%E3%82%8B%E6%95%B5%E3%82%B0%E3%83%AB%E3%83%BC%E3%83%97%E3%81%AB%E5%BC%B7%E5%88%B6%E5%8B%9D%E5%88%A9.390/) (Japanese) |
 | [TsumioMenuSystem](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/TsumioMenuSystem.js)          | This plugin remodels the menu scene.               | [Official Forum](https://forum.tkool.jp/index.php?threads/%E3%80%90%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3%E3%80%91%E3%83%A1%E3%83%8B%E3%83%A5%E3%83%BC%E7%94%BB%E9%9D%A2%E3%82%92%E6%94%B9%E9%80%A0.471/) (Japanese) |
 | [SkipSatoshi](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/SkipSatoshi.js)          | Not display specific actors in the battle, nor in the menu scene.               | N/A |
-| [YieldReturnConversation](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/YieldReturnConversation.js)          | Supports suspension and resumption of events.               | N/A |
+| [YieldReturnConversation](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/YieldReturnConversation.js)          | Supports suspension and resumption of events.               | [Official Forum](https://forum.tkool.jp/index.php?threads/%E3%80%90%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3%E3%80%91%E3%82%A4%E3%83%99%E3%83%B3%E3%83%88%E3%81%AE%E4%B8%AD%E6%96%AD%E3%81%A8%E5%86%8D%E9%96%8B.485/) (Japanese) |
 
 If you want to know all my plugin, see [the blog](http://ntgame.wpblog.jp/page-139/) (Japanese).
 
@@ -65,7 +65,7 @@ RPGツクールMV上での動作を前提としています。
 | [ByeGoodBoy](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/ByeGoodBoy.js)          | 敵とレベル差があるとき、戦闘に強制勝利します。               | [公式フォーラム](https://forum.tkool.jp/index.php?threads/%E3%80%90%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3%E3%80%91%E3%83%AC%E3%83%99%E3%83%AB%E5%B7%AE%E3%81%8C%E3%81%82%E3%82%8B%E6%95%B5%E3%82%B0%E3%83%AB%E3%83%BC%E3%83%97%E3%81%AB%E5%BC%B7%E5%88%B6%E5%8B%9D%E5%88%A9.390/) |
 | [TsumioMenuSystem](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/TsumioMenuSystem.js)          | メニュー画面を改造するプラグインです。               | [公式フォーラム](https://forum.tkool.jp/index.php?threads/%E3%80%90%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3%E3%80%91%E3%83%A1%E3%83%8B%E3%83%A5%E3%83%BC%E7%94%BB%E9%9D%A2%E3%82%92%E6%94%B9%E9%80%A0.471/) |
 | [SkipSatoshi](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/SkipSatoshi.js)          | 特定のキャラクターを戦闘に参加させず、メニュー画面にも表示させません。               | なし |
-| [YieldReturnConversation](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/YieldReturnConversation.js)          | イベントの中断と再開をサポートします。               | なし |
+| [YieldReturnConversation](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/YieldReturnConversation.js)          | イベントの中断と再開をサポートします。               | [公式フォーラム](https://forum.tkool.jp/index.php?threads/%E3%80%90%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3%E3%80%91%E3%82%A4%E3%83%99%E3%83%B3%E3%83%88%E3%81%AE%E4%B8%AD%E6%96%AD%E3%81%A8%E5%86%8D%E9%96%8B.485/) |
 
 GitHubに公開していないものを含む全てのプラグインの一覧は[ブログ](http://ntgame.wpblog.jp/page-139/)をご覧ください。
 
