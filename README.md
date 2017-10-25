@@ -24,6 +24,7 @@ Read each JS file.It contains usage.
 | [TsumioMenuSystem](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/TsumioMenuSystem.js)          | This plugin remodels the menu scene.               | [Official Forum](https://forum.tkool.jp/index.php?threads/%E3%80%90%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3%E3%80%91%E3%83%A1%E3%83%8B%E3%83%A5%E3%83%BC%E7%94%BB%E9%9D%A2%E3%82%92%E6%94%B9%E9%80%A0.471/) (Japanese) |
 | [SkipSatoshi](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/SkipSatoshi.js)          | Not display specific actors in the battle, nor in the menu scene.               | N/A |
 | [YieldReturnConversation](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/YieldReturnConversation.js)          | Supports suspension and resumption of events.               | [Official Forum](https://forum.tkool.jp/index.php?threads/%E3%80%90%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3%E3%80%91%E3%82%A4%E3%83%99%E3%83%B3%E3%83%88%E3%81%AE%E4%B8%AD%E6%96%AD%E3%81%A8%E5%86%8D%E9%96%8B.485/) (Japanese) |
+| [SimpleFileLayout](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/SimpleFileLayout.js)          | This plugin remodels the file scene.               | [Official Forum](https://forum.tkool.jp/index.php?threads/%E3%80%90%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3%E3%80%91%E3%82%B7%E3%83%B3%E3%83%97%E3%83%AB%E3%81%AA%E3%82%BB%E3%83%BC%E3%83%96%E7%94%BB%E9%9D%A2.498/) (Japanese) |
 
 If you want to know all my plugin, see [the blog](http://ntgame.wpblog.jp/page-139/) (Japanese).
 
@@ -66,6 +67,7 @@ RPGツクールMV上での動作を前提としています。
 | [TsumioMenuSystem](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/TsumioMenuSystem.js)          | メニュー画面を改造するプラグインです。               | [公式フォーラム](https://forum.tkool.jp/index.php?threads/%E3%80%90%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3%E3%80%91%E3%83%A1%E3%83%8B%E3%83%A5%E3%83%BC%E7%94%BB%E9%9D%A2%E3%82%92%E6%94%B9%E9%80%A0.471/) |
 | [SkipSatoshi](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/SkipSatoshi.js)          | 特定のキャラクターを戦闘に参加させず、メニュー画面にも表示させません。               | なし |
 | [YieldReturnConversation](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/YieldReturnConversation.js)          | イベントの中断と再開をサポートします。               | [公式フォーラム](https://forum.tkool.jp/index.php?threads/%E3%80%90%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3%E3%80%91%E3%82%A4%E3%83%99%E3%83%B3%E3%83%88%E3%81%AE%E4%B8%AD%E6%96%AD%E3%81%A8%E5%86%8D%E9%96%8B.485/) |
+| [SimpleFileLayout](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/SimpleFileLayout.js)          | ファイルシーンのデザインを変更するプラグインです。               | [公式フォーラム](https://forum.tkool.jp/index.php?threads/%E3%80%90%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3%E3%80%91%E3%82%B7%E3%83%B3%E3%83%97%E3%83%AB%E3%81%AA%E3%82%BB%E3%83%BC%E3%83%96%E7%94%BB%E9%9D%A2.498/) |
 
 GitHubに公開していないものを含む全てのプラグインの一覧は[ブログ](http://ntgame.wpblog.jp/page-139/)をご覧ください。
 
