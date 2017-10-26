@@ -6,6 +6,7 @@
 // http://opensource.org/licenses/mit-license.php
 // ----------------------------------------------------------------------------
 // Version
+// 1.0.1 2017/10/26 セーブデータが存在しないとエラー落ちする不具合の修正。
 // 1.0.0 2017/10/25 公開。
 // ----------------------------------------------------------------------------
 // [GitHub] : https://github.com/Tsumio/rmmv-plugins
@@ -44,6 +45,7 @@
  * 
  * 
  * ----change log---
+ * 1.0.1 2017/10/26 Fixed a bug occurred when saved data does not exist.
  * 1.0.0 2017/10/25 Release.
  * 
  * ----remarks----
@@ -87,6 +89,7 @@
  * 
  * 
  * 【更新履歴】
+ * 1.0.1 2017/10/26 セーブデータが存在しないとエラー落ちする不具合の修正。
  * 1.0.0 2017/10/25 公開。
  * 
  * 【備考】
@@ -261,9 +264,13 @@
 
         partyInfo(index) {
             const savefileId = index+1;
-            const json       = StorageManager.load(savefileId);
-            const party      = this.extractSaveContents(JsonEx.parse(json));
-            return party;
+            if (DataManager.isThisGameFile(savefileId)){
+                const json    = StorageManager.load(savefileId);
+                const party   = this.extractSaveContents(JsonEx.parse(json));
+                return party;
+            }else{
+                return null;
+            }
         }
 
         get parentIndex() {
