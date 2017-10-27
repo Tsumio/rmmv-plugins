@@ -6,6 +6,7 @@
 // http://opensource.org/licenses/mit-license.php
 // ----------------------------------------------------------------------------
 // Version
+// 1.0.2 2017/10/27 セーブデータが存在しない場合、ピクチャを消去するよう修正。
 // 1.0.1 2017/10/26 セーブデータが存在しないとエラー落ちする不具合の修正。
 // 1.0.0 2017/10/25 公開。
 // ----------------------------------------------------------------------------
@@ -45,6 +46,7 @@
  * 
  * 
  * ----change log---
+ * 1.0.2 2017/10/27 Fixed to erase pictures when save data does not exist.
  * 1.0.1 2017/10/26 Fixed a bug occurred when saved data does not exist.
  * 1.0.0 2017/10/25 Release.
  * 
@@ -89,6 +91,7 @@
  * 
  * 
  * 【更新履歴】
+ * 1.0.2 2017/10/27 セーブデータが存在しない場合、ピクチャを消去するよう修正。
  * 1.0.1 2017/10/26 セーブデータが存在しないとエラー落ちする不具合の修正。
  * 1.0.0 2017/10/25 公開。
  * 
@@ -262,17 +265,6 @@
             this._metaData         = null;
         }
 
-        partyInfo(index) {
-            const savefileId = index+1;
-            if (DataManager.isThisGameFile(savefileId)){
-                const json    = StorageManager.load(savefileId);
-                const party   = this.extractSaveContents(JsonEx.parse(json));
-                return party;
-            }else{
-                return null;
-            }
-        }
-
         get parentIndex() {
             return this.parentWindow.index();
         }
@@ -287,6 +279,25 @@
 
         get actorY() {
             return Number(this._metaData[2]);
+        }
+
+        partyInfo(index) {
+            const savefileId = index+1;
+            if (DataManager.isThisGameFile(savefileId)){
+                const json    = StorageManager.load(savefileId);
+                const party   = this.extractSaveContents(JsonEx.parse(json));
+                return party;
+            }else{
+                this.deleteActorPicture();
+                return null;
+            }
+        }
+
+        deleteActorPicture(){
+            if(this.spriteActor !== null){
+                this.removeChild(this.spriteActor);
+                this.spriteActor = null;
+            }
         }
 
         /**
