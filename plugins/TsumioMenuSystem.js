@@ -6,6 +6,7 @@
 // http://opensource.org/licenses/mit-license.php
 // ----------------------------------------------------------------------------
 // Version
+// 1.1.3 2017/10/27 情報ウィンドウのリアルタイム更新機能を追加。
 // 1.1.2 2017/10/13 メソッド名を修正。
 // 1.1.1 2017/10/12 バグ修正。背景設定・ウィンドウスキン設定・DestinationWindow.jsとの連携機能の追加。
 // 1.1.0 2017/10/11 コンテンツの高さパラメーターの追加とコードの改善。
@@ -215,6 +216,11 @@
  * @desc This is a settings sets the skin of the each window.
  * @default {"command":"", "status":"", "chapter":"", "tips":"", "info":""}
  * 
+ * @param UpdateInfoWindow
+ * @type number
+ * @min -1
+ * @desc Update info window with specified frame.When a negative value is set, it dosen't update.
+ * @default -1
  * 
  * @help This plugin remodels the menu scene.
  * 
@@ -278,6 +284,12 @@
  * ----window skin----
  * If you do not set the window skin, the standard window skin will be applied.
  * 
+ * ----update information window----
+ * The information window is updated with the specified frame (updating will not be done if -1 is specified).
+ * When using this function, recommend about 60.
+ * 
+ * Chronus.js information is not updated.
+ * 
  * ----plugin command----
  * All plugin commands start with "TMS".
  * Plugin commands are distinguish uppercase and lowercase.
@@ -296,6 +308,7 @@
  * Furthermore, if you change the dpi or change the number of rows or columns, you may get trouble.
  * 
  * ----change log---
+ * 1.1.3 2017/10/27 Added real-time update function of information window.
  * 1.1.2 2017/10/12 Correct method name.
  * 1.1.1 2017/10/12 Bug fix.Added background settings, window skin settings, collaboration function with DestinationWindow.js.
  * 1.1.0 2017/10/11 Added line height parameter and code improvement.
@@ -511,6 +524,12 @@
  * @desc 各ウィンドウのスキンを設定します。
  * @default {"command":"", "status":"", "chapter":"", "tips":"", "info":""}
  * 
+ * @param 情報ウィンドウの更新
+ * @type number
+ * @min -1
+ * @desc 情報ウィンドウを指定フレームで更新します。マイナスの値が設定された場合は更新しません。
+ * @default -1
+ * 
  * 
  * @help メニュー画面を改造するプラグインです。
  * 
@@ -573,6 +592,12 @@
  * 【ウィンドウスキン】
  * ウィンドウスキンを設定しない場合、標準のウィンドウスキンが適用されます。
  * 
+ * 【情報ウィンドウの更新】
+ * 指定したフレームで情報ウィンドウが更新されます（-1を指定すると更新はおこなわれません）。
+ * 使用する場合、60程度を推奨します。
+ * 
+ * なお、Chronus.jsの情報は更新されません。
+ * 
  * 【プラグインコマンド】
  * 全てのプラグインコマンドは「TMS」から始まります。
  * また、説明上では視認性のためにカギカッコを使用していますが、実際にプラグインコマンドに入力する際には
@@ -593,6 +618,7 @@
  * また、解像度を変えたり、行数や列数を変えたりした場合、不具合が出るかもしれません。
  * 
  * 【更新履歴】
+ * 1.1.3 2017/10/27 情報ウィンドウのリアルタイム更新機能を追加。
  * 1.1.2 2017/10/13 メソッド名の修正。
  * 1.1.1 2017/10/12 バグ修正。背景設定・ウィンドウスキン設定・DestinationWindow.jsとの連携機能の追加。
  * 1.1.0 2017/10/11 コンテンツの高さパラメーターの追加とコードの改善。
@@ -912,6 +938,7 @@ function Game_TMenuSys() {
     param.ratio           = getParamString(['Ratio', '比率']);
     param.lineHeight      = getParamString(['LineHeight', 'コンテンツの高さ']);
     param.windowSkin      = getParamString(['WindowSkin', 'ウィンドウスキン']);
+    param.infoUpdateFrame = getParamNumber(['UpdateInfoWindow', '情報ウィンドウの更新']);
 
 
 ////==============================
@@ -1810,6 +1837,23 @@ function Game_TMenuSys() {
 
     NTMO.TMS.Window_Info.prototype.initialize = function(x, y, width, height) {
         Window_Base.prototype.initialize.call(this, x, y, width, height);
+
+        this.itCountUpFrame = this.countUpFrame();
+    };
+
+    NTMO.TMS.Window_Info.prototype.countUpFrame = function*() {
+        if(param.infoUpdateFrame < 0){
+            return;
+        }
+
+        let frame = 0;
+        while(true){
+            if(frame % param.infoUpdateFrame === 0){
+                this.refresh();
+            }
+            frame++;
+            yield;
+        }
     };
 
     NTMO.TMS.Window_Info.prototype.loadWindowskin = function() {
@@ -1821,6 +1865,8 @@ function Game_TMenuSys() {
     };
 
     NTMO.TMS.Window_Info.prototype.refresh = function() {
+        this.contents.clear();
+        
         this.drawLeftArea();
         this.drawCenterArea();
         this.drawRightArea();
@@ -1929,6 +1975,11 @@ function Game_TMenuSys() {
         }else{
             return 'Chronus is not found.';
         }
+    };
+
+    NTMO.TMS.Window_Info.prototype.update = function() {
+        Window_Base.prototype.update.call(this);
+        this.itCountUpFrame.next();
     };
 
 ////=============================================================================
