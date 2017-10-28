@@ -344,7 +344,7 @@
     };
 
 ////=============================================================================
-//// CalculatePosition
+//// MenuPosition
 ////  This static class is for calculate Window position.
 ////=============================================================================
     class MenuPosition {
