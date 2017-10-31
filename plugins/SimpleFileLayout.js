@@ -6,6 +6,7 @@
 // http://opensource.org/licenses/mit-license.php
 // ----------------------------------------------------------------------------
 // Version
+// 1.0.3 2017/10/31 拡張用の描画メソッド追加。
 // 1.0.2 2017/10/27 セーブデータが存在しない場合、ピクチャを消去するよう修正。
 // 1.0.1 2017/10/26 セーブデータが存在しないとエラー落ちする不具合の修正。
 // 1.0.0 2017/10/25 公開。
@@ -46,6 +47,7 @@
  * 
  * 
  * ----change log---
+ * 1.0.3 2017/10/31 Added drawing method for extension.
  * 1.0.2 2017/10/27 Fixed to erase pictures when save data does not exist.
  * 1.0.1 2017/10/26 Fixed a bug occurred when saved data does not exist.
  * 1.0.0 2017/10/25 Release.
@@ -91,6 +93,7 @@
  * 
  * 
  * 【更新履歴】
+ * 1.0.3 2017/10/31 拡張用の描画メソッド追加。
  * 1.0.2 2017/10/27 セーブデータが存在しない場合、ピクチャを消去するよう修正。
  * 1.0.1 2017/10/26 セーブデータが存在しないとエラー落ちする不具合の修正。
  * 1.0.0 2017/10/25 公開。
@@ -315,7 +318,13 @@
             const members = partyInfo.members();
             this.refreshMetaData(members);
             this.removeChild(this.spriteActor);
+            this.drawExtraContents();
             this.createActorPicture();
+        }
+
+        drawExtraContents() {
+            //Example for kurige.
+            //this.drawTextEx('aaa',0, 0);
         }
 
         createActorPicture() {
