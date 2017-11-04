@@ -30,6 +30,10 @@
  * -> This plugin works with Chronus.js created by Triacontane.
  * 
  * ----how to use----
+ * To use this plugin you need to install "canvas-arrow.js".
+ * Please download "canvas-arrow.js" from the following URL (the author is frogcat, not Tsumio).
+ * https://raw.githubusercontent.com/frogcat/canvas-arrow/master/canvas-arrow.js
+ * 
  * After introducing the plugin, it can be used by using plugin command.
  * 
  * When you execute "TFC goto_Scene" with the plugin command, it will shift to the calendar scene.
@@ -102,6 +106,11 @@
  * ・トリアコンタンさんが制作したプラグインChronus.jsと連携できます。
  * 
  * 【使用方法】
+ * このプラグインを使用するには、canvas-arrow.jsを導入する必要があります。
+ * canvas-arrow.jsは以下のURLからダウンロードしてください（作者はツミオではなくfrogcatさんです）。
+ * https://raw.githubusercontent.com/frogcat/canvas-arrow/master/canvas-arrow.js
+ * 
+ * 
  * プラグインの導入後、プラグインコマンドを使用することによって使用できます。
  * 
  * プラグインコマンドで「TFC goto_Scene」を実行すると、カレンダーシーンへ移行します。
