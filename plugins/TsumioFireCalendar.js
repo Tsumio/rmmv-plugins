@@ -6,6 +6,7 @@
 // http://opensource.org/licenses/mit-license.php
 // ----------------------------------------------------------------------------
 // Version
+// 1.0.1 2017/11/10 プラグインパラメーターの追加と説明の加筆。
 // 1.0.0 2017/11/04 公開。
 // ----------------------------------------------------------------------------
 // [GitHub] : https://github.com/Tsumio/rmmv-plugins
@@ -20,6 +21,26 @@
  * @param ----Basic Settings----
  * @desc 
  * @default 
+ * 
+ * @param CalendarSettings
+ * @type struct<CalendarMain>
+ * @desc Sets coordinate and size ot the calendar.
+ * @default {"x":"0","y":"-100","width":"400","height":"350","outerFrameWidth":"5","innerFrameWidth":"0"}
+ * 
+ * @param CalendarColors
+ * @type struct<CalendarColor>
+ * @desc Sets the colors of the calendar.
+ * @default {"background":"#FFF","textRed":"#CC0000","textBlue":"#0066FF","textBlack":"#000","todayColor":"#66CC99","selectedColor":"#FFCC66"}
+ * 
+ * @param DayOfTheWeekColors
+ * @type struct<DayOfTheWeekColors>
+ * @desc Sets the colors of the day of the week.
+ * @default {"sunday":"#CC0000","monday":"#FF3366","tuesday":"#FF6633","wednesday":"#FF9933","thursday":"#66CC33","friday":"#006600","saturday":"#0066FF"}
+ * 
+ * @param CheckingMarkColor
+ * @type string
+ * @desc Sets the color of the checking mark.
+ * @default #FF6600
  * 
  * 
  * @help This This plugin implements the calendar function.
@@ -76,8 +97,27 @@
  * This line is not registered because TFC is not specified
  * Between TFC and semicolon<TFC : 1991-5-11>even if there is a space, it is OK.
  *
+ * ----how to operate with mouse----
+ * Click on each date to read the data for that date. Click the button to activate.
+ * When you rotate the wheel, the bar in the text area moves according to the rotation amount.
+ * Holding down the Ctrl key and rotating the wheel doubles the amount of movement.
+ * The touch operation of the smartphone should be possible with the same feeling, but it is not confirmed with the actual machine.
+ * 
+ * ----how to operate with keyboard----
+ * Basically it does not assume operation with the keyboard, but supports basic operation.
+ * Use the arrow keys to move each date.
+ * Move the text area bar with the OK key or Cancel key.
+ * You can turn the calendar to the previous month and the following month with Q key and W key.
+ * 
+ * ----collaboration with Chronus.js----
+ * This plugin supports collaboration with Chronus.js created by Triacontane.
+ * When Chronus.js is introduced, the date of Chronus.js is the base date.
+ * When Chronus.js is not introduced, the actual date will be the base date.
+ * 
+ * 参考URL：https://raw.githubusercontent.com/triacontane/RPGMakerMV/master/Chronus.js
  * 
  * ----change log---
+ * 1.0.1 2017/11/10 Add plugin parameters and a description of explanation.
  * 1.0.0 2017/11/04 Release.
  * 
  * ----remarks----
@@ -97,6 +137,25 @@
  * @desc 
  * @default 
  * 
+ * @param カレンダーの設定
+ * @type struct<CalendarMain>
+ * @desc カレンダーの座標とサイズを設定します。
+ * @default {"x":"0","y":"-100","width":"400","height":"350","outerFrameWidth":"5","innerFrameWidth":"0"}
+ * 
+ * @param カレンダーの色
+ * @type struct<CalendarColor>
+ * @desc カレンダーの色を設定します。
+ * @default {"background":"#FFF","textRed":"#CC0000","textBlue":"#0066FF","textBlack":"#000","todayColor":"#66CC99","selectedColor":"#FFCC66"}
+ * 
+ * @param 曜日の背景色
+ * @type struct<DayOfTheWeekColors>
+ * @desc 各曜日の背景色を設定します。
+ * @default {"sunday":"#CC0000","monday":"#FF3366","tuesday":"#FF6633","wednesday":"#FF9933","thursday":"#66CC33","friday":"#006600","saturday":"#0066FF"}
+ * 
+ * @param チェックマークの色
+ * @type string
+ * @desc チェックマークの色を設定します。
+ * @default #FF6600
  * 
  * @help カレンダー機能を実装します。
  * 
@@ -156,7 +215,27 @@
  * この行はTFCが指定されていないため登録されない
  * TFCとセミコロンの間に<TFC : 1991-5-11>空白はあってもOK
  * 
+ * 【マウスでの操作方法】
+ * 各日付をクリックすると、その日付のデータを読み込みます。ボタンもクリックすることで作動します。
+ * また、ホイールを回転させるとテキストエリアのバーが回転量に応じて移動します。
+ * Ctrlキーを押しながらホイールを回転させると移動量が倍になります。
+ * スマホのタッチ操作も同じ感覚で可能なはずですが、実機での確認はしていません。
+ * 
+ * 【キーボードでの操作方法】
+ * 基本的にはキーボードでの操作を想定していませんが、基本的な動作はサポートしています。
+ * カーソルキーで各日付を移動します。
+ * 決定キーやキャンセルキーでテキストエリアのバーを移動させます。
+ * QキーおよびWキーで前月と翌月へカレンダーをめくることができます。
+ * 
+ * 【Chronus.jsとの連携】
+ * 当プラグインはトリアコンタンさんが制作したChronus.jsとの連携をサポートしています。
+ * Chronus.jsを導入した場合、Chronus.jsの日付が基準日になります。
+ * Chronus.jsを導入していない場合は実際の日付が基準日になります。
+ * 
+ * 参考URL：https://raw.githubusercontent.com/triacontane/RPGMakerMV/master/Chronus.js
+ * 
  * 【更新履歴】
+ * 1.0.1 2017/11/10 プラグインパラメーターの追加と説明の加筆。
  * 1.0.0 2017/11/04 公開。
  * 
  * 【備考】
@@ -167,6 +246,95 @@
  * 作者に無断で改変、再配布が可能です。
  * 利用形態（商用、18禁利用等）についても制限はありません。
  * 自由に使用してください。
+ * 
+ */
+/*~struct~CalendarMain:
+ * 
+ * @param x
+ * @type number
+ * @min -3000
+ * @max 3000
+ * @desc X座標(X Coordinate).
+ * 
+ * @param y
+ * @type number
+ * @min -3000
+ * @max 3000
+ * @desc Y座標(Y Coordinate).
+ * 
+ * @param width
+ * @type number
+ * @desc 幅(Width).
+ * 
+ * @param height
+ * @type number
+ * @desc 高さ(Height).
+ * 
+ * @param outerFrameWidth
+ * @type number
+ * @desc 外枠の太さ(Outer frame width).
+ * 
+ * @param innerFrameWidth
+ * @type number
+ * @desc 外枠の太さ(Inner frame width).
+ * 
+ */
+/*~struct~CalendarColor:
+ * 
+ * @param background
+ * @type string
+ * @desc 背景色(BackgroundColor).
+ * 
+ * @param textRed
+ * @type string
+ * @desc 日曜日の文字色(Font color on Sunday).
+ * 
+ * @param textBlue
+ * @type string
+ * @desc 土曜日の文字色(Font color on Saturday).
+ * 
+ * @param textBlack
+ * @type string
+ * @desc 土日以外の文字色(Font color except Saturdays and Sundays).
+ * 
+ * @param todayColor
+ * @type string
+ * @desc 今日の背景色(Today's background color).
+ * 
+ * @param selectedColor
+ * @type string
+ * @desc 選択中の日付の背景色(Selected day's background color).
+ * 
+ */
+/*~struct~DayOfTheWeekColors:
+ * 
+ * @param sunday
+ * @type string
+ * @desc 日曜日の背景色(Background color on Sunday).
+ * 
+ * @param monday
+ * @type string
+ * @desc 月曜日の背景色(Background color on Monday).
+ * 
+ * @param tuesday
+ * @type string
+ * @desc 火曜日の背景色(Background color on Tuesday).
+ * 
+ * @param wednesday
+ * @type string
+ * @desc 水曜日の背景色(Background color on Wednesday).
+ * 
+ * @param thursday
+ * @type string
+ * @desc 木曜日の背景色(Background color on Thursday).
+ * 
+ * @param friday
+ * @type string
+ * @desc 金曜日の背景色(Background color on Friday).
+ * 
+ * @param saturday
+ * @type string
+ * @desc 土曜日の背景色(Background color on Saturday).
  * 
  */
 
@@ -231,20 +399,35 @@ function Game_CalendarTFC() {
         return text;
     };
 
+    //This function is not written by Triacontane.Tsumio wrote this function !
+    var convertToNumber = function(obj) {
+        for(var prop in obj) {
+            obj[prop] = Number(obj[prop]);
+        }
+        return obj;
+    }
+
 ////=============================================================================
 //// Get and set pluguin parameters.
 ////=============================================================================
     var param                          = {};
     //Basic Stteings
+    param.calendarSettings    = getParamString(['CalendarSettings', 'カレンダーの設定']);
+    param.calendarColors      = getParamString(['CalendarColors',   'カレンダーの色']);
+    param.checkingMarkColor   = getParamString(['CheckingMarkColor', 'チェックマークの色']);
+    param.dayOfWeekcolors     = getParamString(['DayOfTheWeekColors', '曜日の背景色']);
 
 ////==============================
 //// Convert parameters.
 ////==============================
+    param.calendarSettings    = convertParam(param.calendarSettings);
+    param.calendarColors      = convertParam(param.calendarColors);
+    param.dayOfWeekcolors     = convertParam(param.dayOfWeekcolors);
 
 ////==============================
 //// Convert to Number.
 ////==============================
-    //None
+    param.calendarSettings    = convertToNumber(param.calendarSettings);
 
 
 ////=============================================================================
@@ -461,7 +644,11 @@ function Game_CalendarTFC() {
 
         start() {
             super.start();
-            this.calendar = new Calendar_Main(this, 0, -100, 5/*=outerFrame*/, 0/*=innerFrame*/);//recommend 5,3
+            const x = param.calendarSettings.x;//Default value is 0;
+            const y = param.calendarSettings.y;//Default value is -100;
+            const outerFrame = param.calendarSettings.outerFrameWidth;
+            const innerFrame = param.calendarSettings.innerFrameWidth;
+            this.calendar = new Calendar_Main(this, x, y, outerFrame, innerFrame);
         }
 
         update() {
@@ -1216,11 +1403,11 @@ function Game_CalendarTFC() {
         }
 
         get width() {
-            return 400;
+            return param.calendarSettings.width;
         }
 
         get height() {
-            return 350;
+            return param.calendarSettings.height;
         }
 
         get weekWidth() {
@@ -1256,27 +1443,27 @@ function Game_CalendarTFC() {
         }
 
         get backgroundColor() {
-            return '#FFF';
+            return param.calendarColors.background;
         }
 
         get textRedColor() {
-            return '#CC0000';
+            return param.calendarColors.textRed;
         }
 
         get textBlueColor() {
-            return '#0066FF';
+            return param.calendarColors.textBlue;
         }
 
         get textBlackColor() {
-            return '#000';
+            return param.calendarColors.textBlack;
         }
 
         get todayColor() {
-            return '#66CC99';
+            return param.calendarColors.todayColor;
         }
 
         get selectedColor() {
-            return '#FFCC66';
+            return param.calendarColors.selectedColor;
         }
 
         get fullYear() {
@@ -1358,7 +1545,7 @@ function Game_CalendarTFC() {
         }
 
         get checkingMarkColor() {
-            return '#FF6600';
+            return param.checkingMarkColor;
         }
 
         monthToString() {
@@ -1591,14 +1778,22 @@ function Game_CalendarTFC() {
         }
 
         drawDayOfWeekBackground() {
+            //Color Settings.
+            const sunColor = param.dayOfWeekcolors.sunday;
+            const monColor = param.dayOfWeekcolors.monday;
+            const tueColor = param.dayOfWeekcolors.tuesday;
+            const wedColor = param.dayOfWeekcolors.wednesday;
+            const thuColor = param.dayOfWeekcolors.thursday;
+            const friColor = param.dayOfWeekcolors.friday;
+            const satColor = param.dayOfWeekcolors.saturday;
             //Draw background.Start with sunday.End with saturday.
-            this.bitmap.fillRect(this.x, this.y + this.yearY, this.weekWidth, this.weekHeight, '#CC0000');
-            this.bitmap.fillRect(this.x+this.weekWidth, this.y + this.yearY, this.weekWidth, this.weekHeight, '#FF3366');
-            this.bitmap.fillRect(this.x+this.weekWidth*2, this.y + this.yearY, this.weekWidth, this.weekHeight, '#FF6633');
-            this.bitmap.fillRect(this.x+this.weekWidth*3, this.y + this.yearY, this.weekWidth, this.weekHeight, '#FF9933');
-            this.bitmap.fillRect(this.x+this.weekWidth*4, this.y + this.yearY, this.weekWidth, this.weekHeight, '#66CC33');
-            this.bitmap.fillRect(this.x+this.weekWidth*5, this.y + this.yearY, this.weekWidth, this.weekHeight, '#006600');
-            this.bitmap.fillRect(this.x+this.weekWidth*6, this.y + this.yearY, this.weekWidth, this.weekHeight, '#0066FF');
+            this.bitmap.fillRect(this.x, this.y + this.yearY, this.weekWidth, this.weekHeight, sunColor);
+            this.bitmap.fillRect(this.x+this.weekWidth, this.y + this.yearY, this.weekWidth, this.weekHeight, monColor);
+            this.bitmap.fillRect(this.x+this.weekWidth*2, this.y + this.yearY, this.weekWidth, this.weekHeight, tueColor);
+            this.bitmap.fillRect(this.x+this.weekWidth*3, this.y + this.yearY, this.weekWidth, this.weekHeight, wedColor);
+            this.bitmap.fillRect(this.x+this.weekWidth*4, this.y + this.yearY, this.weekWidth, this.weekHeight, thuColor);
+            this.bitmap.fillRect(this.x+this.weekWidth*5, this.y + this.yearY, this.weekWidth, this.weekHeight, friColor);
+            this.bitmap.fillRect(this.x+this.weekWidth*6, this.y + this.yearY, this.weekWidth, this.weekHeight, satColor);
         }
 
         drawDays() {
@@ -1653,7 +1848,11 @@ function Game_CalendarTFC() {
             const y = this.y + this.yearY + 3;
             //Draw
             for(let i = 0; i < 7; i++) {
-                this.bitmap.drawText(dayOfWeekJp[i], x + this.weekWidth*i, y, this.width, this.smallFontSize, 'left');
+                if($gameSystem.isJapanese()){
+                    this.bitmap.drawText(dayOfWeekJp[i], x + this.weekWidth*i, y, this.width, this.smallFontSize, 'left');
+                }else {
+                    this.bitmap.drawText(dayOfWeekEng[i], x + this.weekWidth*i, y, this.width, this.smallFontSize, 'left');
+                }
             }
         }
 
