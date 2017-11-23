@@ -27,6 +27,7 @@ Read each JS file.It contains usage.
 | [SimpleFileLayout](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/SimpleFileLayout.js)          | This plugin remodels the file scene.               | [Official Forum](https://forum.tkool.jp/index.php?threads/%E3%80%90%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3%E3%80%91%E3%82%B7%E3%83%B3%E3%83%97%E3%83%AB%E3%81%AA%E3%82%BB%E3%83%BC%E3%83%96%E7%94%BB%E9%9D%A2.498/) (Japanese) |
 | [SimpleMenuLayout](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/SimpleMenuLayout.js)          | This plugin remodels the menu scene.               | [Official Forum](https://forum.tkool.jp/index.php?threads/%E3%80%90%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3%E3%80%91%E3%82%B7%E3%83%B3%E3%83%97%E3%83%AB%E3%81%AA%E3%83%A1%E3%83%8B%E3%83%A5%E3%83%BC%E7%94%BB%E9%9D%A2.502/) (Japanese) |
 | [TsumioFireCalendar](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/TsumioFireCalendar.js)          | This plugin implements the calendar function.               | [Official Forum](https://forum.tkool.jp/index.php?threads/%E3%80%90%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3%E3%80%91%E3%82%AB%E3%83%AC%E3%83%B3%E3%83%80%E3%83%BC%E6%A9%9F%E8%83%BD.511/) (Japanese) |
+| [TsumioEventsShadow](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/TsumioEventsShadow.js)          | This plugin displays shadow.               | [Official Forum](https://forum.tkool.jp/index.php?threads/【プラグイン】イベントに立体的な影を表示.534/) (Japanese) |
 
 If you want to know all my plugin, see [the blog](http://ntgame.wpblog.jp/page-139/) (Japanese).
 
@@ -72,6 +73,7 @@ RPGツクールMV上での動作を前提としています。
 | [SimpleFileLayout](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/SimpleFileLayout.js)          | ファイルシーンのデザインを変更するプラグインです。               | [公式フォーラム](https://forum.tkool.jp/index.php?threads/%E3%80%90%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3%E3%80%91%E3%82%B7%E3%83%B3%E3%83%97%E3%83%AB%E3%81%AA%E3%82%BB%E3%83%BC%E3%83%96%E7%94%BB%E9%9D%A2.498/) |
 | [SimpleMenuLayout](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/SimpleMenuLayout.js)          | シンプルなメニュー画面を実装します。               | [公式フォーラム](https://forum.tkool.jp/index.php?threads/%E3%80%90%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3%E3%80%91%E3%82%B7%E3%83%B3%E3%83%97%E3%83%AB%E3%81%AA%E3%83%A1%E3%83%8B%E3%83%A5%E3%83%BC%E7%94%BB%E9%9D%A2.502/) |
 | [TsumioFireCalendar](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/TsumioFireCalendar.js)          | カレンダー機能を実装します。               | [公式フォーラム](https://forum.tkool.jp/index.php?threads/%E3%80%90%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3%E3%80%91%E3%82%AB%E3%83%AC%E3%83%B3%E3%83%80%E3%83%BC%E6%A9%9F%E8%83%BD.511/) |
+| [TsumioEventsShadow](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/TsumioEventsShadow.js)          | 立体的な影を表示するプラグインです。               | [公式フォーラム](https://forum.tkool.jp/index.php?threads/【プラグイン】イベントに立体的な影を表示.534/) |
 
 GitHubに公開していないものを含む全てのプラグインの一覧は[ブログ](http://ntgame.wpblog.jp/page-139/)をご覧ください。
 
