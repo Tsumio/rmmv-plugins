@@ -6,6 +6,7 @@
 // http://opensource.org/licenses/mit-license.php
 // ----------------------------------------------------------------------------
 // Version
+// 1.0.1 2017/11/25 オートセーブ機能の追加。
 // 1.0.0 2017/11/23 公開。
 // ----------------------------------------------------------------------------
 // [GitHub] : https://github.com/Tsumio/rmmv-plugins
@@ -64,6 +65,7 @@
  * "TES rotate eventId angle" : Change the angle of the specified event. Also see [angle].
  * "TES save" : Save the current shadow setting. See also [save and release].
  * "TES dispose" : Dispose the current shadow setting. See also [save and release].
+ * "TES autoSave true/false" : Valid/Invalid automatic saving function.See also [automatic saving function].
  * 
  * If you set "this" to [eventId], the event number of the event that executed the plugin command is substituted.
  * 
@@ -101,7 +103,15 @@
  * The shadow setting is not saved in the save data.
  * Please execute shadows again by using automatic execution of events etc. if necessary.
  * 
+ * ----automatic saving function----
+ * When automatic saving function is enabled from the plugin command ("TES autoSave true"), the function equivalent to "TES save" is executed at the timing of each command execution.
+ * However, "TES save" is not executed at the timing when automatic saving function is enabled.
+ * Also, "TES dispose" is not executed at the timing of invalidation ("TES autoSave false").
+ * 
+ * It is recommended that you disable autosave if you change the shadow setting frequently (more than a few times per second) since processing may take time.
+ * 
  * ----change log----
+ * 1.0.1 2017/11/25 Add automatic saving function.
  * 1.0.0 2017/11/23 Release.
  * 
  * ----remarks----
@@ -168,6 +178,7 @@
  * 「TES rotate イベント番号 角度」 : 指定されたイベントの角度を変更します。【角度】も参照してください。
  * 「TES save」 : 現在の影の設定を保存します。【セーブと解放】も参照してください。
  * 「TES dispose」 : 現在の影の設定を破棄します。 【セーブと解放】も参照してください。
+ * 「TES autoSave true/false」 : オートセーブの有効/無効を設定します。【オートセーブ】も参照してください。
  * 
  * なお、イベント番号に「this」を指定した場合、プラグインコマンドを実行したイベントのイベント番号が代入されます。
  * 
@@ -203,7 +214,15 @@
  * 影の設定はセーブデータにも保存されません。
  * 必要があればイベントの自動実行などを用いて影の再設定をするようにしてください。
  * 
+ * 【オートセーブ】
+ * プラグインコマンドからオートセーブを有効にした場合（「TES autoSave true」）、各コマンドを実行したタイミングで「TES save」と同等の機能が実行されます。
+ * ただしオートセーブを有効にしたタイミングで「TES save」が実行されるわけではありません。
+ * また、無効化（「TES autoSave false」)したタイミングで「TES dispose」が実行されるわけでもありません。
+ * 
+ * 頻繁（1秒間に数回以上）に影の設定を変更する場合、処理が重くなる可能性があるのでオートセーブは無効化することを推奨します。
+ * 
  * 【更新履歴】
+ * 1.0.1 2017/11/25 オートセーブ機能の追加。
  * 1.0.0 2017/11/23 公開。
  * 
  * 【備考】
@@ -331,19 +350,24 @@
             switch (args[0]) {
                 case 'on':
                     ShadowManager.showShadow(eventId);
+                    ShadowManager.fireAutoSave();
                     break;
                 case 'off':
                     ShadowManager.hideShadow(eventId);
+                    ShadowManager.fireAutoSave();
                     break;
                 case 'setColor':
                     ShadowManager.setShadowColor(eventId, Number(args[2]), Number(args[3]), 
                                         Number(args[4]), Number(args[5]));
+                    ShadowManager.fireAutoSave();
                     break;
                 case 'setPos':
                     ShadowManager.setShadowPosition(eventId, Number.parseFloat(args[2]), Number.parseFloat(args[3]));
+                    ShadowManager.fireAutoSave();
                     break;
                 case 'rotate':
                     ShadowManager.rotateShadow(eventId, args[2]);
+                    ShadowManager.fireAutoSave();
                     break;
                 case 'save':
                     ShadowManager.saveShadow();
@@ -351,6 +375,8 @@
                 case 'dispose':
                     ShadowManager.disposeShadow();
                     break;
+                case 'autoSave' :
+                    ShadowManager.setAutoSave(convertParam(args[1]));
             }
         }
     };
@@ -510,6 +536,24 @@
 
         static hasSavingData() {
             return this._isSaving;
+        }
+
+        /**
+         * @param {boolean} valid
+         * Set valid true/false.
+         */
+        static setAutoSave(valid) {
+            $gameSystem.shadowAutoSaveTES = valid;
+        }
+
+        static shouldAutoSave() {
+            return $gameSystem.shadowAutoSaveTES;
+        }
+
+        static fireAutoSave() {
+            if(this.shouldAutoSave()){
+                this.saveShadow();
+            }
         }
     }
 
