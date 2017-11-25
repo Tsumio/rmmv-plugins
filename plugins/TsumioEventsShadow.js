@@ -109,6 +109,7 @@
  * Also, "TES dispose" is not executed at the timing of invalidation ("TES autoSave false").
  * 
  * It is recommended that you disable autosave if you change the shadow setting frequently (more than a few times per second) since processing may take time.
+ * Also, Validity/Invalidity of auto save is stored in the saved data of the main unit.
  * 
  * ----change log----
  * 1.0.1 2017/11/25 Add automatic saving function.
@@ -220,6 +221,7 @@
  * また、無効化（「TES autoSave false」)したタイミングで「TES dispose」が実行されるわけでもありません。
  * 
  * 頻繁（1秒間に数回以上）に影の設定を変更する場合、処理が重くなる可能性があるのでオートセーブは無効化することを推奨します。
+ * また、オートセーブの有効/無効は本体のセーブデータに記憶されます。
  * 
  * 【更新履歴】
  * 1.0.1 2017/11/25 オートセーブ機能の追加。
