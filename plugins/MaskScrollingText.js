@@ -6,6 +6,7 @@
 // http://opensource.org/licenses/mit-license.php
 // ----------------------------------------------------------------------------
 // Version
+// 1.0.1 2017/11/28 円形のマスクに対応。マスク内のみでスクロールするよう調整。
 // 1.0.0 2017/11/27 公開。
 // ----------------------------------------------------------------------------
 // [GitHub] : https://github.com/Tsumio/rmmv-plugins
@@ -42,12 +43,21 @@
  * And separate each word with a space.
  * Please make sure.
  * 
- * "MST setMaskRect x y width height" : Creates a mask for the specified rectangle.
+ * 「MST setRectMask x y width height」 : Creates a mask for the specified rectangle.
+ * 「MST setEllipseMask x y halfWidth halfHeight」 : Creates a mask for the specified ellipse.。The X and Y are coordinate of the center of this circle.
+ * 「MST setCircleMask x y radius」 : Creates a mask for the specified circle.The X and Y are coordinate of the center of this circle.
  * 
  * Furthermore, By using Graphics.width and Graphics.height, you can also get the width and height of the screen.
  * Example："MST setMaskRect 200 200 Graphics.width-400 200"
  * 
+ * ----obsolete plugin command----
+ * These are plugin commands that exist only for compatibility.
+ * You should not use these commands.
+ * 
+ * "MST setMaskRect x y width height" : Creates a mask for the specified rectangle.
+ * 
  * ----change log----
+ * 1.0.1 2017/11/28 Corresponds to a circular mask.Adjust to scroll only in the mask.
  * 1.0.0 2017/11/27 Release.
  * 
  * ----remarks----
@@ -91,12 +101,21 @@
  * 各単語の間は半角スペースで区切ります（全角では認識しません）。
  * 間違わないように気をつけてください。
  * 
- * 「MST setMaskRect x y width height」 : 指定した矩形のマスクを作成します。
+ * 「MST setRectMask x y width height」 : 指定した矩形のマスクを作成します。
+ * 「MST setEllipseMask x y halfWidth halfHeight」 : 指定した楕円形のマスクを作成します。xとyは円の中心座標です。
+ * 「MST setCircleMask x y radius」 : 指定した円形のマスクを作成します。xとyは円の中心座標です。
  * 
  * なお、Graphics.widthやGraphics.heightを用いるこにより、画面の幅や高さを取得することもできます。
  * 例：「MST setMaskRect 200 200 Graphics.width-400 200」
  * 
+ * 【廃止したプラグインコマンド】
+ * 互換性のためだけに存在しているプラグインコマンドです。
+ * 通常は使用しないでください。
+ * 
+ * 「MST setMaskRect x y width height」 : 指定した矩形のマスクを作成します。
+ * 
  * 【更新履歴】
+ * 1.0.1 2017/11/28 円形のマスクに対応。マスク内のみでスクロールするよう調整。
  * 1.0.0 2017/11/27 公開。
  * 
  * 【備考】
@@ -179,8 +198,17 @@
         _Game_Interpreter_pluginCommand.call(this, command, args);
         if (command === 'MST') {
             switch (args[0]) {
-                case 'setMaskRect':
-                    SceneManager._scene._scrollTextWindow.setMaskRect(args[1], args[2], args[3], args[4]);
+                case 'setMaskRect'://[Obsolete]
+                    SceneManager._scene._scrollTextWindow.setRectMask(args[1], args[2], args[3], args[4]);
+                    break;
+                case 'setRectMask':
+                    SceneManager._scene._scrollTextWindow.setRectMask(args[1], args[2], args[3], args[4]);
+                    break;
+                case 'setEllipseMask':
+                    SceneManager._scene._scrollTextWindow.setEllipseMask(args[1], args[2], args[3], args[4]);
+                    break;
+                case 'setCircleMask':
+                    SceneManager._scene._scrollTextWindow.setCircleMask(args[1], args[2], args[3]);
                     break;
             }
         }
@@ -200,22 +228,69 @@
 
     /**
      * Called from plugin command.
+     * 
      */
-    Window_ScrollText.prototype.setMaskRect = function(x, y, width, height) {
+    Window_ScrollText.prototype.setRectMask = function(x, y, width, height) {
         const _x      = eval(x);
         const _y      = eval(y);
         const _width  = eval(width);
         const _height = eval(height);
 
-        this.createMask(_x, _y, _width, _height);
+        this.createRectMask(_x, _y, _width, _height);
         this.maskRect = {x:_x, y:_y, width:_width, height:_height};
     };
 
-    Window_ScrollText.prototype.createMask = function(x, y, width, height) {        
+    /**
+     * Called from plugin command.
+     * 
+     */
+    Window_ScrollText.prototype.setEllipseMask = function(x, y, halfWidth, halfHeight) {
+        const _halfWidth  = eval(halfWidth);
+        const _halfHeight = eval(halfHeight);
+        const _x      = eval(x);
+        const _y      = eval(y);
+
+        this.createEllipseMask(_x, _y, _halfWidth, _halfHeight);
+        this.maskRect = {x:_x-_halfWidth, y:_y-_halfHeight, halfWidth:_halfWidth, halfHeight:_halfHeight};
+    };
+
+    /**
+     * Called from plugin command.
+     * 
+     */
+    Window_ScrollText.prototype.setCircleMask = function(x, y, radius) {
+        const _x      = eval(x);
+        const _y      = eval(y);
+        const _radius = eval(radius);
+
+        this.createCircleMask(_x, _y, _radius);
+        this.maskRect = {x:_x-_radius, y:_y-_radius, width:_radius, height:_radius};
+    };
+
+    Window_ScrollText.prototype.createRectMask = function(x, y, width, height) {        
         //Set new mask settings.
         const mask = new PIXI.Graphics();
         mask.beginFill(0xffffff, 1);
         mask.drawRect(x, y, width, height); 
+        mask.endFill();
+        this._windowContentsSprite.mask = mask;
+    };
+
+    Window_ScrollText.prototype.createEllipseMask = function(x, y, halfWidth, halfHeight) {        
+        //Set new mask settings.
+        const mask = new PIXI.Graphics();
+        mask.beginFill(0xffffff, 1);
+        mask.drawEllipse(x, y, halfWidth, halfHeight);
+        mask.endFill();
+        this._windowContentsSprite.mask = mask;
+        console.log(this._windowContentsSprite.mask);
+    };
+
+    Window_ScrollText.prototype.createCircleMask = function(x, y, radius) {        
+        //Set new mask settings.
+        const mask = new PIXI.Graphics();
+        mask.beginFill(0xffffff, 1);
+        mask.drawCircle(x, y, radius);
         mask.endFill();
         this._windowContentsSprite.mask = mask;
     };
@@ -256,6 +331,14 @@
         this.createContents();
         this.origin.y = -this.height + this.maskRect.y;
         this.drawTextEx(this._text, this.maskRect.x, 1);
+    };
+
+    const _Window_ScrollText_updateMessage = Window_ScrollText.prototype.updateMessage;
+    Window_ScrollText.prototype.updateMessage = function() {
+        _Window_ScrollText_updateMessage.call(this);
+        if (this.origin.y >= this.contents.height - this.maskRect.y) {
+            this.terminateMessage();
+        }
     };
 
 
