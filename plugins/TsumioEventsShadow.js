@@ -6,6 +6,7 @@
 // http://opensource.org/licenses/mit-license.php
 // ----------------------------------------------------------------------------
 // Version
+// 1.0.2 2017/11/29 ヘルプの加筆。
 // 1.0.1 2017/11/25 オートセーブ機能の追加。
 // 1.0.0 2017/11/23 公開。
 // ----------------------------------------------------------------------------
@@ -51,6 +52,8 @@
  * ----how to use----
  * You can use this plugin after setting some plugin parameters.
  * You can also operate shadows from plugin commands.
+ * 
+ * Write "<onShadow>" in the memo field where you want to apply shadows.
  * 
  * ----plugin command----
  * All plugin commands start with "TES".
@@ -112,6 +115,7 @@
  * Also, Validity/Invalidity of auto save is stored in the saved data of the main unit.
  * 
  * ----change log----
+ * 1.0.2 2017/11/29 Revision the help.
  * 1.0.1 2017/11/25 Add automatic saving function.
  * 1.0.0 2017/11/23 Release.
  * 
@@ -162,6 +166,7 @@
  * プラグインの導入後、プラグインパラメーターを設定することによって使用できます。
  * また、プラグインコマンドから影の操作が可能です。
  * 
+ * 影を適用したいメモ欄に「<onShadow>」を記述してください。
  * 
  * 【プラグインコマンド】
  * 全てのプラグインコマンドは「TES」から始まります。
@@ -224,6 +229,7 @@
  * また、オートセーブの有効/無効は本体のセーブデータに記憶されます。
  * 
  * 【更新履歴】
+ * 1.0.2 2017/11/29 ヘルプの加筆。
  * 1.0.1 2017/11/25 オートセーブ機能の追加。
  * 1.0.0 2017/11/23 公開。
  * 
