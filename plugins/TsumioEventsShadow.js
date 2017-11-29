@@ -53,7 +53,7 @@
  * You can use this plugin after setting some plugin parameters.
  * You can also operate shadows from plugin commands.
  * 
- * Write "<onShadow>" in the memo field where you want to apply shadows.
+ * Write "<onShadow>" in the memo field of the event where you want to apply shadows.
  * 
  * ----plugin command----
  * All plugin commands start with "TES".
@@ -166,7 +166,7 @@
  * プラグインの導入後、プラグインパラメーターを設定することによって使用できます。
  * また、プラグインコマンドから影の操作が可能です。
  * 
- * 影を適用したいメモ欄に「<onShadow>」を記述してください。
+ * 影を適用したいイベントのメモ欄に「<onShadow>」を記述してください。
  * 
  * 【プラグインコマンド】
  * 全てのプラグインコマンドは「TES」から始まります。
