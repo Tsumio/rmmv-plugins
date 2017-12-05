@@ -21,10 +21,15 @@
  * @desc 
  * @default 
  * 
- * @param VariableNumber
+ * @param VariableNumberTotal
  * @type variable
  * @desc Set variable number for saving experience value.
  * @default 1
+ * 
+ * @param VariableNumberEach
+ * @type variable
+ * @desc Set the variable number to save the experience value obtained in one battle. It will be reset every battle.
+ * @default 2
  * 
  * @help Store the total experience value obtained so far in the specified variable.
  * 
@@ -59,10 +64,15 @@
  * @desc 
  * @default 
  * 
- * @param 経験値保存用の変数番号
+ * @param 合計の経験値保存用の変数番号
  * @type variable
- * @desc 経験値を保存するための変数番号を設定します。
+ * @desc 合計の経験値を保存するための変数番号を設定します。戦闘ごとにはリセットされません。
  * @default 1
+ * 
+ * @param 個別の経験値保存用の変数番号
+ * @type variable
+ * @desc 一回の戦闘で得た経験値を保存するための変数番号を設定します。戦闘ごとにリセットされます。
+ * @default 2
  * 
  * @help これまで得た合計経験値を変数に保存します。
  * 
@@ -71,7 +81,7 @@
  * 
  * 【使用方法】
  * プラグインの導入後、プラグインパラメーターを設定してください。
- * 指定の変数を参照することにより、これまでに得た合計経験値を取得することができます。
+ * 指定の変数を参照することにより、これまでに得た合計経験値・前回の戦闘の経験値を取得することができます。
  * 
  * 【プラグインコマンド】
  * プラグインコマンドはありません。
@@ -151,7 +161,8 @@
 ////=============================================================================
     var param                          = {};
     //Basic Stteings
-    param.expVariableNum    = getParamNumber(['VariableNumber', '経験値保存用の変数番号']);
+    param.expTotalVariableNum  = getParamNumber(['VariableNumberTotal', '合計の経験値保存用の変数番号']);
+    param.expEachVariableNum   = getParamNumber(['VariableNumberEach',  '個別の経験値保存用の変数番号']);
 
 ////==============================
 //// Convert parameters.
@@ -170,9 +181,12 @@
     const _BattleManager_makeRewards = BattleManager.makeRewards;
     BattleManager.makeRewards = function() {
         _BattleManager_makeRewards.call(this);
-        const prevExp     = $gameVariables.value(param.expVariableNum);
+        //Total exp.
+        const prevExp     = $gameVariables.value(param.expTotalVariableNum);
         const newTotalExp = prevExp + $gameTroop.expTotal();
-        $gameVariables.setValue(param.expVariableNum, newTotalExp);
+        $gameVariables.setValue(param.expTotalVariableNum, newTotalExp);
+        //Current exp.
+        $gameVariables.setValue(param.expEachVariableNum, $gameTroop.expTotal());
     };
 
 ////=============================================================================
