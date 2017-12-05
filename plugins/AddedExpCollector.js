@@ -14,7 +14,7 @@
 //=============================================================================
 
 /*:
- * @plugindesc Store the total experience value obtained so far in the specified variable.
+ * @plugindesc Save the experience value gained in battle in a variable.
  * @author Tsumio
  *
  * @param ----Basic Settings----
@@ -23,26 +23,25 @@
  * 
  * @param VariableNumberTotal
  * @type variable
- * @desc Set variable number for saving experience value.
+ * @desc Set variable number for saving experience value.It will not be reset every battle.
  * @default 1
  * 
- * @param VariableNumberEach
+ * @param VariableNumberPrev
  * @type variable
  * @desc Set the variable number to save the experience value obtained in one battle. It will be reset every battle.
  * @default 2
  * 
- * @help Store the total experience value obtained so far in the specified variable.
+ * @help Save the experience value gained in battle in a variable.
  * 
  * ----feature----
- * -> Store the total experience value obtained so far in the specified variable.
+ * -> Save the experience value gained in battle in a variable.
  * 
  * ----how to use----
  * After introducing this plugin, please set the plugin parameters.
- * By referring to the specified variable, can obtain the total experience value gained so far.
+ * By referring to the specified variable, can acquire the total experience value gained so far and the experience value of the previous battle.
  * 
  * ----plugin command----
  * There is no plugin command.
- * 
  * 
  * ----change log---
  * 1.0.0 2017/12/05 Release.
@@ -50,14 +49,14 @@
  * ----remarks----
  * I shall not be responsible for any loss, damages and troubles from using this plugin.
  * 
- * --Terms of Use--
+ * ----Terms of Use----
  * This plugin is free for both commercial and non-commercial use.
  * You may edit the source code to suit your needs,
  * so long as you don't claim the source code belongs to you.
  * 
  */
 /*:ja
- * @plugindesc これまで得た合計経験値を変数に保存します。
+ * @plugindesc 戦闘で得た経験値を変数に保存します。
  * @author ツミオ
  *
  * @param ----基本的な設定----
@@ -69,15 +68,15 @@
  * @desc 合計の経験値を保存するための変数番号を設定します。戦闘ごとにはリセットされません。
  * @default 1
  * 
- * @param 個別の経験値保存用の変数番号
+ * @param 前回の経験値保存用の変数番号
  * @type variable
  * @desc 一回の戦闘で得た経験値を保存するための変数番号を設定します。戦闘ごとにリセットされます。
  * @default 2
  * 
- * @help これまで得た合計経験値を変数に保存します。
+ * @help 戦闘で得た経験値を変数に保存します。
  * 
  * 【特徴】
- * ・これまで得た合計経験値を指定の変数に格納します。
+ * ・戦闘で得た経験値を変数に保存します。
  * 
  * 【使用方法】
  * プラグインの導入後、プラグインパラメーターを設定してください。
@@ -105,7 +104,6 @@
 (function() {
     'use strict';
     var pluginName = 'AddedExpCollector';
-
 
 ////=============================================================================
 //// Local function
@@ -162,7 +160,7 @@
     var param                          = {};
     //Basic Stteings
     param.expTotalVariableNum  = getParamNumber(['VariableNumberTotal', '合計の経験値保存用の変数番号']);
-    param.expEachVariableNum   = getParamNumber(['VariableNumberEach',  '個別の経験値保存用の変数番号']);
+    param.expEachVariableNum   = getParamNumber(['VariableNumberPrev',  '前回の経験値保存用の変数番号']);
 
 ////==============================
 //// Convert parameters.
@@ -181,11 +179,11 @@
     const _BattleManager_makeRewards = BattleManager.makeRewards;
     BattleManager.makeRewards = function() {
         _BattleManager_makeRewards.call(this);
-        //Total exp.
+        //Set total exp.
         const prevExp     = $gameVariables.value(param.expTotalVariableNum);
         const newTotalExp = prevExp + $gameTroop.expTotal();
         $gameVariables.setValue(param.expTotalVariableNum, newTotalExp);
-        //Current exp.
+        //Set prev exp.
         $gameVariables.setValue(param.expEachVariableNum, $gameTroop.expTotal());
     };
 
