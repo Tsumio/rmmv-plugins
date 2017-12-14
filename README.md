@@ -30,6 +30,7 @@ Read each JS file.It contains usage.
 | [TsumioEventsShadow](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/TsumioEventsShadow.js)          | This plugin displays shadow.               | [Official Forum](https://forum.tkool.jp/index.php?threads/【プラグイン】イベントに立体的な影を表示.534/) (Japanese) |
 | [MaskScrollingText](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/MaskScrollingText.js)          | Add mask function to scrolling text.               | [Official Forum](https://forum.tkool.jp/index.php?threads/%E3%80%90%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3%E3%80%91%E6%96%87%E7%AB%A0%E3%81%AE%E3%82%B9%E3%82%AF%E3%83%AD%E3%83%BC%E3%83%AB%E8%A1%A8%E7%A4%BA%E3%82%92%E3%83%9E%E3%82%B9%E3%82%AF%E3%81%99%E3%82%8B.540/) (Japanese) |
 | [AddedExpCollector](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/AddedExpCollector.js)          | Save the experience value gained in battle in a variable.               | N/A |
+| [UnfollowTouchTracks](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/UnfollowTouchTracks.js)          | This plugin hides tracks representing the destination.               | [Official Forum](https://forum.tkool.jp/index.php?threads/%E3%80%90%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3%E3%80%91%E3%82%BF%E3%83%83%E3%83%81%E5%BE%8C%E3%81%AE%E7%9B%AE%E7%9A%84%E5%9C%B0%E3%82%92%E8%A1%A8%E3%81%99%E8%BB%8C%E8%B7%A1%E3%82%92%E9%9D%9E%E8%A1%A8%E7%A4%BA.564/) (Japanese) |
 
 If you want to know all my plugin, see [the blog](http://ntgame.wpblog.jp/page-139/) (Japanese).
 
@@ -78,6 +79,7 @@ RPGツクールMV上での動作を前提としています。
 | [TsumioEventsShadow](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/TsumioEventsShadow.js)          | 立体的な影を表示するプラグインです。               | [公式フォーラム](https://forum.tkool.jp/index.php?threads/【プラグイン】イベントに立体的な影を表示.534/) |
 | [MaskScrollingText](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/MaskScrollingText.js)          | 文章のスクロール表示にマスク機能を加えます。               | [公式フォーラム](https://forum.tkool.jp/index.php?threads/%E3%80%90%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3%E3%80%91%E6%96%87%E7%AB%A0%E3%81%AE%E3%82%B9%E3%82%AF%E3%83%AD%E3%83%BC%E3%83%AB%E8%A1%A8%E7%A4%BA%E3%82%92%E3%83%9E%E3%82%B9%E3%82%AF%E3%81%99%E3%82%8B.540/) |
 | [AddedExpCollector](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/AddedExpCollector.js)          | 戦闘で得た経験値を変数に保存します。               | なし |
+| [UnfollowTouchTracks](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/UnfollowTouchTracks.js)          | タッチ後の目的地を表す軌跡を非表示にするプラグインです。               | [公式フォーラム](https://forum.tkool.jp/index.php?threads/%E3%80%90%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3%E3%80%91%E3%82%BF%E3%83%83%E3%83%81%E5%BE%8C%E3%81%AE%E7%9B%AE%E7%9A%84%E5%9C%B0%E3%82%92%E8%A1%A8%E3%81%99%E8%BB%8C%E8%B7%A1%E3%82%92%E9%9D%9E%E8%A1%A8%E7%A4%BA.564/) |
 
 GitHubに公開していないものを含む全てのプラグインの一覧は[ブログ](http://ntgame.wpblog.jp/page-139/)をご覧ください。
 
