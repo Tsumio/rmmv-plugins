@@ -236,6 +236,11 @@
             this.drawEscapeRatio();
         }
 
+        open() {
+            super.open();
+            this.refresh();
+        }
+
         drawEscapeRatio() {
             const text = $gameSystem.isJapanese() ? `逃走成功率${this.escapeRatio}%` : `Escape Ratio:${this.escapeRatio}%`;
             this.drawTextEx(text, 0, 0);
