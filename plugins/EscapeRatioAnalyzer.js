@@ -223,7 +223,6 @@
             const height = this.fittingHeight(1);
             super.initialize(x, y - height, width, height);
 
-            this.refresh();
             this.close();
         }
 
