@@ -34,8 +34,8 @@
 #### ブランチでわける
 - ブランチごとにPITCHME.mdを置く |
 - 先の方法よりはマシ |
-- でもPresentationのためにブランチを作るのがなんだか嫌だ
-- **というわけで次が本命** |
+- でもPresentationのためにブランチを作るのがなんだか嫌だ |
+- というわけで次が本命 |
 
 ---
 
@@ -44,16 +44,16 @@
 - 各フォルダにPITCHME.mdを置く |
 - たぶん皆さんがやりたいのはコレ |
 - ただし各フォルダにPITCHME.mdを置くだけではPresentationとして認識されない |
-- **どうすればよいか？** |
+- どうすればよいか？ |
 
 ---
 
 ### アドレスで管理できる
-- 実は各フォルダごとにPITCHME.mdを置いた場合、アドレスで各Presentationを管理できる
-- 具体的には以下の通り
-- https://gitpitch.com/user/repo/branch?p=フォルダ名
+- 実は各フォルダごとにPITCHME.mdを置いた場合、アドレスで各Presentationを管理できる |
+- 具体的には以下の通り |
+- https://gitpitch.com/user/repo/branch?p=フォルダ名 |
 - ブランチが不要ならrepo?p=フォルダ名 |
-- 具体例は、**このPresentationのアドレスを参照** |
+- 具体例はこのPresentationのアドレスを参照 |
   
 その他の詳細は[Wiki](https://github.com/gitpitch/gitpitch/wiki/Asset-Sharing)に書いてます。  
 ただし英語。
