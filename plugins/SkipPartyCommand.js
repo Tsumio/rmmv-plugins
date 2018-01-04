@@ -6,6 +6,7 @@
 // http://opensource.org/licenses/mit-license.php
 // ----------------------------------------------------------------------------
 // Version
+// 1.0.4 2018/01/04 アクターコマンドに逃げるコマンドを追加。
 // 1.0.3 2018/01/02 パーティー先頭に行動不能アクターが存在した場合の不具合を修正。
 // 1.0.2 2017/08/16 さらに微調整。
 // 1.0.1 2017/08/16 スキップの判定を微調整。
@@ -25,16 +26,22 @@
  * @desc If this switch is on, party command is skipped.
  * @default 1
  * 
+ * @param SwitchNumberForEscapeCommand
+ * @type switch
+ * @desc If this switch is on, show escape command to actor command window.
+ * @default 2
+ * 
  * @help This plugin skip party command in battle.
  * 
  * ----how to use----
- * You can use this plugin after setting SwitchNumberForSkipping parameter.
+ * You can use this plugin after setting SwitchNumberForSkipping and SwitchNumberForEscapeCommand parameters.
  * 
  * ----plugin command----
  * There is no plugin command.
  * 
  * 
  * ----change log---
+ * 1.0.4 2018/01/04 Add escape command to acttor command window.
  * 1.0.3 2018/01/02 Fixed a bug when a inactivity actor is at the beginning of the party.
  * 1.0.2 2017/08/16 More Adjustment.
  * 1.0.1 2017/08/16 Adjustment of skip judgment.
@@ -58,18 +65,24 @@
  * @desc このスイッチ番号がONのとき、パーティーコマンドはスキップされます。
  * @default 1
  * 
+ * @param 逃げるコマンド表示用のスイッチ番号
+ * @type switch
+ * @desc このスイッチ番号がONのとき、アクターコマンドに逃げるコマンドが追加されます。
+ * @default 2
+ * 
  * @help 戦闘時のパーティーコマンドをスキップします。
  * 
  * 
  * 
  * 【使用方法】
- * プラグインの導入後、スキップ用のスイッチ番号を設定することによって使用できます。
+ * プラグインの導入後、スキップ用のスイッチ番号および逃げるコマンド表示用のスイッチ番号を設定することによって使用できます。
  * 
  * 
  * 【プラグインコマンド】
  * このプラグインにプラグインコマンドはありません。
  *
  * 【更新履歴】
+ * 1.0.4 2018/01/04 アクターコマンドに逃げるコマンドを追加。
  * 1.0.3 2018/01/02 パーティー先頭に行動不能アクターが存在した場合の不具合を修正。
  * 1.0.2 2017/08/16 さらに微調整。
  * 1.0.1 2017/08/16 スキップの判定を微調整。
@@ -147,6 +160,7 @@
 ////=============================================================================
     var param                          = {};
     param.switchNum_skipping           = getParamNumber(['SwitchNumberForSkipping', 'スキップ用のスイッチ番号']);
+    param.switchNum_escapeCommand      = getParamNumber(['SwitchNumberForEscapeCommand', '逃げるコマンド表示用のスイッチ番号']);
 
 ////==============================
 //// Convert parameters.
@@ -188,6 +202,34 @@
     //This is additional method.
     Scene_Battle.prototype.canSkipPartyCommand_SPC = function() {
         return this.isSkippableSwitchOn_SPC() && BattleManager.isInputting() && !BattleManager.actor();
+    };
+
+    const _Scene_Battle_createActorCommandWindow = Scene_Battle.prototype.createActorCommandWindow;
+    Scene_Battle.prototype.createActorCommandWindow = function() {
+        _Scene_Battle_createActorCommandWindow.call(this);
+        this._actorCommandWindow.setHandler('escape', this.commandEscape.bind(this));
+    };
+
+//////=============================================================================
+///// Window_ActorCommand
+/////  Add escapeCommand.
+/////=============================================================================
+    const _Window_ActorCommand_changeInputWindow = Window_ActorCommand.prototype.makeCommandList;
+    Window_ActorCommand.prototype.makeCommandList = function() {
+        _Window_ActorCommand_changeInputWindow.call(this);
+        if(this._actor) {
+            this.addEscapeCommand();
+        }
+    };
+
+    Window_ActorCommand.prototype.addEscapeCommand = function() {
+        if(this.isEscapeCommandSwitchOn_SPC()) {
+            this.addCommand(TextManager.escape, 'escape', BattleManager.canEscape());
+        }
+    };
+
+    Window_ActorCommand.prototype.isEscapeCommandSwitchOn_SPC = function() {
+        return $gameSwitches.value(param.switchNum_escapeCommand);
     };
 
 })();
