@@ -33,6 +33,7 @@ Read each JS file.It contains usage.
 | [UnfollowTouchTracks](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/UnfollowTouchTracks.js)          | This plugin hides tracks representing the destination.               | [Official Forum](https://forum.tkool.jp/index.php?threads/%E3%80%90%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3%E3%80%91%E3%82%BF%E3%83%83%E3%83%81%E5%BE%8C%E3%81%AE%E7%9B%AE%E7%9A%84%E5%9C%B0%E3%82%92%E8%A1%A8%E3%81%99%E8%BB%8C%E8%B7%A1%E3%82%92%E9%9D%9E%E8%A1%A8%E7%A4%BA.564/) (Japanese) |
 | [EscapeRatioAnalyzer](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/EscapeRatioAnalyzer.js)          | Display the escape ratio during battle.               | N/A |
 | [SkipPartyCommand](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/SkipPartyCommand.js)          | This plugin skip party command in battle.               | N/A |
+| [BugFixFreezeOfSomeScenes](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/BugFixFreezeOfSomeScenes.js)          | Fixes the bug of freezing occurring in some scenes.               | N/A |
 
 If you want to know all my plugin, see [the blog](http://ntgame.wpblog.jp/page-139/) (Japanese).
 
@@ -84,6 +85,7 @@ RPGツクールMV上での動作を前提としています。
 | [UnfollowTouchTracks](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/UnfollowTouchTracks.js)          | タッチ後の目的地を表す軌跡を非表示にするプラグインです。               | [公式フォーラム](https://forum.tkool.jp/index.php?threads/%E3%80%90%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3%E3%80%91%E3%82%BF%E3%83%83%E3%83%81%E5%BE%8C%E3%81%AE%E7%9B%AE%E7%9A%84%E5%9C%B0%E3%82%92%E8%A1%A8%E3%81%99%E8%BB%8C%E8%B7%A1%E3%82%92%E9%9D%9E%E8%A1%A8%E7%A4%BA.564/) |
 | [EscapeRatioAnalyzer](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/EscapeRatioAnalyzer.js)          | 戦闘中の逃走成功率を表示します。               | なし |
 | [SkipPartyCommand](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/SkipPartyCommand.js)          | 戦闘時のパーティーコマンドをスキップします。               | なし |
+| [BugFixFreezeOfSomeScenes](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/BugFixFreezeOfSomeScenes.js)          | いくつかのシーンで発生する可能性のあるフリーズ現象を修正します。               | なし |
 
 GitHubに公開していないものを含む全てのプラグインの一覧は[ブログ](http://ntgame.wpblog.jp/page-139/)をご覧ください。
 
