@@ -26,6 +26,7 @@
  * 
  * ----feature----
  * -> Fixes the bug of freezing occurring in some scenes.
+ * -> Corresponds to core script 1.5.1.
  * 
  * ----how to use----
  * Just by installing the plugin.
@@ -67,6 +68,7 @@
  * 
  * 【特徴】
  * ・いくつかのシーンで発生する可能性のあるフリーズ現象を修正します。
+ * ・コアスクリプト1.5.1に対応しています。
  * 
  * 【使用方法】
  * プラグインを導入するだけで使用できます。
