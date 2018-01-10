@@ -6,6 +6,7 @@
 // http://opensource.org/licenses/mit-license.php
 // ----------------------------------------------------------------------------
 // Version
+// 1.0.2 2018/01/10 メニュー画面にコマンドを追加できるよう変更。
 // 1.0.1 2017/11/10 プラグインパラメーターの追加と説明の加筆。
 // 1.0.0 2017/11/04 公開。
 // ----------------------------------------------------------------------------
@@ -42,6 +43,19 @@
  * @desc Sets the color of the checking mark.
  * @default #FF6600
  * 
+ * @param ----Menu Scene Settings----
+ * @desc 
+ * @default 
+ * 
+ * @param CommandName
+ * @type string
+ * @desc Sets command name of the menu scene.
+ * @default Diary
+ * 
+ * @param ShouldAddCommand
+ * @type boolean
+ * @desc Sets whether or not to add a command to the menu scene.
+ * @default false
  * 
  * @help This This plugin implements the calendar function.
  * 
@@ -117,6 +131,7 @@
  * 参考URL：https://raw.githubusercontent.com/triacontane/RPGMakerMV/master/Chronus.js
  * 
  * ----change log---
+ * 1.0.2 2018/01/10 Changed to add a command of the menu scene.
  * 1.0.1 2017/11/10 Add plugin parameters and a description of explanation.
  * 1.0.0 2017/11/04 Release.
  * 
@@ -156,6 +171,20 @@
  * @type string
  * @desc チェックマークの色を設定します。
  * @default #FF6600
+ * 
+ * @param ----メニュー画面の設定----
+ * @desc 
+ * @default 
+ * 
+ * @param コマンド名
+ * @type string
+ * @desc メニュー画面のコマンド名を設定します。
+ * @default ダイアリー
+ * 
+ * @param コマンドを追加する
+ * @type boolean
+ * @desc メニュー画面にコマンドを追加するかどうかを設定します。
+ * @default false
  * 
  * @help カレンダー機能を実装します。
  * 
@@ -235,6 +264,7 @@
  * 参考URL：https://raw.githubusercontent.com/triacontane/RPGMakerMV/master/Chronus.js
  * 
  * 【更新履歴】
+ * 1.0.2 2018/01/10 メニュー画面にコマンドを追加できるよう変更。
  * 1.0.1 2017/11/10 プラグインパラメーターの追加と説明の加筆。
  * 1.0.0 2017/11/04 公開。
  * 
@@ -416,6 +446,8 @@ function Game_CalendarTFC() {
     param.calendarColors      = getParamString(['CalendarColors',   'カレンダーの色']);
     param.checkingMarkColor   = getParamString(['CheckingMarkColor', 'チェックマークの色']);
     param.dayOfWeekcolors     = getParamString(['DayOfTheWeekColors', '曜日の背景色']);
+    param.commandName         = getParamString(['CommandName', 'コマンド名']);
+    param.shouldAddCommand    = getParamString(['ShouldAddCommand', 'コマンドを追加する']);
 
 ////==============================
 //// Convert parameters.
@@ -423,6 +455,7 @@ function Game_CalendarTFC() {
     param.calendarSettings    = convertParam(param.calendarSettings);
     param.calendarColors      = convertParam(param.calendarColors);
     param.dayOfWeekcolors     = convertParam(param.dayOfWeekcolors);
+    param.shouldAddCommand    = convertParam(param.shouldAddCommand);
 
 ////==============================
 //// Convert to Number.
@@ -457,6 +490,34 @@ function Game_CalendarTFC() {
                     break;
             }
         }
+    };
+
+//////=============================================================================
+///// Window_MenuCommand
+/////  Add menu command for calendar.
+/////==============================================================================
+    const _Window_MenuCommand_addOriginalCommands      = Window_MenuCommand.prototype.addOriginalCommands;
+    Window_MenuCommand.prototype.addOriginalCommands = function() {
+        _Window_MenuCommand_addOriginalCommands.call(this);
+        if(param.shouldAddCommand) {
+            this.addCommand(param.commandName, 'diary', true);
+        }
+    };
+
+//////=============================================================================
+///// Scene_Menu
+/////  Add menu command for calendar.
+/////==============================================================================
+    const _Scene_Menu_createCommandWindow      = Scene_Menu.prototype.createCommandWindow;
+    Scene_Menu.prototype.createCommandWindow = function() {
+        _Scene_Menu_createCommandWindow.call(this);
+        if(param.shouldAddCommand) {
+            this._commandWindow.setHandler('diary', this.commandDiary.bind(this));
+        }
+    };
+
+    Scene_Menu.prototype.commandDiary = function() {
+        SceneManager.push(Scene_Diary);
     };
 
 //////=============================================================================
