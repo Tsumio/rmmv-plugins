@@ -6,12 +6,23 @@
 // http://opensource.org/licenses/mit-license.php
 // ----------------------------------------------------------------------------
 // Version
+// 1.0.2 2018/01/12 ライセンス表記を修正。
 // 1.0.1 2018/01/12 注釈が不正な場合、通常のウィンドウを表示するよう変更。
 // 1.0.0 2018/01/12 公開。
 // ----------------------------------------------------------------------------
 // [GitHub] : https://github.com/Tsumio/rmmv-plugins
 // [Blog]   : http://ntgame.wpblog.jp/
 // [Twitter]: https://twitter.com/TsumioNtGame
+//=============================================================================
+
+//=============================================================================
+// jQuery.easing(include EASING EQUATIONS) is:
+// Copyright (c) 2008 George McGinley Smith
+// EASING EQUATIONS is:
+// Copyright (c) 2001 Robert Penner
+// 
+// Neither the name of the the names of contributors may be used to endorse or
+// promote products derived from this software without specific prior written permission.
 //=============================================================================
 
 /*:
@@ -86,6 +97,7 @@
  * There is no plugin command.
  * 
  * ----change log---
+ * 1.0.2 2018/01/12 Fix license notation.
  * 1.0.1 2018/01/12 If comment is invalid, to display normal window.
  * 1.0.0 2018/01/12 Release.
  * 
@@ -170,6 +182,7 @@
  * プラグインコマンドはありません。
  * 
  * 【更新履歴】
+ * 1.0.2 2018/01/12 ライセンス表記を修正。
  * 1.0.1 2018/01/12 注釈が不正な場合、通常のウィンドウを表示するよう変更。
  * 1.0.0 2018/01/12 公開。
  * 
@@ -628,6 +641,15 @@
 ////  And I referred to jQuery Easing written by George McGinley Smith.
 ////  See https://github.com/danro/jquery-easing/blob/master/jquery.easing.js
 ////=============================================================================
+//=============================================================================
+// jQuery.easing(include EASING EQUATIONS) is:
+// Copyright (c) 2008 George McGinley Smith
+// EASING EQUATIONS is:
+// Copyright (c) 2001 Robert Penner
+// 
+// Neither the name of the the names of contributors may be used to endorse or
+// promote products derived from this software without specific prior written permission.
+//=============================================================================
     class EasingFactory {
         /**
          * Get initialize location.
