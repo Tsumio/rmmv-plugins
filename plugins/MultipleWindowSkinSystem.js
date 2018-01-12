@@ -6,6 +6,7 @@
 // http://opensource.org/licenses/mit-license.php
 // ----------------------------------------------------------------------------
 // Version
+// 1.0.1 2018/01/12 注釈が不正な場合、通常のウィンドウを表示するよう変更。
 // 1.0.0 2018/01/12 公開。
 // ----------------------------------------------------------------------------
 // [GitHub] : https://github.com/Tsumio/rmmv-plugins
@@ -85,6 +86,7 @@
  * There is no plugin command.
  * 
  * ----change log---
+ * 1.0.1 2018/01/12 If comment is invalid, to display normal window.
  * 1.0.0 2018/01/12 Release.
  * 
  * ----remarks----
@@ -168,6 +170,7 @@
  * プラグインコマンドはありません。
  * 
  * 【更新履歴】
+ * 1.0.1 2018/01/12 注釈が不正な場合、通常のウィンドウを表示するよう変更。
  * 1.0.0 2018/01/12 公開。
  * 
  * 【備考】
@@ -493,8 +496,17 @@
     };
 
     Window_Message.prototype.isEnabled = function() {
-        return $gameMessage.currentWindow === null;
+        return $gameMessage.currentWindow === null || !this.anyMultipleWindowValid();
     };
+
+    Window_Message.prototype.anyMultipleWindowValid = function() {
+        for(let setting of param.windowsSettings) {
+            if(setting.uniqueID === $gameMessage.currentWindow) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 ////=============================================================================
 //// Game_Interpreter
