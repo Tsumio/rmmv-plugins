@@ -34,6 +34,7 @@ Read each JS file.It contains usage.
 | [EscapeRatioAnalyzer](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/EscapeRatioAnalyzer.js)          | Display the escape ratio during battle.               | N/A |
 | [SkipPartyCommand](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/SkipPartyCommand.js)          | This plugin skip party command in battle.               | N/A |
 | [BugFixFreezeOfSomeScenes](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/BugFixFreezeOfSomeScenes.js)          | Fixes the bug of freezing occurring in some scenes.               | N/A |
+| [MultipleWindowSkinSystem](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/MultipleWindowSkinSystem.js)          | Dynamically change the image and display method of the message window.               | [Official Forum](https://forum.tkool.jp/index.php?threads/%E3%83%A1%E3%83%83%E3%82%BB%E3%83%BC%E3%82%B8%E3%82%A6%E3%82%A3%E3%83%B3%E3%83%89%E3%82%A6%E6%8B%A1%E5%BC%B5%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3.634/) (Japanese) |
 
 If you want to know all my plugin, see [the blog](http://ntgame.wpblog.jp/page-139/) (Japanese).
 
@@ -86,6 +87,7 @@ RPGツクールMV上での動作を前提としています。
 | [EscapeRatioAnalyzer](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/EscapeRatioAnalyzer.js)          | 戦闘中の逃走成功率を表示します。               | なし |
 | [SkipPartyCommand](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/SkipPartyCommand.js)          | 戦闘時のパーティーコマンドをスキップします。               | なし |
 | [BugFixFreezeOfSomeScenes](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/BugFixFreezeOfSomeScenes.js)          | いくつかのシーンで発生する可能性のあるフリーズ現象を修正します。               | なし |
+| [MultipleWindowSkinSystem](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/MultipleWindowSkinSystem.js)          | メッセージウィンドウの画像や表示方法を動的に変更できるようにします。               | [公式フォーラム](https://forum.tkool.jp/index.php?threads/%E3%83%A1%E3%83%83%E3%82%BB%E3%83%BC%E3%82%B8%E3%82%A6%E3%82%A3%E3%83%B3%E3%83%89%E3%82%A6%E6%8B%A1%E5%BC%B5%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3.634/) |
 
 GitHubに公開していないものを含む全てのプラグインの一覧は[ブログ](http://ntgame.wpblog.jp/page-139/)をご覧ください。
 
