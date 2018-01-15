@@ -37,7 +37,7 @@
  * 
  * Anyway, Moghunter released a wonderful plugin MOG_PictureGallery !
  * THANKS A LOT !
- * See the his site.
+ * See his site.
  * https://atelierrgss.wordpress.com/
  * 
  * ----plugin command----
