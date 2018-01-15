@@ -112,7 +112,7 @@ var Moghunter = Moghunter;
     Game_System.prototype.refreshPictureList = function() {
         const length = this._picgl_data.length;
         for(let i = length; i < Moghunter.picturegallery_picture_number; i++) {
-        this._picgl_data[i] = [false, String(Moghunter.picturegallery_file_name + (i + 1))];
+            this._picgl_data[i] = [false, String(Moghunter.picturegallery_file_name + (i + 1))];
         }
     }
 
