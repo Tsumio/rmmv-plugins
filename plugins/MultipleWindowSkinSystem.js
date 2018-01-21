@@ -6,6 +6,7 @@
 // http://opensource.org/licenses/mit-license.php
 // ----------------------------------------------------------------------------
 // Version
+// 1.0.3 2018/01/21 ウィンドウの画像を正常に読み込めるよう修正。
 // 1.0.2 2018/01/12 ライセンス表記を修正。
 // 1.0.1 2018/01/12 注釈が不正な場合、通常のウィンドウを表示するよう変更。
 // 1.0.0 2018/01/12 公開。
@@ -97,6 +98,7 @@
  * There is no plugin command.
  * 
  * ----change log---
+ * 1.0.3 2018/01/21 Fix a bug that can't load windows images.
  * 1.0.2 2018/01/12 Fix license notation.
  * 1.0.1 2018/01/12 If comment is invalid, to display normal window.
  * 1.0.0 2018/01/12 Release.
@@ -182,6 +184,7 @@
  * プラグインコマンドはありません。
  * 
  * 【更新履歴】
+ * 1.0.3 2018/01/21 ウィンドウの画像を正常に読み込めるよう修正。
  * 1.0.2 2018/01/12 ライセンス表記を修正。
  * 1.0.1 2018/01/12 注釈が不正な場合、通常のウィンドウを表示するよう変更。
  * 1.0.0 2018/01/12 公開。
@@ -449,6 +452,20 @@
 //// Convert to Number.
 ////==============================
     //None
+
+////=============================================================================
+//// Scene_Boot
+///   Override this class for loading images.
+////=============================================================================
+    const _Scene_Boot_loadSystemWindowImage      = Scene_Boot.prototype.loadSystemWindowImage;
+    Scene_Boot.prototype.loadSystemWindowImage = function() {
+        _Scene_Boot_loadSystemWindowImage.call(this);
+
+        //Addtional window images.
+        for(let setting of param.windowsSettings) {
+            ImageManager.reserveSystem(setting.skin);
+        }
+    };
 
 ////=============================================================================
 //// Scene_Map
