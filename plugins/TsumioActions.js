@@ -6,6 +6,7 @@
 // http://opensource.org/licenses/mit-license.php
 // ----------------------------------------------------------------------------
 // Version
+// 1.0.1 2018/01/27 説明を加筆。
 // 1.0.0 2018/01/25 公開。
 // ----------------------------------------------------------------------------
 // [GitHub] : https://github.com/Tsumio/rmmv-plugins
@@ -51,6 +52,9 @@
  * ----how to use----
  * After installing the plugin, sets each plugin parameter.
  * Turning on the switch, player can fire each action.
+ * 
+ * Changes actions with the Q/W key.
+ * And each action is executed by ok key.
  * 
  * ----common:about image----
  * The image is loaded from the img/characters folder.
@@ -133,6 +137,7 @@
  * 
  * 
  * ----change log---
+ * 1.0.1 2018/01/27 Add a description.
  * 1.0.0 2018/01/25 Release.
  * 
  * ----remarks----
@@ -182,6 +187,9 @@
  * 【使用方法】
  * プラグインの導入後、プラグインパラメーターを設定してください。
  * スイッチをONにすると各アクションが有効になります。
+ * 
+ * アクションの切り替えはQ/Wキーでおこないます。
+ * また、各アクションは決定キーによって実行されます。
  * 
  * 【共通：画像について】
  * 画像ファイルはimg/charactersフォルダから読み込みます。
@@ -264,6 +272,7 @@
  * 
  * 
  * 【更新履歴】
+ * 1.0.1 2018/01/27 説明を加筆。
  * 1.0.0 2017/01/25 公開。
  * 
  * 【備考】
