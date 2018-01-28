@@ -6,6 +6,7 @@
 // http://opensource.org/licenses/mit-license.php
 // ----------------------------------------------------------------------------
 // Version
+// 1.0.2 2018/01/28 弾数の表示機能を追加。
 // 1.0.1 2018/01/27 説明を加筆。
 // 1.0.0 2018/01/25 公開。
 // ----------------------------------------------------------------------------
@@ -137,6 +138,7 @@
  * 
  * 
  * ----change log---
+ * 1.0.2 2018/01/28 Add a function that display a remaining bomb, arrow.
  * 1.0.1 2018/01/27 Add a description.
  * 1.0.0 2018/01/25 Release.
  * 
@@ -272,6 +274,7 @@
  * 
  * 
  * 【更新履歴】
+ * 1.0.2 2018/01/28 弾数の表示機能を追加。
  * 1.0.1 2018/01/27 説明を加筆。
  * 1.0.0 2017/01/25 公開。
  * 
@@ -595,6 +598,7 @@
             const actionName = `fire${this.currentAction.name}`;
             try {
                 $gamePlayer[`${actionName}Action`]();
+                this.refreshActionItemWindow();
             }catch(e) {
                 console.warn('Error!');
                 Debug.log(e);
@@ -662,12 +666,12 @@
             if(!this._actions) {
                 this._actions = 
                 [
-                    {name:'empty',     obj:this.empty},
-                    {name:'Boomerang', obj:param.boomerangSettings},
-                    {name:'Arrow',     obj:param.arrowSettings},
-                    {name:'HookShot',  obj:param.hookShotSettings},
-                    {name:'MagicFire', obj:param.magicFireSettings},
-                    {name:'Bomb',      obj:param.bombSettings},
+                    {name:'empty',     obj:this.empty,              hasLimit:false},
+                    {name:'Boomerang', obj:param.boomerangSettings, hasLimit:false},
+                    {name:'Arrow',     obj:param.arrowSettings,     hasLimit:true},
+                    {name:'HookShot',  obj:param.hookShotSettings,  hasLimit:false},
+                    {name:'MagicFire', obj:param.magicFireSettings, hasLimit:false},
+                    {name:'Bomb',      obj:param.bombSettings,      hasLimit:true},
                 ];
             }
             return this._actions;
@@ -1145,11 +1149,11 @@
 
             const x = 24;
             const y = 48;
-            this.drawActionItem(action.obj.fileName, Number(action.obj.index), x, y);
+            this.drawActionItem(action, action.obj.fileName, Number(action.obj.index), x, y);
             Debug.log(`${action.obj.fileName}, ${Number(action.obj.index)}`);
         }
 
-        drawActionItem(characterName, characterIndex, x, y) {
+        drawActionItem(action, characterName, characterIndex, x, y) {
             var bitmap = ImageManager.loadCharacter(characterName);
             bitmap.addLoadListener(function() {
                 var big = ImageManager.isBigCharacter(characterName);
@@ -1159,7 +1163,21 @@
                 var sx = (n % 4 * 3 + 1) * pw;
                 var sy = (Math.floor(n / 4) * 4) * ph;
                 this.contents.blt(bitmap, sx, sy, pw, ph, x - pw / 2, y - ph);
+
+                //Draw Remaining count.
+                //Why there ? Because, addLoadListener ! For waiting.
+                this.drawRemainingCount(action);
             }.bind(this));
+        }
+
+        drawRemainingCount(action) {
+            if(action.hasLimit) {
+                const remaining = $gameVariables.value(Number(action.obj.variableID));
+                Debug.log(`${action.name}の残り弾数${remaining}`);
+                this.makeFontSmaller();
+                this.drawText(remaining, 0, 23, 30);//23 is a magic number, but this is the best size.
+                this.resetFontSettings();
+            }
         }
     }
 
