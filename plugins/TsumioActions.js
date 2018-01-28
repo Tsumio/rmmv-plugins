@@ -6,6 +6,7 @@
 // http://opensource.org/licenses/mit-license.php
 // ----------------------------------------------------------------------------
 // Version
+// 1.0.3 2018/01/28 弾数の表示機能を修正。
 // 1.0.2 2018/01/28 弾数の表示機能を追加。
 // 1.0.1 2018/01/27 説明を加筆。
 // 1.0.0 2018/01/25 公開。
@@ -138,6 +139,7 @@
  * 
  * 
  * ----change log---
+ * 1.0.3 2018/01/28 Fix a function that display a remaining bomb, arrow.
  * 1.0.2 2018/01/28 Add a function that display a remaining bomb, arrow.
  * 1.0.1 2018/01/27 Add a description.
  * 1.0.0 2018/01/25 Release.
@@ -274,6 +276,7 @@
  * 
  * 
  * 【更新履歴】
+ * 1.0.3 2018/01/28 弾数の表示機能を修正。
  * 1.0.2 2018/01/28 弾数の表示機能を追加。
  * 1.0.1 2018/01/27 説明を加筆。
  * 1.0.0 2017/01/25 公開。
@@ -583,6 +586,17 @@
 //// Convert to Number.
 ////==============================
     //None
+
+////=============================================================================
+//// Game_Interpreter
+////  Update remaining bombs, arrows.
+////=============================================================================
+    const _Game_Interpreter_command122 = Game_Interpreter.prototype.command122;
+    Game_Interpreter.prototype.command122 = function() {
+        const result = _Game_Interpreter_command122.call(this);
+        Actions_Manager.refreshActionItemWindow();
+        return result;
+    };
 
 ////=============================================================================
 //// Actions_Manager
