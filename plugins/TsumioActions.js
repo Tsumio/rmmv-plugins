@@ -6,6 +6,7 @@
 // http://opensource.org/licenses/mit-license.php
 // ----------------------------------------------------------------------------
 // Version
+// 1.0.4 2018/01/29 アクションアイテムウィンドウのレイヤー登録順を調整。
 // 1.0.3 2018/01/28 弾数の表示機能を修正。
 // 1.0.2 2018/01/28 弾数の表示機能を追加。
 // 1.0.1 2018/01/27 説明を加筆。
@@ -139,6 +140,7 @@
  * 
  * 
  * ----change log---
+ * 1.0.4 2018/01/29 Fix layer registration order of action item window.
  * 1.0.3 2018/01/28 Fix a function that display a remaining bomb, arrow.
  * 1.0.2 2018/01/28 Add a function that display a remaining bomb, arrow.
  * 1.0.1 2018/01/27 Add a description.
@@ -276,6 +278,7 @@
  * 
  * 
  * 【更新履歴】
+ * 1.0.4 2018/01/29 アクションアイテムウィンドウのレイヤー登録順を調整。
  * 1.0.3 2018/01/28 弾数の表示機能を修正。
  * 1.0.2 2018/01/28 弾数の表示機能を追加。
  * 1.0.1 2018/01/27 説明を加筆。
@@ -586,6 +589,17 @@
 //// Convert to Number.
 ////==============================
     //None
+
+////=============================================================================
+//// Settings for plugin command.
+////=============================================================================
+    const _Game_Interpreter_pluginCommand = Game_Interpreter.prototype.pluginCommand;
+    Game_Interpreter.prototype.pluginCommand = function (command, args) {
+        _Game_Interpreter_pluginCommand.call(this, command, args);
+        if (command === 'TA') {
+            //There is none.
+        }
+    };
 
 ////=============================================================================
 //// Game_Interpreter
@@ -1136,7 +1150,7 @@
 
     Scene_Map.prototype.createActionItemWindow = function() {
         this._actionItemWindow = new Window_ActionItem();
-        this.addChild(this._actionItemWindow);
+        this.addWindow(this._actionItemWindow);
         Actions_Manager.setActionItemWindow(this._actionItemWindow);
         this._actionItemWindow.refreshActionItem();
     };
