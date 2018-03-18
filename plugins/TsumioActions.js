@@ -6,6 +6,7 @@
 // http://opensource.org/licenses/mit-license.php
 // ----------------------------------------------------------------------------
 // Version
+// 1.0.5 2018/03/18 発射時のSE設定機能を追加。
 // 1.0.4 2018/01/29 アクションアイテムウィンドウのレイヤー登録順を調整。
 // 1.0.3 2018/01/28 弾数の表示機能を修正。
 // 1.0.2 2018/01/28 弾数の表示機能を追加。
@@ -140,6 +141,7 @@
  * 
  * 
  * ----change log---
+ * 1.0.5 2018/03/18 Add a SE setting function.
  * 1.0.4 2018/01/29 Fix layer registration order of action item window.
  * 1.0.3 2018/01/28 Fix a function that display a remaining bomb, arrow.
  * 1.0.2 2018/01/28 Add a function that display a remaining bomb, arrow.
@@ -278,6 +280,7 @@
  * 
  * 
  * 【更新履歴】
+ * 1.0.5 2018/03/18 発射時のSE設定機能を追加。
  * 1.0.4 2018/01/29 アクションアイテムウィンドウのレイヤー登録順を調整。
  * 1.0.3 2018/01/28 弾数の表示機能を修正。
  * 1.0.2 2018/01/28 弾数の表示機能を追加。
@@ -332,6 +335,12 @@
  * @desc 飛距離。(Leap).
  * @default 5
  * 
+ * @param seName
+ * @type file
+ * @desc 発射時に再生するSE名。(SE name)
+ * @require 1
+ * @dir audio/se
+ * 
  */
 /*~struct~HookShot:
  * 
@@ -380,6 +389,12 @@
  * @desc 飛距離。(Leap).
  * @default 5
  * 
+ * @param seName
+ * @type file
+ * @desc 発射時に再生するSE名。(SE name)
+ * @require 1
+ * @dir audio/se
+ * 
  */
 /*~struct~Arrow:
  * 
@@ -423,6 +438,12 @@
  * @desc 速度。(Speed).
  * @default 0.3
  * 
+ * @param seName
+ * @type file
+ * @desc 発射時に再生するSE名。(SE name)
+ * @require 1
+ * @dir audio/se
+ * 
  */
 /*~struct~MagicFire:
  * 
@@ -459,6 +480,12 @@
  * @decimals 2
  * @desc 速度。(Speed).
  * @default 0.2
+ * 
+ * @param seName
+ * @type file
+ * @desc 発射時に再生するSE名。(SE name)
+ * @require 1
+ * @dir audio/se
  * 
  */
 /*~struct~Bomb:
@@ -1214,27 +1241,35 @@
 //// Game_Player
 ////  Add actions function.
 ////=============================================================================
+    Game_Player.prototype.createActionSeObject = function(seName) {
+        return {"name":seName,"volume":100,"pitch":100,"pan":0};
+    };
+
     Game_Player.prototype.fireBoomerangAction = function() {
         if (Bullet_Manager.canCreateBullet()) {
             Bullet_Manager.createBullet(new Game_Boomerang(this.x, this.y, this.direction()));
+            AudioManager.playSe(this.createActionSeObject(param.boomerangSettings.seName));
         }
     };
 
     Game_Player.prototype.fireHookShotAction = function() {
         if (HookShot_Manager.canCreateHookShot()) {
             HookShot_Manager.createHookShot(new Game_HookShot(this.x, this.y, this.direction()));
+            AudioManager.playSe(this.createActionSeObject(param.hookShotSettings.seName));
         }
     };
 
     Game_Player.prototype.fireArrowAction = function() {
         if (Arrow_Manager.canCreateArrow()) {
             Arrow_Manager.createArrow(new Game_Arrow(this.x, this.y, this.direction()));
+            AudioManager.playSe(this.createActionSeObject(param.arrowSettings.seName));
         }
     };
 
     Game_Player.prototype.fireMagicFireAction = function() {
         if (MagicFire_Manager.canCreateMagicFire()) {
             MagicFire_Manager.createMagicFire(new Game_MagicFire(this.x, this.y, this.direction()));
+            AudioManager.playSe(this.createActionSeObject(param.magicFireSettings.seName));
         }
     };
 
