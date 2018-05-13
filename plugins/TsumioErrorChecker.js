@@ -6,6 +6,7 @@
 // http://opensource.org/licenses/mit-license.php
 // ----------------------------------------------------------------------------
 // Version
+// 1.0.1 2018/05/13 プラグインを途中から導入しても動くようにした。
 // 1.0.0 2018/05/13 公開。
 // ----------------------------------------------------------------------------
 // [GitHub] : https://github.com/Tsumio/rmmv-plugins
@@ -42,6 +43,7 @@
  * If the dup file is also broken, the beep sounds normally and data will not be read.
  *
  * ----change log---
+ * 1.0.1 2018/05/13 Run the plugin if introducing from the middle.
  * 1.0.0 2018/05/13 Release.
  * 
  * ----remarks----
@@ -83,6 +85,7 @@
  * 
  * 
  * 【更新履歴】
+ * 1.0.1 2018/05/13 プラグインを途中から導入しても動くようにした。
  * 1.0.0 2018/05/13 公開。
  * 
  * 【備考】
@@ -155,12 +158,10 @@
 ////=============================================================================
     var param                          = {};
     //Basic Stteings
-    //param.boomerangSettings        = getParamString(['BoomerangSettings', 'ブーメランの設定']);
 
 ////==============================
 //// Convert parameters.
 ////==============================
-    //param.boomerangSettings        = convertParam(param.boomerangSettings);
 
 
 ////==============================
@@ -191,6 +192,15 @@
                         .digest('hex');
         return hashCode;
     }
+
+    DataManager.loadGameForDupFile = function(savefileId) {
+        var globalInfo = this.loadGlobalInfo();
+        var json = StorageManager.loadDupFile(savefileId);
+        
+        this.createGameObjects();
+        this.extractSaveContents(JsonEx.parse(json));
+        this._lastAccessedId = savefileId;
+    };
 
 ////=============================================================================
 //// Storagemanager
@@ -250,6 +260,13 @@
             data.system.hash  = '';
             const currentHash = DataManager.makeHashCode(data);
 
+            //ハッシュがそもそも存在しない場合、途中からプラグインを入れた可能性がある
+            if(!originHash) {
+                //ハッシュが一致したということにして返す
+                Debug.log('ハッシュがそもそも存在しないので、一致したということにする（途中からプラグインを入れた？）');
+                return true;
+            }
+
             //単に保存されているハッシュの文字列を比べているだけなので、セキュリティどうこうでは使えない！
             //あくまでも復元のための簡易チェック
             //厳密にやりたいならもう少し凝ったプログラムが必要
@@ -277,15 +294,6 @@
         }
         Debug.log(filePath);
         return LZString.decompressFromBase64(data);
-    };
-
-    DataManager.loadGameForDupFile = function(savefileId) {
-        var globalInfo = this.loadGlobalInfo();
-        var json = StorageManager.loadDupFile(savefileId);
-        
-        this.createGameObjects();
-        this.extractSaveContents(JsonEx.parse(json));
-        this._lastAccessedId = savefileId;
     };
 
 ////=============================================================================
