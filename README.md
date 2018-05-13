@@ -37,7 +37,7 @@ Read each JS file.It contains usage.
 | [MultipleWindowSkinSystem](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/MultipleWindowSkinSystem.js)          | Dynamically change the image and display method of the message window.               | [Official Forum](https://forum.tkool.jp/index.php?threads/%E3%83%A1%E3%83%83%E3%82%BB%E3%83%BC%E3%82%B8%E3%82%A6%E3%82%A3%E3%83%B3%E3%83%89%E3%82%A6%E6%8B%A1%E5%BC%B5%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3.634/) (Japanese) |
 | [MOG_PictureGallery_Patch](https://github.com/Tsumio/rmmv-plugins/blob/master/plugins/MOG_PictureGallery_Patch.js)          | Patch plugin for MOG_PictureGallery.               | N/A |
 | [TsumioActions](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/TsumioActions.js)          | Implement special actions.               | [Official Forum](https://forum.tkool.jp/index.php?threads/【プラグイン】特殊なアクションを実装.669/) (Japanese) |
-| [TsumioErrorChecker](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/TsumioErrorChecker.js)          | Attempting to restore storage data if it is spoiled.               | [Official Forum](https://forum.tkool.jp/index.php?threads/【プラグイン】特殊なアクションを実装.669/) (Japanese) |
+| [TsumioErrorChecker](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/TsumioErrorChecker.js)          | Attempting to restore storage data if it is spoiled.               | [Official Forum](https://forum.tkool.jp/index.php?threads/%E3%80%90%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3%E3%80%91%E3%82%BB%E3%83%BC%E3%83%96%E3%83%87%E3%83%BC%E3%82%BF%E3%81%8C%E5%A3%8A%E3%82%8C%E3%81%A6%E3%81%84%E3%81%9F%E5%A0%B4%E5%90%88%E3%81%AB%E5%BE%A9%E5%85%83%E3%82%92%E8%A9%A6%E3%81%BF%E3%82%8B.928/) (Japanese) |
 
 If you want to know all my plugin, see [the blog](http://ntgame.wpblog.jp/page-139/) (Japanese).
 
@@ -93,7 +93,7 @@ RPGツクールMV上での動作を前提としています。
 | [MultipleWindowSkinSystem](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/MultipleWindowSkinSystem.js)          | メッセージウィンドウの画像や表示方法を動的に変更できるようにします。               | [公式フォーラム](https://forum.tkool.jp/index.php?threads/%E3%83%A1%E3%83%83%E3%82%BB%E3%83%BC%E3%82%B8%E3%82%A6%E3%82%A3%E3%83%B3%E3%83%89%E3%82%A6%E6%8B%A1%E5%BC%B5%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3.634/) |
 | [MOG_PictureGallery_Patch](https://github.com/Tsumio/rmmv-plugins/blob/master/plugins/MOG_PictureGallery_Patch.js)          | MOG_PictureGalleryのパッチプラグインです。               | なし |
 | [TsumioActions](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/TsumioActions.js)          | 特殊なアクションを実装します。               | [公式フォーラム](https://forum.tkool.jp/index.php?threads/【プラグイン】特殊なアクションを実装.669/) |
-| [TsumioErrorChecker](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/TsumioErrorChecker.js)          | セーブデータが壊れていた場合に復元を試みるプラグイン。               | [公式フォーラム](https://forum.tkool.jp/index.php?threads/【プラグイン】特殊なアクションを実装.669/) |
+| [TsumioErrorChecker](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/TsumioErrorChecker.js)          | セーブデータが壊れていた場合に復元を試みるプラグイン。               | [公式フォーラム](https://forum.tkool.jp/index.php?threads/%E3%80%90%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3%E3%80%91%E3%82%BB%E3%83%BC%E3%83%96%E3%83%87%E3%83%BC%E3%82%BF%E3%81%8C%E5%A3%8A%E3%82%8C%E3%81%A6%E3%81%84%E3%81%9F%E5%A0%B4%E5%90%88%E3%81%AB%E5%BE%A9%E5%85%83%E3%82%92%E8%A9%A6%E3%81%BF%E3%82%8B.928/) |
 
 GitHubに公開していないものを含む全てのプラグインの一覧は[ブログ](http://ntgame.wpblog.jp/page-139/)をご覧ください。
 
