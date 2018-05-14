@@ -6,6 +6,7 @@
 // http://opensource.org/licenses/mit-license.php
 // ----------------------------------------------------------------------------
 // Version
+// 1.1.1 2018/05/14 致命的な不具合の修正。
 // 1.1.0 2018/05/14 暗号化の機能をつけた。
 // 1.0.1 2018/05/13 プラグインを途中から導入しても動くようにした。
 // 1.0.0 2018/05/13 公開。
@@ -56,6 +57,7 @@
  * If storage data exists before installing this plugin, and if you check the encryption flag, you can not read old data.
  *
  * ----change log---
+ * 1.1.1 2018/05/14 Fix a fatal bug.
  * 1.1.0 2018/05/14 Add encryption function.
  * 1.0.1 2018/05/13 Run the plugin if introducing from the middle.
  * 1.0.0 2018/05/13 Release.
@@ -111,6 +113,7 @@
  * 
  * 
  * 【更新履歴】
+ * 1.1.1 2018/05/14 致命的な不具合の修正。
  * 1.1.0 2018/05/14 暗号化の機能をつけた。
  * 1.0.1 2018/05/13 プラグインを途中から導入しても動くようにした。
  * 1.0.0 2018/05/13 公開。
@@ -300,12 +303,23 @@
     StorageManager.load = function(savefileId) {
         try {
             if (this.isLocalMode() && savefileId > 0) {
-                let json = this.loadFromLocalFile(savefileId);
+                //最初に元のJSONファイルを取得
+                let json = this.loadOriginalFromLocalFile(savefileId);
+                //必要があれば復号化
                 if(param.shouldEncrypt) {
                     json = StorageManager.decrypte(json);
                 }
+                //復号化したものを解凍
+                json = LZString.decompressFromBase64(json);
+                //解凍してパース
                 const data = JsonEx.parse(json);
-                if(!this.validHash(data)) {
+
+                //データが正しいかどうかをチェック
+                if(this.validHash(data)) {
+                    //ハッシュが一致しているのでそのまま返す
+                    Debug.log('ハッシュが一致したのでそのまま返す');
+                    return json;
+                }else {
                     Debug.log('ハッシュが一致しなかったのでdupファイルをロード' + savefileId);
                     return StorageManager.loadDupFile(savefileId);
                 }
@@ -378,8 +392,35 @@
         if(param.shouldEncrypt) {
             data = StorageManager.decrypte(data);
         }
+
+        if (this.isLocalMode() && savefileId > 0) {
+            //復号化したものを解凍
+            data = LZString.decompressFromBase64(data);
+            //解凍してパース
+            const origin = JsonEx.parse(data);
+
+            if(!this.validHash(origin)) {
+                Debug.log('dupファイルも改造されています');
+                throw new Error();
+            }
+
+            return data;
+        }
+
         return LZString.decompressFromBase64(data);
     };
+
+    //解凍済みのファイルを返さないようにする
+    StorageManager.loadOriginalFromLocalFile = function(savefileId) {
+        var data = null;
+        var fs = require('fs');
+        var filePath = this.localFilePath(savefileId);
+        if (fs.existsSync(filePath)) {
+            data = fs.readFileSync(filePath, { encoding: 'utf8' });
+        }
+
+        return data;
+    }
 
 ////=============================================================================
 //// Debug
