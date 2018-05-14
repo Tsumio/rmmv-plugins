@@ -6,6 +6,7 @@
 // http://opensource.org/licenses/mit-license.php
 // ----------------------------------------------------------------------------
 // Version
+// 1.1.0 2018/05/14 暗号化の機能をつけた。
 // 1.0.1 2018/05/13 プラグインを途中から導入しても動くようにした。
 // 1.0.0 2018/05/13 公開。
 // ----------------------------------------------------------------------------
@@ -22,6 +23,15 @@
  * @desc 
  * @default 
  * 
+ * @param Encrypt 
+ * @type boolean
+ * @desc Whether storage data is encrypted or not. When encrypted, the storage data capacity increases.
+ * @default false
+ * 
+ * @param DecryptKey
+ * @type string
+ * @desc Key for decrypting storage data.
+ * @default abcdefg123456
  * 
  * @help Attempting to restore storage data if it is spoiled.
  * 
@@ -29,6 +39,7 @@
  * -> Generate backup file in local environment
  * -> If the storage data is spoiled, it automatically reads the backup file
  * -> Does not work with Atsumaru etc.
+ * -> Can encrypt storage data.
  * 
  * ----how to use----
  * Just installing the plugin.
@@ -42,7 +53,10 @@
  * When storage data is read, if the original data is spoiled, this dup file will be read.
  * If the dup file is also broken, the beep sounds normally and data will not be read.
  *
+ * If storage data exists before installing this plugin, and if you check the encryption flag, you can not read old data.
+ *
  * ----change log---
+ * 1.1.0 2018/05/14 Add encryption function.
  * 1.0.1 2018/05/13 Run the plugin if introducing from the middle.
  * 1.0.0 2018/05/13 Release.
  * 
@@ -63,6 +77,15 @@
  * @desc 
  * @default 
  * 
+ * @param 暗号化
+ * @type boolean
+ * @desc セーブデータを暗号化するかどうか
+ * @default false
+ * 
+ * @param 復号化キー
+ * @type string
+ * @desc セーブデータを復号化するためのキー
+ * @default abcdefg123456
  * 
  * @help セーブデータが壊れていた場合に復元を試みるプラグイン
  * 
@@ -70,6 +93,7 @@
  * ・ローカル環境でバックアップファイルを生成します
  * ・データが破損していた場合は自動でバックアップファイルを読み取ります
  * ・アツマール等では動きません
+ * ・セーブデータを暗号化する機能があります
  * 
  * 【使用方法】
  * プラグインの導入するだけで完了です。
@@ -79,12 +103,15 @@
  * セーブデータ保存時にバックアップファイルとしてdupファイルを生成します。
  * セーブデータ読み込み時、元データが壊れていた場合はこのdupファイルを読み込みます。
  * dupファイルも壊れていた場合は通常通りビープー音が鳴ってデータを読み込みません。
+ *
+ * このプラグインを導入する前にセーブデータが存在している場合、暗号化フラグにチェックを入れるとそのデータは読み込めなくなります。
  * 
  * 【プラグインコマンド】
  * プラグインコマンドはありません。
  * 
  * 
  * 【更新履歴】
+ * 1.1.0 2018/05/14 暗号化の機能をつけた。
  * 1.0.1 2018/05/13 プラグインを途中から導入しても動くようにした。
  * 1.0.0 2018/05/13 公開。
  * 
@@ -158,11 +185,13 @@
 ////=============================================================================
     var param                          = {};
     //Basic Stteings
+    param.shouldEncrypt         = getParamString(['Encrypt ', '暗号化']);
+    param.decryptKey            = getParamString(['DecryptKey',    '復号化キー']);
 
 ////==============================
 //// Convert parameters.
 ////==============================
-
+    param.shouldEncrypt = convertParam(param.shouldEncrypt);
 
 ////==============================
 //// Convert to Number.
@@ -206,13 +235,63 @@
 //// Storagemanager
 ////  保存時にバックアップ用のデータを生成する
 ////=============================================================================
+    const _StorageManager_saveToLocalFile = StorageManager.saveToLocalFile;
+    StorageManager.saveToLocalFile = function(savefileId, json) {
+        if(param.shouldEncrypt && savefileId > 0) {
+            this.createEncryptedFile(savefileId, json, this.localFilePath(savefileId));
+        }else {
+            _StorageManager_saveToLocalFile.apply(this, arguments);
+        }
+    };
+    
+    //暗号化されたファイルを生成する
+    StorageManager.createEncryptedFile = function(savefileId, json, fileName) {
+        //元の処理
+        var data = LZString.compressToBase64(json);
+        var fs = require('fs');
+        var dirPath = this.localFileDirectoryPath();
+        var filePath = fileName;
+
+        const cryptedJson = StorageManager.encrypte(data);
+        if (!fs.existsSync(dirPath)) {
+            fs.mkdirSync(dirPath);
+        }
+        fs.writeFileSync(filePath, cryptedJson);
+    };
+
+    //暗号化の処理
+    StorageManager.encrypte = function(planeText) {
+        //暗号化の処理
+        var crypto      = require("crypto");
+        var cipher      = crypto.createCipher('aes128' , param.decryptKey);
+        var cryptedJson = cipher.update(planeText, 'utf8', 'hex');
+        cryptedJson    += cipher.final('hex');
+        Debug.log('暗号化');
+        Debug.log(cryptedJson);
+        return cryptedJson;
+    };
+
+    //復号化の処理
+    StorageManager.decrypte = function(encryptedText) {
+        var crypto   = require("crypto");
+        var decipher = crypto.createDecipher('aes128', param.decryptKey);
+        var decJson  = decipher.update(encryptedText, 'hex', 'utf8');
+        decJson     += decipher.final('utf8');
+        Debug.log('復号化');
+        Debug.log(decJson);
+        return decJson;
+    };
 
     //バックアップデータのための保存処理を追加
     const _StorageManager_save = StorageManager.save;
     StorageManager.save = function(savefileId, json) {
         _StorageManager_save.apply(this, arguments);
         if (this.isLocalMode()) {
-            this.createDupFileToLocal(savefileId, json);
+            if(param.shouldEncrypt) {
+                this.createEncryptedFile(savefileId, json, this.localFilePath(savefileId) + '.dup');
+            }else {
+                this.createDupFileToLocal(savefileId, json);
+            }
         }
     };
 
@@ -221,7 +300,10 @@
     StorageManager.load = function(savefileId) {
         try {
             if (this.isLocalMode() && savefileId > 0) {
-                const json = this.loadFromLocalFile(savefileId);
+                let json = this.loadFromLocalFile(savefileId);
+                if(param.shouldEncrypt) {
+                    json = StorageManager.decrypte(json);
+                }
                 const data = JsonEx.parse(json);
                 if(!this.validHash(data)) {
                     Debug.log('ハッシュが一致しなかったのでdupファイルをロード' + savefileId);
@@ -293,6 +375,9 @@
             data = fs.readFileSync(filePath, { encoding: 'utf8' });
         }
         Debug.log(filePath);
+        if(param.shouldEncrypt) {
+            data = StorageManager.decrypte(data);
+        }
         return LZString.decompressFromBase64(data);
     };
 
