@@ -145,6 +145,7 @@
             var name = PluginManager.parameters(pluginName)[paramNames[i]];
             if (name) return name;
         }
+
         return '';
     };
 
@@ -188,7 +189,7 @@
 ////=============================================================================
     var param                          = {};
     //Basic Stteings
-    param.shouldEncrypt         = getParamString(['Encrypt ', '暗号化']);
+    param.shouldEncrypt         = getParamString(['Encrypt', '暗号化']);
     param.decryptKey            = getParamString(['DecryptKey',    '復号化キー']);
 
 ////==============================
