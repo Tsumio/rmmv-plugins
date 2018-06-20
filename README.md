@@ -112,4 +112,4 @@ GitHubに公開していないものを含む全てのプラグインの一覧�
 ツミオ  
 [GitHub] : <https://github.com/Tsumio/rmmv-plugins>  
 [Blog]   : <http://ntgame.wpblog.jp/>  
-[Twitter]: <https://twitter.com/TsumioNtGame> 
+[Twitter]: <https://twitter.com/TsumioNtGame>
