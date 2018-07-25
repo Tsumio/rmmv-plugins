@@ -6,6 +6,7 @@
 // http://opensource.org/licenses/mit-license.php
 // ----------------------------------------------------------------------------
 // Version
+// 1.0.5 2018/07/25 0ターン目もステータスウィンドウをリフレッシュするよう修正。
 // 1.0.4 2018/01/04 アクターコマンドに逃げるコマンドを追加。
 // 1.0.3 2018/01/02 パーティー先頭に行動不能アクターが存在した場合の不具合を修正。
 // 1.0.2 2017/08/16 さらに微調整。
@@ -41,6 +42,7 @@
  * 
  * 
  * ----change log---
+ * 1.0.5 2018/07/25 Fixed to refresh the status window also on turn 0.
  * 1.0.4 2018/01/04 Add escape command to acttor command window.
  * 1.0.3 2018/01/02 Fixed a bug when a inactivity actor is at the beginning of the party.
  * 1.0.2 2017/08/16 More Adjustment.
@@ -82,6 +84,7 @@
  * このプラグインにプラグインコマンドはありません。
  *
  * 【更新履歴】
+ * 1.0.5 2018/07/25 0ターン目もステータスウィンドウをリフレッシュするよう修正。
  * 1.0.4 2018/01/04 アクターコマンドに逃げるコマンドを追加。
  * 1.0.3 2018/01/02 パーティー先頭に行動不能アクターが存在した場合の不具合を修正。
  * 1.0.2 2017/08/16 さらに微調整。
@@ -188,6 +191,7 @@
     Scene_Battle.prototype.skipPartyCommand_SPC = function() {
         if (this.canSkipPartyCommand_SPC()) {
             BattleManager.selectNextCommand();//Instead of commandFight().
+            this.refreshStatus();
             this.startActorCommandSelection();
             return true;//Be skipped.
         }
