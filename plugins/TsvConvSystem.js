@@ -71,7 +71,7 @@ $dataConv = null;
 ///// Game_Interpreter
 /////  プラグインコマンドを追加しているだけ。
 /////=============================================================================
-    var _Game_Interpreter_pluginCommand = Game_Interpreter.prototype.pluginCommand;
+    const _Game_Interpreter_pluginCommand = Game_Interpreter.prototype.pluginCommand;
     Game_Interpreter.prototype.pluginCommand = function(command, args) {
         _Game_Interpreter_pluginCommand.call(this, command, args);
         if (command === '会話' || command === 'Conv') {
