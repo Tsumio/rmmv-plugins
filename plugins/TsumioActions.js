@@ -6,6 +6,7 @@
 // http://opensource.org/licenses/mit-license.php
 // ----------------------------------------------------------------------------
 // Version
+// 1.0.6 2018/08/27 アクションウィンドウの操作方法を追加。爆風の範囲を設定できる機能を追加。
 // 1.0.5 2018/03/18 発射時のSE設定機能を追加。
 // 1.0.4 2018/01/29 アクションアイテムウィンドウのレイヤー登録順を調整。
 // 1.0.3 2018/01/28 弾数の表示機能を修正。
@@ -137,10 +138,15 @@
  *  -> At one time, player can throw only one bomb
  * 
  * ----plugin command----
- * There is no plugin command.
+ * ・TA showWindow
+ * Show the action window.
+ * 
+ * ・TA hideWindow
+ * Hide the action window.
  * 
  * 
  * ----change log---
+ * 1.0.6 2018/08/27 Added managing the action window. Added the range setting for bomb.
  * 1.0.5 2018/03/18 Add a SE setting function.
  * 1.0.4 2018/01/29 Fix layer registration order of action item window.
  * 1.0.3 2018/01/28 Fix a function that display a remaining bomb, arrow.
@@ -198,6 +204,7 @@
  * 
  * アクションの切り替えはQ/Wキーでおこないます。
  * また、各アクションは決定キーによって実行されます。
+ * 
  * 
  * 【共通：画像について】
  * 画像ファイルはimg/charactersフォルダから読み込みます。
@@ -276,10 +283,15 @@
  *  ・一度に投げられるバクダンは一つまで
  * 
  * 【プラグインコマンド】
- * プラグインコマンドはありません。
+ * ・TA showWindow
+ * アクションウィンドウを表示します。
+ * 
+ * ・TA hideWindow
+ * アクションウィンドウを隠します。
  * 
  * 
  * 【更新履歴】
+ * 1.0.6 2018/08/27 アクションウィンドウの操作方法を追加。爆風の範囲を設定できる機能を追加。
  * 1.0.5 2018/03/18 発射時のSE設定機能を追加。
  * 1.0.4 2018/01/29 アクションアイテムウィンドウのレイヤー登録順を調整。
  * 1.0.3 2018/01/28 弾数の表示機能を修正。
@@ -536,6 +548,13 @@
  * @desc 飛距離。(Leap).
  * @default 4
  * 
+ * @param range
+ * @type number
+ * @decimals 2
+ * @max 255
+ * @desc 爆風の範囲。(Range).
+ * @default 2.40
+ * 
  */
 
 (function() {
@@ -624,7 +643,11 @@
     Game_Interpreter.prototype.pluginCommand = function (command, args) {
         _Game_Interpreter_pluginCommand.call(this, command, args);
         if (command === 'TA') {
-            //There is none.
+            if(args[0] === 'showWindow') {
+                Actions_Manager.showActionItemWindow();
+            }else if(args[0] === 'hideWindow') {
+                Actions_Manager.hideActionItemWindow();
+            }
         }
     };
 
@@ -666,6 +689,16 @@
 
         static refreshActionItemWindow() {
             this._actionItemWindow.refreshActionItem();
+        }
+
+        static showActionItemWindow() {
+            this._actionItemWindow.show();
+            $gamePlayer.anctionItemWindowVisible = true;
+        }
+
+        static hideActionItemWindow() {
+            this._actionItemWindow.hide();
+            $gamePlayer.anctionItemWindowVisible = false;
         }
 
         static get empty() {
@@ -1180,6 +1213,7 @@
         this.addWindow(this._actionItemWindow);
         Actions_Manager.setActionItemWindow(this._actionItemWindow);
         this._actionItemWindow.refreshActionItem();
+        this._actionItemWindow.manageVisible();
     };
 
 ////=============================================================================
@@ -1193,6 +1227,14 @@
             const x      = 20;
             const y      = 20;
             super.initialize(x, y, width, height);
+        }
+
+        manageVisible() {
+            if($gamePlayer.anctionItemWindowVisible) {
+                Actions_Manager.showActionItemWindow();
+            }else {
+                Actions_Manager.hideActionItemWindow();
+            }
         }
 
         refreshActionItem() {
@@ -1241,6 +1283,13 @@
 //// Game_Player
 ////  Add actions function.
 ////=============================================================================
+
+    const _Game_Player_initMembers = Game_Player.prototype.initMembers;
+    Game_Player.prototype.initMembers = function() {
+        _Game_Player_initMembers.call(this);
+        this.anctionItemWindowVisible = true;
+    };
+
     Game_Player.prototype.createActionSeObject = function(seName) {
         return {"name":seName,"volume":100,"pitch":100,"pan":0};
     };
@@ -1640,7 +1689,7 @@
             const params       = param.bombSettings;
             this._speed        = Number(params.speed);;
             this._leap         = Number(params.leap);
-            this._range        = 2.4;
+            this._range        = Number(params.range);
             this._noteTag      = 'bomb';//Should be override.
 
             this._explodeAnimation   = params.animation;
