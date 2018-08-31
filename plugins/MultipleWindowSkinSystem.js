@@ -6,6 +6,7 @@
 // http://opensource.org/licenses/mit-license.php
 // ----------------------------------------------------------------------------
 // Version
+// 1.0.4 2018/08/31 起動時に発生するエラーを修正。
 // 1.0.3 2018/01/21 ウィンドウの画像を正常に読み込めるよう修正。
 // 1.0.2 2018/01/12 ライセンス表記を修正。
 // 1.0.1 2018/01/12 注釈が不正な場合、通常のウィンドウを表示するよう変更。
@@ -98,6 +99,7 @@
  * There is no plugin command.
  * 
  * ----change log---
+ * 1.0.4 2018/08/31 Fix a bug that cant' load game.
  * 1.0.3 2018/01/21 Fix a bug that can't load windows images.
  * 1.0.2 2018/01/12 Fix license notation.
  * 1.0.1 2018/01/12 If comment is invalid, to display normal window.
@@ -184,6 +186,7 @@
  * プラグインコマンドはありません。
  * 
  * 【更新履歴】
+ * 1.0.4 2018/08/31 起動時に発生するエラーを修正。
  * 1.0.3 2018/01/21 ウィンドウの画像を正常に読み込めるよう修正。
  * 1.0.2 2018/01/12 ライセンス表記を修正。
  * 1.0.1 2018/01/12 注釈が不正な場合、通常のウィンドウを表示するよう変更。
@@ -1286,13 +1289,6 @@
 ////  Sub window for actor name.
 ////=============================================================================
     class MultipleWindow_ActorName extends Window_Base {
-        /**
-         * @param {MultipleWindow_Settings} settings
-         */
-        constructor(messageWindow, settings) {
-            this.initialize.apply(this, arguments);
-        }
-
         /**
          * @param {MultipleWindow_Settings} settings
          */
