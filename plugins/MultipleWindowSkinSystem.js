@@ -6,6 +6,7 @@
 // http://opensource.org/licenses/mit-license.php
 // ----------------------------------------------------------------------------
 // Version
+// 1.0.5 2018/09/22 並列処理が走っている際にピクチャが表示されない不具合を修正。
 // 1.0.4 2018/08/31 起動時に発生するエラーを修正。
 // 1.0.3 2018/01/21 ウィンドウの画像を正常に読み込めるよう修正。
 // 1.0.2 2018/01/12 ライセンス表記を修正。
@@ -99,6 +100,7 @@
  * There is no plugin command.
  * 
  * ----change log---
+ * 1.0.5 2018/09/22 Fix a bug that picture is not displayed when parallel event is running.
  * 1.0.4 2018/08/31 Fix a bug that cant' load game.
  * 1.0.3 2018/01/21 Fix a bug that can't load windows images.
  * 1.0.2 2018/01/12 Fix license notation.
@@ -186,6 +188,7 @@
  * プラグインコマンドはありません。
  * 
  * 【更新履歴】
+ * 1.0.5 2018/09/22 並列処理が走っている際にピクチャが表示されない不具合を修正。
  * 1.0.4 2018/08/31 起動時に発生するエラーを修正。
  * 1.0.3 2018/01/21 ウィンドウの画像を正常に読み込めるよう修正。
  * 1.0.2 2018/01/12 ライセンス表記を修正。
@@ -545,6 +548,14 @@
 //// Game_Interpreter
 ////  Decide the appropriate window from the comments.
 ////=============================================================================
+
+    const _Game_Interpreter_initialize = Game_Interpreter.prototype.initialize;
+    Game_Interpreter.prototype.initialize = function(depth, isParallel) {
+        _Game_Interpreter_initialize.apply(this, arguments);
+       
+        this._isParalell = isParallel;
+    };
+
     const _Game_Interpreter_command108 = Game_Interpreter.prototype.command108;
     Game_Interpreter.prototype.command108 = function() {//Comment
         $gameMessage.currentWindow = this._params[0];
@@ -558,7 +569,22 @@
         _Game_Interpreter_terminate.call(this);
 
         //After the event ends, forcibly erase the picture.
-        PictureAction.erase();
+        if(!this._isParalell) {
+            PictureAction.erase();
+        }
+    };
+
+////=============================================================================
+//// Game_Event
+////  Override to distinguish between interpreters.
+////=============================================================================
+
+    const _Game_Event_setupPageSettings = Game_Event.prototype.setupPageSettings;
+    Game_Event.prototype.setupPageSettings = function() {
+        _Game_Event_setupPageSettings.call(this);
+        if (this._trigger === 4) {
+            this._interpreter = new Game_Interpreter(0, true);
+        }
     };
 
 ////=============================================================================
