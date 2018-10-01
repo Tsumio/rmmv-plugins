@@ -39,6 +39,7 @@ Read each JS file.It contains usage.
 | [TsumioActions](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/TsumioActions.js)          | Implement special actions.               | [Official Forum](https://forum.tkool.jp/index.php?threads/【プラグイン】特殊なアクションを実装.669/) (Japanese) |
 | [TsumioErrorChecker](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/TsumioErrorChecker.js)          | Attempting to restore storage data if it is spoiled.               | [Official Forum](https://forum.tkool.jp/index.php?threads/%E3%80%90%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3%E3%80%91%E3%82%BB%E3%83%BC%E3%83%96%E3%83%87%E3%83%BC%E3%82%BF%E3%81%8C%E5%A3%8A%E3%82%8C%E3%81%A6%E3%81%84%E3%81%9F%E5%A0%B4%E5%90%88%E3%81%AB%E5%BE%A9%E5%85%83%E3%82%92%E8%A9%A6%E3%81%BF%E3%82%8B.928/) (Japanese) |
 | [MemoryCheatingBlocker](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/MemoryCheatingBlocker.js)          | Prevent memory tampering cheat.               | [Official Forum](https://forum.tkool.jp/index.php?threads/%E3%83%A1%E3%83%A2%E3%83%AA%E6%94%B9%E7%AB%84%E3%83%81%E3%83%BC%E3%83%88%E3%82%92%E4%BA%88%E9%98%B2%E3%81%99%E3%82%8B%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3.934/) (Japanese) |
+| [BattleCommandAdjuster](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/BattleCommandAdjuster.js)          | Position the battle command next to the actor.               | N/A |
 
 If you want to know all my plugin, see [the blog](http://ntgame.wpblog.jp/page-139/) (Japanese).
 
@@ -96,6 +97,7 @@ RPGツクールMV上での動作を前提としています。
 | [TsumioActions](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/TsumioActions.js)          | 特殊なアクションを実装します。               | [公式フォーラム](https://forum.tkool.jp/index.php?threads/【プラグイン】特殊なアクションを実装.669/) |
 | [TsumioErrorChecker](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/TsumioErrorChecker.js)          | セーブデータが壊れていた場合に復元を試みるプラグイン。               | [公式フォーラム](https://forum.tkool.jp/index.php?threads/%E3%80%90%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3%E3%80%91%E3%82%BB%E3%83%BC%E3%83%96%E3%83%87%E3%83%BC%E3%82%BF%E3%81%8C%E5%A3%8A%E3%82%8C%E3%81%A6%E3%81%84%E3%81%9F%E5%A0%B4%E5%90%88%E3%81%AB%E5%BE%A9%E5%85%83%E3%82%92%E8%A9%A6%E3%81%BF%E3%82%8B.928/) |
 | [MemoryCheatingBlocker](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/MemoryCheatingBlocker.js)          | メモリ改竄チートを予防するプラグイン。               | [公式フォーラム](https://forum.tkool.jp/index.php?threads/%E3%83%A1%E3%83%A2%E3%83%AA%E6%94%B9%E7%AB%84%E3%83%81%E3%83%BC%E3%83%88%E3%82%92%E4%BA%88%E9%98%B2%E3%81%99%E3%82%8B%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3.934/) |
+| [BattleCommandAdjuster](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/BattleCommandAdjuster.js)          | バトルコマンドの位置をアクターの隣にします。               | なし |
 
 GitHubに公開していないものを含む全てのプラグインの一覧は[ブログ](http://ntgame.wpblog.jp/page-139/)をご覧ください。
 
