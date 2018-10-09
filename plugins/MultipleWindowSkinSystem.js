@@ -6,6 +6,8 @@
 // http://opensource.org/licenses/mit-license.php
 // ----------------------------------------------------------------------------
 // Version
+// 1.0.6 2018/10/09 コモンイベントの並列処理が走っている際にピクチャが表示されない不具合を修正。
+//                  名前欄を制御文字の中身に従って拡張するように変更。
 // 1.0.5 2018/09/22 並列処理が走っている際にピクチャが表示されない不具合を修正。
 // 1.0.4 2018/08/31 起動時に発生するエラーを修正。
 // 1.0.3 2018/01/21 ウィンドウの画像を正常に読み込めるよう修正。
@@ -100,6 +102,8 @@
  * There is no plugin command.
  * 
  * ----change log---
+ * 1.0.6 2018/10/09 Fix a bug that picture is not displayed when parallel common event is running.
+ *                  Changed name window to expand according to contents of control characters.
  * 1.0.5 2018/09/22 Fix a bug that picture is not displayed when parallel event is running.
  * 1.0.4 2018/08/31 Fix a bug that cant' load game.
  * 1.0.3 2018/01/21 Fix a bug that can't load windows images.
@@ -188,6 +192,8 @@
  * プラグインコマンドはありません。
  * 
  * 【更新履歴】
+ * 1.0.6 2018/10/09 コモンイベントの並列処理が走っている際にピクチャが表示されない不具合を修正。
+ *                  名前欄を制御文字の中身に従って拡張するように変更。
  * 1.0.5 2018/09/22 並列処理が走っている際にピクチャが表示されない不具合を修正。
  * 1.0.4 2018/08/31 起動時に発生するエラーを修正。
  * 1.0.3 2018/01/21 ウィンドウの画像を正常に読み込めるよう修正。
@@ -584,6 +590,19 @@
         _Game_Event_setupPageSettings.call(this);
         if (this._trigger === 4) {
             this._interpreter = new Game_Interpreter(0, true);
+        }
+    };
+
+////=============================================================================
+//// Game_CommonEvent
+////  Override to distinguish between interpreters.
+////=============================================================================
+
+    const _Game_CommonEvent_refresh = Game_CommonEvent.prototype.refresh;
+    Game_CommonEvent.prototype.refresh = function() {
+        _Game_CommonEvent_refresh.call(this);
+        if(this.isActive() && this._interpreter) {
+            this._interpreter._isParalell = true;
         }
     };
 
@@ -1327,7 +1346,7 @@
             //Local settings.
             const actorName  = settings.ACTOR_NAME;
             const tempBitmap = new Bitmap();
-            const width      = tempBitmap.measureTextWidth(actorName||'') + this.standardPadding()*2;
+            const width      = tempBitmap.measureTextWidth(this.convertEscapeCharacters(actorName)||'') + this.standardPadding()*2;
             const height     = this.fittingHeight(1); 
 
             //Initialize
