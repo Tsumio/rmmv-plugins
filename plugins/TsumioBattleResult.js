@@ -6,6 +6,7 @@
 // http://opensource.org/licenses/mit-license.php
 // ----------------------------------------------------------------------------
 // Version
+// 1.0.1 2018/12/15 アイテムを何も取得していないときのテキストを設定できるようにした。
 // 1.0.0 2018/12/15 公開。
 // ----------------------------------------------------------------------------
 // [GitHub] : https://github.com/Tsumio/rmmv-plugins
@@ -24,7 +25,7 @@
  * @param DescSettings
  * @type struct<DescSettings>
  * @desc The setting of the text to be displayed in the explanation column of each window.
- * @default {"expDesc":"取得経験値","skillDesc":"習得スキル","noSkillDesc":"なし","itemDesc":"取得アイテム"}
+ * @default {"expDesc":"取得経験値","skillDesc":"習得スキル","noSkillDesc":"なし","noItemDesc":"なし","itemDesc":"取得アイテム"}
  * 
  * @param LevelUpAnimationSettings
  * @type struct<AnimationSettings>
@@ -64,6 +65,7 @@
  * If a dummy image is not prepared, an error will occur
  * 
  * ----change log---
+ * 1.0.1 2018/12/15 Add a function setting the text when not obtain any item.
  * 1.0.0 2018/12/15 Release.
  * 
  * ----remarks----
@@ -86,7 +88,7 @@
  * @param 説明文の設定
  * @type struct<DescSettings>
  * @desc 各ウィンドウの説明欄に表示するテキストの設定。
- * @default {"expDesc":"取得経験値","skillDesc":"習得スキル","noSkillDesc":"なし","itemDesc":"取得アイテム"}
+ * @default {"expDesc":"取得経験値","skillDesc":"習得スキル","noSkillDesc":"なし","noItemDesc":"なし","itemDesc":"取得アイテム"}
  * 
  * @param レベルアップ時アニメーションの設定
  * @type struct<AnimationSettings>
@@ -128,6 +130,7 @@
  * ダミーの画像を用意していない場合はエラーが発生します。
  * 
  * 【更新履歴】
+ * 1.0.1 2018/12/15 アイテムを何も取得していないときのテキストを設定できるようにした。
  * 1.0.0 2018/12/15 公開。
  * 
  * 【備考】
@@ -197,6 +200,11 @@
  * @param noSkillDesc
  * @type string
  * @desc 習得したスキルがないことを説明するテキスト。
+ * @default なし
+ * 
+ * @param noItemDesc
+ * @type string
+ * @desc 取得したアイテムがないことを説明するテキスト。
  * @default なし
  * 
  * @param itemDesc
@@ -1407,6 +1415,10 @@
             return this._gold;
         }
 
+        get noItemText() {
+            return param.descSettings.noItemDesc;
+        }
+
         isObtainedGold() {
             return this.gold > 0;
         }
@@ -1419,6 +1431,20 @@
             this.select(0);
             this.activate();
             this._createDescWindow();
+        }
+
+        drawAllItems() {
+            super.drawAllItems();
+            this.tryDrawNoItems();
+        }
+
+        //入手したゴールドもアイテムもなければ「なし」と表示する
+        tryDrawNoItems() {
+            if(this.maxItems() !== 0) {
+                return;
+            }
+            const rect = this.itemRectForText(0);
+            this.drawText(this.noItemText, rect.x, rect.y, rect.width);
         }
 
         //Hack:ロジックが非常に汚い。リファクタリング対象。
