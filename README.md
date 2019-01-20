@@ -41,6 +41,7 @@ Read each JS file.It contains usage.
 | [MemoryCheatingBlocker](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/MemoryCheatingBlocker.js)          | Prevent memory tampering cheat.               | [Official Forum](https://forum.tkool.jp/index.php?threads/%E3%83%A1%E3%83%A2%E3%83%AA%E6%94%B9%E7%AB%84%E3%83%81%E3%83%BC%E3%83%88%E3%82%92%E4%BA%88%E9%98%B2%E3%81%99%E3%82%8B%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3.934/) (Japanese) |
 | [BattleCommandAdjuster](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/BattleCommandAdjuster.js)          | Position the battle command next to the actor.               | N/A |
 | [TsumioBattleResult](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/TsumioBattleResult.js)          | Change battle result.               | N/A |
+| [TsumioCarrySystem](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/TsumioCarrySystem.js)          | Player can carry a event.               | N/A |
 
 If you want to know all my plugin, see [the blog](http://ntgame.wpblog.jp/page-139/) (Japanese).
 
@@ -100,6 +101,7 @@ RPGツクールMV上での動作を前提としています。
 | [MemoryCheatingBlocker](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/MemoryCheatingBlocker.js)          | メモリ改竄チートを予防するプラグイン。               | [公式フォーラム](https://forum.tkool.jp/index.php?threads/%E3%83%A1%E3%83%A2%E3%83%AA%E6%94%B9%E7%AB%84%E3%83%81%E3%83%BC%E3%83%88%E3%82%92%E4%BA%88%E9%98%B2%E3%81%99%E3%82%8B%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3.934/) |
 | [BattleCommandAdjuster](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/BattleCommandAdjuster.js)          | バトルコマンドの位置をアクターの隣にします。               | なし |
 | [TsumioBattleResult](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/TsumioBattleResult.js)          | 戦闘結果の表示を変更します。               | なし |
+| [TsumioCarrySystem](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/TsumioCarrySystem.js)          | プレイヤーはイベントの持ち運びが可能になります。               | なし |
 
 GitHubに公開していないものを含む全てのプラグインの一覧は[ブログ](http://ntgame.wpblog.jp/page-139/)をご覧ください。
 
