@@ -42,6 +42,7 @@ Read each JS file.It contains usage.
 | [BattleCommandAdjuster](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/BattleCommandAdjuster.js)          | Position the battle command next to the actor.               | N/A |
 | [TsumioBattleResult](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/TsumioBattleResult.js)          | Change battle result.               | N/A |
 | [TsumioCarrySystem](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/TsumioCarrySystem.js)          | Player can carry a event.               | N/A |
+| [TsumioCommandBattle](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/TsumioCommandBattle.js)          | Extend the battle system.               | N/A |
 
 If you want to know all my plugin, see [the blog](http://ntgame.wpblog.jp/page-139/) (Japanese).
 
@@ -102,6 +103,7 @@ RPGツクールMV上での動作を前提としています。
 | [BattleCommandAdjuster](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/BattleCommandAdjuster.js)          | バトルコマンドの位置をアクターの隣にします。               | なし |
 | [TsumioBattleResult](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/TsumioBattleResult.js)          | 戦闘結果の表示を変更します。               | なし |
 | [TsumioCarrySystem](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/TsumioCarrySystem.js)          | プレイヤーはイベントの持ち運びが可能になります。               | なし |
+| [TsumioCommandBattle](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/TsumioCommandBattle.js)          | 戦闘システムを拡張します。               | なし |
 
 GitHubに公開していないものを含む全てのプラグインの一覧は[ブログ](http://ntgame.wpblog.jp/page-139/)をご覧ください。
 
