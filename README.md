@@ -44,6 +44,7 @@ Read each JS file.It contains usage.
 | [TsumioCarrySystem](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/TsumioCarrySystem.js)          | Player can carry a event.               | N/A |
 | [TsumioCommandBattle](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/TsumioCommandBattle.js)          | Extend the battle system.               | N/A |
 | [UnReloadMap](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/UnReloadMap.js)          | Disables map reloading only on setting maps.               | N/A |
+| [CharacterScaleChanger](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/CharacterScaleChanger.js)          |Change the Character scale at once.               | N/A |
 
 If you want to know all my plugin, see [the blog](http://ntgame.wpblog.jp/page-139/) (Japanese).
 
@@ -106,6 +107,7 @@ RPGツクールMV上での動作を前提としています。
 | [TsumioCarrySystem](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/TsumioCarrySystem.js)          | プレイヤーはイベントの持ち運びが可能になります。               | なし |
 | [TsumioCommandBattle](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/TsumioCommandBattle.js)          | 戦闘システムを拡張します。               | なし |
 | [UnReloadMap](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/UnReloadMap.js)          | 特定マップでマップのリロードを無効化します。               | なし |
+| [CharacterScaleChanger](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/CharacterScaleChanger.js)          | キャラクターのScaleを一括で変更します。               | なし |
 
 GitHubに公開していないものを含む全てのプラグインの一覧は[ブログ](http://ntgame.wpblog.jp/page-139/)をご覧ください。
 
