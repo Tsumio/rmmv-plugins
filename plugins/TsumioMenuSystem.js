@@ -6,6 +6,7 @@
 // http://opensource.org/licenses/mit-license.php
 // ----------------------------------------------------------------------------
 // Version
+// 1.1.4 2019/07/12 SVアクターが正常に表示されない不具合を修正。
 // 1.1.3 2017/10/27 情報ウィンドウのリアルタイム更新機能を追加。
 // 1.1.2 2017/10/13 メソッド名を修正。
 // 1.1.1 2017/10/12 バグ修正。背景設定・ウィンドウスキン設定・DestinationWindow.jsとの連携機能の追加。
@@ -308,6 +309,7 @@
  * Furthermore, if you change the dpi or change the number of rows or columns, you may get trouble.
  * 
  * ----change log---
+ * 1.1.4 2019/07/12 Fixed the problem that SV actors are not displayed properly.
  * 1.1.3 2017/10/27 Added real-time update function of information window.
  * 1.1.2 2017/10/12 Correct method name.
  * 1.1.1 2017/10/12 Bug fix.Added background settings, window skin settings, collaboration function with DestinationWindow.js.
@@ -618,6 +620,7 @@
  * また、解像度を変えたり、行数や列数を変えたりした場合、不具合が出るかもしれません。
  * 
  * 【更新履歴】
+ * 1.1.4 2019/07/12 SVアクターが正常に表示されない不具合を修正。
  * 1.1.3 2017/10/27 情報ウィンドウのリアルタイム更新機能を追加。
  * 1.1.2 2017/10/13 メソッド名の修正。
  * 1.1.1 2017/10/12 バグ修正。背景設定・ウィンドウスキン設定・DestinationWindow.jsとの連携機能の追加。
@@ -1540,6 +1543,12 @@ function Game_TMenuSys() {
         this.sVActors = new SVActors(this, this.lineHeight(), this.getCorrectY());
     };
 
+    var _Window_MenuStatus_refresh = Window_MenuStatus.prototype.refresh;
+    Window_MenuStatus.prototype.refresh = function() {
+        _Window_MenuStatus_refresh.call(this);
+        this.sVActors.modifyVisible();
+    };
+
     Window_MenuStatus.prototype.modifySVActorsVisible = function() {
         this.sVActors.modifyVisible();
     };
@@ -1903,8 +1912,8 @@ function Game_TMenuSys() {
         var op1Text = this.tryToParse(param.op1Contents);
         var op2Text = this.tryToParse(param.op2Contents);
         //Drawing.
-        this.drawInfoText(param.option1, op1Text, x, true);
-        this.drawInfoText(param.option2, op2Text, x, false);
+        this.drawInfoText(param.option1, op1Text, x - 100, true);
+        this.drawInfoText(param.option2, op2Text, x - 100, false);
     };
 
     /**
