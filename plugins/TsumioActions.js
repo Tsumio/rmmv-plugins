@@ -1,11 +1,15 @@
 //=============================================================================
 // TsumioActions.js
 // ----------------------------------------------------------------------------
-// Copyright (c) 2017-2018 Tsumio
+// Copyright (c) 2017-2019 Tsumio
 // This software is released under the MIT License.
 // http://opensource.org/licenses/mit-license.php
 // ----------------------------------------------------------------------------
 // Version
+// 1.1.3 2019/08/25 フックショット中はメニュー表示を抑制するよう変更
+// 1.1.2 2019/08/13 イベントが生成されていないときはアクション発生しないよう変更
+// 1.1.1 2019/04/03 フックショット時のカメラ機能追加
+// 1.1.0 2019/04/03 機能追加と不具合の修正
 // 1.0.6 2018/08/27 アクションウィンドウの操作方法を追加。爆風の範囲を設定できる機能を追加。
 // 1.0.5 2018/03/18 発射時のSE設定機能を追加。
 // 1.0.4 2018/01/29 アクションアイテムウィンドウのレイヤー登録順を調整。
@@ -15,7 +19,6 @@
 // 1.0.0 2018/01/25 公開。
 // ----------------------------------------------------------------------------
 // [GitHub] : https://github.com/Tsumio/rmmv-plugins
-// [Blog]   : http://ntgame.wpblog.jp/
 // [Twitter]: https://twitter.com/TsumioNtGame
 //=============================================================================
 
@@ -146,6 +149,10 @@
  * 
  * 
  * ----change log---
+ * 1.1.3 2019/08/25 Changed to suppress menu scene during hook shot action.
+ * 1.1.2 2019/08/13 Changed no action happend when the event is not generated.
+ * 1.1.1 2019/04/03 Add camera function for hook shot.
+ * 1.1.0 2019/04/03 Add some new functions, and fix a bug.
  * 1.0.6 2018/08/27 Added managing the action window. Added the range setting for bomb.
  * 1.0.5 2018/03/18 Add a SE setting function.
  * 1.0.4 2018/01/29 Fix layer registration order of action item window.
@@ -291,6 +298,10 @@
  * 
  * 
  * 【更新履歴】
+ * 1.1.3 2019/08/25 フックショット中はメニュー表示を抑制するよう変更
+ * 1.1.2 2019/08/13 イベントが生成されていないときはアクション発生しないよう変更
+ * 1.1.1 2019/04/03 フックショット時のカメラ機能追加
+ * 1.1.0 2019/04/03 機能追加と不具合の修正
  * 1.0.6 2018/08/27 アクションウィンドウの操作方法を追加。爆風の範囲を設定できる機能を追加。
  * 1.0.5 2018/03/18 発射時のSE設定機能を追加。
  * 1.0.4 2018/01/29 アクションアイテムウィンドウのレイヤー登録順を調整。
@@ -352,6 +363,11 @@
  * @desc 発射時に再生するSE名。(SE name)
  * @require 1
  * @dir audio/se
+ * 
+ * @param passRegion
+ * @type number[]
+ * @max 999
+ * @desc ブーメランが通行可能なリージョンID(Region ID for passing bomb).
  * 
  */
 /*~struct~HookShot:
@@ -554,6 +570,16 @@
  * @max 255
  * @desc 爆風の範囲。(Range).
  * @default 2.40
+ * 
+ * @param commonId
+ * @type number
+ * @desc プレイヤーにヒットしたとき、実行するコモンイベントID。
+ * @default 1
+ * 
+ * @param passRegion
+ * @type number[]
+ * @max 999
+ * @desc ボムが通行可能なリージョンID(Region ID for passing bomb).
  * 
  */
 
@@ -862,6 +888,7 @@
         static clear() {
             this._hookShot = null;
             this._currentlyInjection = false;
+            $gameSystem.enableMenu();
         }
 
         static update() {
@@ -918,13 +945,13 @@
             const current = $gameVariables.value(id);
             const newNum  = current - 1;
             //Set new number.
-            $gameVariables._data[id] = newNum.clamp(0, max);
+            $gameVariables.setValue(id, newNum.clamp(0, max));
         }
 
         static refreshArrowNumber() {
             const id      = Number(param.arrowSettings.variableID);
             const max = Number(param.arrowSettings.max);
-            $gameVariables._data[id] = $gameVariables._data[id].clamp(0, max);
+            $gameVariables.setValue(id, $gameVariables._data[id].clamp(0, max));
         }
 
         /**
@@ -1086,13 +1113,13 @@
             const current = $gameVariables.value(id);
             const newNum  = current - 1;
             //Set new number.
-            $gameVariables._data[id] = newNum.clamp(0, max);
+            $gameVariables.setValue(id, newNum.clamp(0, max));
         }
 
         static refreshBombNumber() {
             const id  = Number(param.bombSettings.variableID);
             const max = Number(param.bombSettings.max);
-            $gameVariables._data[id] = $gameVariables._data[id].clamp(0, max);
+            $gameVariables.setValue(id, $gameVariables._data[id].clamp(0, max));
         }
 
         /**
@@ -1305,6 +1332,7 @@
         if (HookShot_Manager.canCreateHookShot()) {
             HookShot_Manager.createHookShot(new Game_HookShot(this.x, this.y, this.direction()));
             AudioManager.playSe(this.createActionSeObject(param.hookShotSettings.seName));
+            $gameSystem.disableMenu();
         }
     };
 
@@ -1372,6 +1400,7 @@
 
         return true;
     };
+    
 
 ////=============================================================================
 //// Game_ActionsBase
@@ -1641,7 +1670,7 @@
          */
         canEventStart(event) {
             const key = [event._mapId, event._eventId, this.selfSwitchId];
-            return event.event().meta[this.noteTag] && !$gameSelfSwitches.value(key);
+            return event.event().meta[this.noteTag] && !$gameSelfSwitches.value(key) && event._pageIndex >= 0;
         }
 
         update() {
@@ -1690,6 +1719,7 @@
             this._speed        = Number(params.speed);;
             this._leap         = Number(params.leap);
             this._range        = Number(params.range);
+            this._commonId     = Number(params.commonId);
             this._noteTag      = 'bomb';//Should be override.
 
             this._explodeAnimation   = params.animation;
@@ -1700,6 +1730,8 @@
             this._isPickedUp         = false;
             this._isThrowing         = false;
             this.locate(x, y);
+
+            this.initializePassRegionList();
         }
 
         initializeImage() {
@@ -1712,6 +1744,13 @@
             this.setMoveFrequency(2);
             this.setMoveSpeed(2);
             this.setPattern(0);
+        }
+
+        initializePassRegionList() {
+            this._passRegionList = convertParam(param.bombSettings.passRegion);
+            this._passRegionList = this.passRegionList.map(function(value, index) {
+                return Number(value);
+            });
         }
 
         get explodeAnimation() {
@@ -1750,6 +1789,10 @@
             return this._isThrowing;
         }
 
+        get passRegionList() {
+            return this._passRegionList;
+        }
+
         /**
          * Override for throwing action.
          */
@@ -1784,6 +1827,7 @@
 
         onBombHitPreventingObject() {
             //跳ね返り処理
+            this.onEndFalling();
         }
 
         /**
@@ -1803,6 +1847,23 @@
                     this.fireCollisionEnterEvent(event);
                 }
             }, this);
+            this.onCollideWithExplosionForPlayer();
+        }
+
+        onCollideWithExplosionForPlayer() {
+            if(this.isEventAlreadyCollide($gamePlayer)) {
+                return;
+            }
+            var dX = $gamePlayer._realX-this._realX;
+            var dY = $gamePlayer._realY-this._realY;
+            if(dX*dX + dY*dY < this.range*this.range){
+                this.fireCollisionEnterPlayer();
+            }
+        }
+
+        fireCollisionEnterPlayer() {
+            this.collidingEvents.add($gamePlayer);
+            $gameTemp.reserveCommonEvent(this._commonId);
         }
 
         startExplosion() {
@@ -1888,6 +1949,18 @@
                 Debug.log('ボム：通行不可');
                 this.onBombHitPreventingObject();
             }
+        }
+
+        canPass(x, y, d) {
+            //Can pass through.
+            const isHitCanPassRegion = this.passRegionList.some(function(regionId) {
+                return this.regionId() === regionId;
+            }, this);
+            if(isHitCanPassRegion) {
+                return true;
+            }
+
+            return super.canPass(x, y, d);
         }
     }
 
@@ -2012,7 +2085,7 @@
             this._speed        = Number(params.speed);
             this._leap         = Number(params.leap);
             this._noteTag      = 'hook';//Should be override.
-            this._range        = 0.3;
+            this._range        = 0.5;
             this._jumpSpeed    = this.speed*1.5;
             this._isHookActionStarted = false;
             this._isHookActionEnd     = false;
@@ -2293,6 +2366,8 @@
             const hookX   = ($gamePlayer._realX+Math.cos(angle)*(-this.jumpSpeed));
             const hookY   = ($gamePlayer._realY-Math.sin(angle)*(-this.jumpSpeed));
             $gamePlayer.setPosition(hookX, hookY);
+            //カメラ移動の処理を追加
+            $gamePlayer.center(hookX, hookY);
 
             if(this.isPlayerPositionChanged()) {
                 this.playerOldPosition.x = hookX;
@@ -2343,17 +2418,56 @@
             super(x, y, dir);
         }
 
+        get passRegionList() {
+            return this._passRegionList;
+        }
+
         initializeOriginal(x, y, dir) {
             super.initializeOriginal(x, y, dir);
             const params      = param.boomerangSettings;
             this._speed       = Number(params.speed);
             this._leap        = Number(params.leap);
             this._noteTag     = 'boomerang';
+
+            this.initializePassRegionList();
+        }
+
+        initializePassRegionList() {
+            this._passRegionList = convertParam(param.boomerangSettings.passRegion);
+            this._passRegionList = this.passRegionList.map(function(value, index) {
+                return Number(value);
+            });
         }
 
         initializeImage() {
             const params = param.boomerangSettings;
             this.setImage(params.fileName, Number(params.index));
+        }
+
+        update() {
+            super.update();
+            this.updateCheckingCanPass();
+        }
+
+        updateCheckingCanPass() {
+            if(this.canPass(Math.round(this.x), Math.round(this.y), this.startDir)) {
+                Debug.log('ブーメラン：通行可能');
+            }else {
+                Debug.log('ブーメラン：通行不可');
+                this.canReturn = true;
+            }
+        }
+
+        canPass(x, y, d) {
+            //Can pass through.
+            const isHitCanPassRegion = this.passRegionList.some(function(regionId) {
+                return this.regionId() === regionId;
+            }, this);
+            if(isHitCanPassRegion) {
+                return true;
+            }
+
+            return super.canPass(x, y, d);
         }
     }
 
