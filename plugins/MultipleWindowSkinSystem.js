@@ -1,4 +1,4 @@
-//=============================================================================
+﻿//=============================================================================
 // MultipleWindowSkinSystem.js
 // ----------------------------------------------------------------------------
 // Copyright (c) 2017-2018 Tsumio
@@ -6,6 +6,9 @@
 // http://opensource.org/licenses/mit-license.php
 // ----------------------------------------------------------------------------
 // Version
+// 1.0.9 2019/03/03 並列処理で注釈を実行した際に正常に動作しない不具合を修正。
+// 1.0.8 2019/02/16 名前の色変更を可能にした。
+// 1.0.7 2019/02/10 MADOへ対応させた。
 // 1.0.6 2018/10/09 コモンイベントの並列処理が走っている際にピクチャが表示されない不具合を修正。
 //                  名前欄を制御文字の中身に従って拡張するように変更。
 // 1.0.5 2018/09/22 並列処理が走っている際にピクチャが表示されない不具合を修正。
@@ -102,6 +105,9 @@
  * There is no plugin command.
  * 
  * ----change log---
+ * 1.0.9 2019/03/03 Fixed bug that does not work properly when comment is executed in parallel processing.
+ * 1.0.8 2019/02/16 Possible to change the color of the name.
+ * 1.0.7 2019/02/10 Corresponded to MADO.
  * 1.0.6 2018/10/09 Fix a bug that picture is not displayed when parallel common event is running.
  *                  Changed name window to expand according to contents of control characters.
  * 1.0.5 2018/09/22 Fix a bug that picture is not displayed when parallel event is running.
@@ -192,6 +198,9 @@
  * プラグインコマンドはありません。
  * 
  * 【更新履歴】
+ * 1.0.9 2019/03/03 並列処理で注釈を実行した際に正常に動作しない不具合を修正。
+ * 1.0.8 2019/02/16 名前の色変更を可能にした。
+ * 1.0.7 2019/02/10 MADOへ対応させた。
  * 1.0.6 2018/10/09 コモンイベントの並列処理が走っている際にピクチャが表示されない不具合を修正。
  *                  名前欄を制御文字の中身に従って拡張するように変更。
  * 1.0.5 2018/09/22 並列処理が走っている際にピクチャが表示されない不具合を修正。
@@ -564,6 +573,9 @@
 
     const _Game_Interpreter_command108 = Game_Interpreter.prototype.command108;
     Game_Interpreter.prototype.command108 = function() {//Comment
+        if(this._isParalell) {
+            return _Game_Interpreter_command108.call(this);
+        }
         $gameMessage.currentWindow = this._params[0];
 
         const result = _Game_Interpreter_command108.call(this);
@@ -899,6 +911,8 @@
             this._easing     = null;
             this._easingTime = 0;
             super.initialize();
+
+            this.loadWindowskin();//Note:MADOとの競合を解消
         }
 
         /**
@@ -1345,8 +1359,9 @@
 
             //Local settings.
             const actorName  = settings.ACTOR_NAME;
+            const actorName2 = actorName.replace(/\\C\[(\d+)\]/gi, '');//カラーコードを除ける
             const tempBitmap = new Bitmap();
-            const width      = tempBitmap.measureTextWidth(this.convertEscapeCharacters(actorName)||'') + this.standardPadding()*2;
+            const width      = tempBitmap.measureTextWidth(this.convertEscapeCharacters(actorName2)||'') + this.standardPadding()*2;
             const height     = this.fittingHeight(1); 
 
             //Initialize
@@ -1423,6 +1438,11 @@
         }
 
         startEasing() {
+            //対処療法的
+            if(this.SETTINGS.MOVEMENT === 'None') {
+                return;
+            }
+
             //Initialize destination.
             this.destX = this.x;
             this.destY = this.y;
@@ -1575,7 +1595,7 @@
  *
  * Open source under the BSD License.
  *
- * Copyright © 2008 George McGinley Smith
+ * Copyright c 2008 George McGinley Smith
  * All rights reserved.
  * https://raw.github.com/danro/jquery-easing/master/LICENSE
  * ======================================================== */
@@ -1586,7 +1606,7 @@
  * 
  * Open source under the BSD License. 
  * 
- * Copyright © 2001 Robert Penner
+ * Copyright c 2001 Robert Penner
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without modification, 
