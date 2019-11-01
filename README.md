@@ -46,6 +46,7 @@ Read each JS file.It contains usage.
 | [UnReloadMap](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/UnReloadMap.js)          | Disables map reloading only on setting maps.               | N/A |
 | [CharacterScaleChanger](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/CharacterScaleChanger.js)          |Change the Character scale at once.               | N/A |
 | [BattleCommandModifier](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/BattleCommandModifier.js)          | Control the availability of battle command.               | N/A |
+| [MessageWindowSizeAdjuster](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/MessageWindowSizeAdjuster.js)          | Changes the size of the message window.               | N/A |
 
 If you want to know all my plugin, see [the blog](http://ntgame.wpblog.jp/page-139/) (Japanese).
 
@@ -110,6 +111,7 @@ RPGツクールMV上での動作を前提としています。
 | [UnReloadMap](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/UnReloadMap.js)          | 特定マップでマップのリロードを無効化します。               | なし |
 | [CharacterScaleChanger](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/CharacterScaleChanger.js)          | キャラクターのScaleを一括で変更します。               | なし |
 | [BattleCommandModifier](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/BattleCommandModifier.js)          | バトルコマンドの使用可否コントロールします。               | なし |
+| [MessageWindowSizeAdjuster](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/MessageWindowSizeAdjuster.js)          | メッセージウィンドウのサイズを変更するプラグイン               | なし |
 
 GitHubに公開していないものを含む全てのプラグインの一覧は[ブログ](http://ntgame.wpblog.jp/page-139/)をご覧ください。
 
