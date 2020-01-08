@@ -48,6 +48,7 @@ Read each JS file.It contains usage.
 | [BattleCommandModifier](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/BattleCommandModifier.js)          | Control the availability of battle command.               | N/A |
 | [MessageWindowSizeAdjuster](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/MessageWindowSizeAdjuster.js)          | Changes the size of the message window.               | N/A |
 | [AirshipAltitudeAdjuster](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/AirshipAltitudeAdjuster.js)          | Adjust the altitude of the airship.               | N/A |
+| [ShortestDistanceCalculator](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/ShortestDistanceCalculator.js)          | Calculate the shortest distance.               | N/A |
 
 If you want to know all my plugin, see [the blog](http://ntgame.wpblog.jp/page-139/) (Japanese).
 
@@ -113,7 +114,8 @@ RPGツクールMV上での動作を前提としています。
 | [CharacterScaleChanger](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/CharacterScaleChanger.js)          | キャラクターのScaleを一括で変更します。               | なし |
 | [BattleCommandModifier](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/BattleCommandModifier.js)          | バトルコマンドの使用可否コントロールします。               | なし |
 | [MessageWindowSizeAdjuster](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/MessageWindowSizeAdjuster.js)          | メッセージウィンドウのサイズを変更するプラグイン               | なし |
-| [AirshipAltitudeAdjuster](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/AirshipAltitudeAdjuster.js)          | 飛行船の高度を調整するプラグイン               | なし |
+| [AirshipAltitudeAdjuster](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/AirshipAltitudeAdjuster.js)          | 飛行船の高度を調整するプラグイン。               | なし |
+| [ShortestDistanceCalculator](https://raw.githubusercontent.com/Tsumio/rmmv-plugins/master/plugins/ShortestDistanceCalculator.js)          | 最短距離を計算するプラグイン。               | なし |
 
 
 GitHubに公開していないものを含む全てのプラグインの一覧は[ブログ](http://ntgame.wpblog.jp/page-139/)をご覧ください。
