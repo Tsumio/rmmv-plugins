@@ -6,6 +6,7 @@
 // http://opensource.org/licenses/mit-license.php
 // ----------------------------------------------------------------------------
 // Version
+// 1.0.1 2020/11/09 誤字の訂正。
 // 1.0.0 2020/11/08 公開。
 // ----------------------------------------------------------------------------
 // [GitHub] : https://github.com/Tsumio/rmmv-plugins
@@ -52,6 +53,7 @@
  * Running in parallel processing events may cause the game to be heavy.
  * 
  * ----change log---
+ * 1.0.1 2020/11/09 Fix typos.
  * 1.0.0 2020/01/08 Release.
  * 
  * ----remarks----
@@ -81,11 +83,11 @@
  * プラグインの導入後、スクリプトコマンドを使用します。
  * 
  * 【スクリプトコマンド】
- * ■キャラクターA.calcShortestDistance(キャラクターB, 再起回数)
+ * ■キャラクターA.calcShortestDistance(キャラクターB, 再帰回数)
  * キャラクターAがキャラクターBへ到達するための最短距離を返します
  * 
  * キャラクターA,Bには対象のイベントやプレイヤーなどを指定します。
- * 再起回数はデフォルトで130回が指定されています。
+ * 再帰回数はデフォルトで130回が指定されています。
  * この回数は経路を探索する回数のことです。
  * 距離が130以上あることがわかっている場合、130回以上を指定してください。
  * 
@@ -98,7 +100,7 @@
  * const dis2 = $gamePlayer.calcShortestDistance($gameMap.event(12));
  * console.log(dis2);
  * 
- * ■再起回数を超えた場合
+ * ■再帰回数を超えた場合
  * JavaScript において正確に扱える最大整数値が返ってきます。
  * 
  * 【注意】
@@ -106,6 +108,7 @@
  * 並列処理イベントで実行するとゲームが重くなる原因となるかもしれません。
  * 
  * 【更新履歴】
+ * 1.0.1 2020/11/09 誤字の訂正。
  * 1.0.0 2020/01/08 公開。
  * 
  * 【備考】
@@ -159,7 +162,7 @@
      * targetへの最短距離を返す。
      * Note:非常にコストの高い処理なので、ループ等では呼ばないこと。
      * Note:100％最短経路を返すとは限らない。
-     * Note:再起回数のデフォルト値の130は適当な値で意味は特にない。
+     * Note:再帰回数のデフォルト値の130は適当な値で意味は特にない。
      */
     Game_Character.prototype.calcShortestDistance = function(target, recursiveTimes = 130) {
         //現在のインスタンスを元に、画面上には存在しないダミーキャラクターを作成する
@@ -167,7 +170,7 @@
 
         //最短距離を計算する
         const calcShortestDistanceRecursive = function(count, x, y) {
-            //再起の回数を制限する
+            //再帰の回数を制限する
             const canRecursive = count < recursiveTimes;
             if(!canRecursive) {
                 return Number.MAX_SAFE_INTEGER;
